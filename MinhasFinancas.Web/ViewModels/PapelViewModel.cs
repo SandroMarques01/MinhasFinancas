@@ -40,13 +40,13 @@ namespace MinhasFinancas.Web.ViewModels
         [DisplayName("Ativo")]
         public bool Ativo { get; set; }
 
-        public virtual IEnumerable<TransacaoViewModel> Transacaos { get; set; }
-        public virtual IEnumerable<DividendoViewModel> Dividendos { get; set; }
-        public virtual IEnumerable<SegmentoViewModel> Segmentos { get; set; }
+        //public virtual IEnumerable<TransacaoViewModel> Transacaos { get; set; }
+        //public virtual IEnumerable<DividendoViewModel> Dividendos { get; set; }
+        //public virtual IEnumerable<SegmentoViewModel> Segmentos { get; set; }
 
         /// <summary>
         /// Propriedades fora da classe
         /// </summary>
-        public int QuantidadeTotal { get; set; }
+        //public int QuantidadeTotal { get; set; }
     }
 }
