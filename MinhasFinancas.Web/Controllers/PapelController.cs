@@ -1,12 +1,9 @@
 ﻿using AutoMapper;
 using MinhasFinancas.Infra.Models;
-using MinhasFinancas.Service.papel;
 using MinhasFinancas.Service.Papel;
 using MinhasFinancas.Web.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Net;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
