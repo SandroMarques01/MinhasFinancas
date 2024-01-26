@@ -11,14 +11,9 @@ namespace MinhasFinancas.Infra.Models
         public string Descricao { get; set; }
         public bool Ativo { get; set; }
 
-        public virtual ICollection<Transacao> Transacaos { get; set; }
-        public virtual ICollection<Dividendo> Dividendos { get; set; }
-        public virtual ICollection<Segmento> Segmentos { get; set; }
+        public virtual ICollection<Transacao> Transacao { get; set; }
+        public virtual ICollection<Dividendo> Dividendo { get; set; }
+        public virtual ICollection<Segmento> Segmento { get; set; }
 
-
-        /// <summary>
-        /// Propriedades fora da classe
-        /// </summary>
-        public int QuantidadeTotal { get; set; }
     }
 }

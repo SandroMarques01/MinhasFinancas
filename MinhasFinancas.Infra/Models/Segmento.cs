@@ -9,7 +9,7 @@ namespace MinhasFinancas.Infra.Models
         public bool Ativo { get; set; }
 
 
-        public virtual ICollection<Papel> Papels { get; set; }
+        public virtual ICollection<Papel> Papel { get; set; }
 
     }
 }

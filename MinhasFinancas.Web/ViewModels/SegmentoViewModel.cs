@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace MinhasFinancas.Web.ViewModels
@@ -13,8 +14,16 @@ namespace MinhasFinancas.Web.ViewModels
 
         [Key]
         public Guid Id { get; set; }
+
+        [Required(ErrorMessage = "O campo {0} é obrigatório")]
+        [DisplayName("Nome")]
         public string Nome { get; set; }
+
+        [DisplayName("Descrição")]
         public string Descricao { get; set; }
+
+        [Required(ErrorMessage = "O campo {0} é obrigatório")]
+        [DisplayName("Ativo")]
         public bool Ativo { get; set; }
 
 
