@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MinhasFinancas.Infra.Models;
+using MinhasFinancas.Service.Core;
 using MinhasFinancas.Service.Papel;
 using MinhasFinancas.Service.Segmento;
 using MinhasFinancas.Web.ViewModels;
@@ -10,7 +11,7 @@ using System.Web.Mvc;
 
 namespace MinhasFinancas.Web.Controllers
 {
-    public class SegmentoController : Controller
+    public class SegmentoController : BaseController
     {
         ISegmentoService _segmentoService;
         IPapelService _papelService;
@@ -18,7 +19,8 @@ namespace MinhasFinancas.Web.Controllers
 
         public SegmentoController(ISegmentoService segmentoService,
                                   IPapelService papelService,
-                                  IMapper mapper)
+                                  IMapper mapper,
+                                  INotificador notificador) : base(notificador)
         {
             _segmentoService = segmentoService;
             _papelService = papelService;

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MinhasFinancas.Infra.Models;
+using MinhasFinancas.Service.Core;
 using MinhasFinancas.Service.Papel;
 using MinhasFinancas.Web.ViewModels;
 using System;
@@ -10,13 +11,14 @@ using System.Web.Mvc;
 namespace MinhasFinancas.Web.Controllers
 {
 
-    public class PapelController : Controller
+    public class PapelController : BaseController
     {
         IPapelService _papelService;
         IMapper _mapper;
 
         public PapelController(IPapelService papelService,
-                               IMapper mapper)
+                               IMapper mapper,
+                               INotificador notificador) : base(notificador)
         {
             _papelService = papelService;
             _mapper = mapper;
