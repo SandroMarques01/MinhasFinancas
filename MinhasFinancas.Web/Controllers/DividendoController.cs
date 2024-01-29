@@ -68,7 +68,7 @@ namespace MinhasFinancas.Web.Controllers
             Dividendo obj = _mapper.Map<Dividendo>(dividendoViewModel);
             await _dividendoService.Add(obj);
 
-            //if (!OperacaoValida()) return View(DividendoViewModel);
+            if (!OperacaoValida()) return View(dividendoViewModel);
 
             return RedirectToAction("Index");
         }
@@ -101,7 +101,7 @@ namespace MinhasFinancas.Web.Controllers
             Dividendo dividendo = _mapper.Map<Dividendo>(dividendoViewModel);
             await _dividendoService.Update(dividendo);
 
-            //if (!OperacaoValida()) return View(await ObterFornecedorProdutosEndereco(id));
+            if (!OperacaoValida()) return View(_mapper.Map<DividendoViewModel>(await _dividendoService.GetById(id)));
 
             return RedirectToAction("Index");
         }
@@ -129,7 +129,7 @@ namespace MinhasFinancas.Web.Controllers
 
             await _dividendoService.DeleteById(id);
 
-            //if (!OperacaoValida()) return View(fornecedor);
+            if (!OperacaoValida()) return View(dividendoViewModel);
 
             return RedirectToAction("Index");
         }
