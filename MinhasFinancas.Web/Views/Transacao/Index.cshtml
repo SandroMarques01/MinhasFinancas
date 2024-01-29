@@ -38,7 +38,7 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.PapelId)
+            @Html.DisplayFor(modelItem => item.Papel.Codigo) - @Html.DisplayFor(modelItem => item.Papel.Nome)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.ValorUnt)
