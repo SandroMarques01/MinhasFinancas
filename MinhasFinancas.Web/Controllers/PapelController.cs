@@ -5,6 +5,7 @@ using MinhasFinancas.Service.Papel;
 using MinhasFinancas.Web.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
@@ -27,7 +28,7 @@ namespace MinhasFinancas.Web.Controllers
         // GET: Papel
         public async Task<ActionResult> Index()
         {
-            return View(_mapper.Map<List<PapelViewModel>>(await _papelService.Get()));
+            return View(_mapper.Map<List<PapelViewModel>>(await _papelService.Get()).OrderBy(f => f.TipoPapel));
         }
 
         // GET: Papel/Details/5
@@ -38,6 +39,7 @@ namespace MinhasFinancas.Web.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.Papel = papelViewModel.Codigo + " - " + papelViewModel.Nome;
 
             return View(papelViewModel);
         }
@@ -74,6 +76,7 @@ namespace MinhasFinancas.Web.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.Papel = papelViewModel.Codigo + " - " + papelViewModel.Nome;
 
             return View(papelViewModel);
         }
@@ -105,6 +108,7 @@ namespace MinhasFinancas.Web.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.Papel = papelViewModel.Codigo + " - " + papelViewModel.Nome;
 
             return View(papelViewModel);
         }

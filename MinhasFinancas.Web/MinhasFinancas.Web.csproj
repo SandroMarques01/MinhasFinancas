@@ -151,6 +151,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\ConfiguracaoController.cs" />
     <Compile Include="Controllers\DividendoController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PapelController.cs" />
@@ -236,6 +237,7 @@
     <Content Include="Views\Transacao\Details.cshtml" />
     <Content Include="Views\Transacao\Edit.cshtml" />
     <Content Include="Views\Transacao\Index.cshtml" />
+    <Content Include="Views\Configuracao\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

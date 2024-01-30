@@ -31,7 +31,7 @@ namespace MinhasFinancas.Web.Controllers
         // GET: Transacao
         public async Task<ActionResult> Index()
         {
-            return View(_mapper.Map<List<TransacaoViewModel>>(await _transacaoService.Get(includeProperties: "Papel")));
+            return View(_mapper.Map<List<TransacaoViewModel>>(await _transacaoService.Get(includeProperties: "Papel")).OrderByDescending(f => f.Data));
         }
 
         // GET: Transacao/Details/5
@@ -44,6 +44,7 @@ namespace MinhasFinancas.Web.Controllers
             }
 
             transacaoViewModel.Papel = _mapper.Map<List<PapelViewModel>>(await _papelService.Get(f => f.Id == transacaoViewModel.PapelId)).FirstOrDefault();
+            ViewBag.Papel = transacaoViewModel.Papel.Codigo + " - " + transacaoViewModel.Papel.Nome + " | " + transacaoViewModel.Data.ToString("dd/MM/yyyy");
 
             return View(transacaoViewModel);
         }
@@ -84,6 +85,7 @@ namespace MinhasFinancas.Web.Controllers
 
             transacaoViewModel.Papel = _mapper.Map<List<PapelViewModel>>(await _papelService.Get(f => f.Id == transacaoViewModel.PapelId)).FirstOrDefault();
             transacaoViewModel = await PopularPapeis(transacaoViewModel);
+            ViewBag.Papel = transacaoViewModel.Papel.Codigo + " - " + transacaoViewModel.Papel.Nome + " | " + transacaoViewModel.Data.ToString("dd/MM/yyyy");
 
             return View(transacaoViewModel);
         }
@@ -117,6 +119,7 @@ namespace MinhasFinancas.Web.Controllers
             }
 
             transacaoViewModel.Papel = _mapper.Map<List<PapelViewModel>>(await _papelService.Get(f => f.Id == transacaoViewModel.PapelId)).FirstOrDefault();
+            ViewBag.Papel = transacaoViewModel.Papel.Codigo + " - " + transacaoViewModel.Papel.Nome + " | " + transacaoViewModel.Data.ToString("dd/MM/yyyy");
 
             return View(transacaoViewModel);
         }

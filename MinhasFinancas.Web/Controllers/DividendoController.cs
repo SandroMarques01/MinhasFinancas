@@ -18,7 +18,7 @@ namespace MinhasFinancas.Web.Controllers
         IPapelService _papelService;
         IMapper _mapper;
 
-        public DividendoController (IDividendoService dividendoService,
+        public DividendoController(IDividendoService dividendoService,
                                     IPapelService papelService,
                                     IMapper mapper,
                                     INotificador notificador) : base(notificador)
@@ -32,21 +32,21 @@ namespace MinhasFinancas.Web.Controllers
         [HttpGet]
         public async Task<ActionResult> Index()
         {
-            return View(_mapper.Map<List<DividendoViewModel>>(await _dividendoService.Get(includeProperties: "Papel")));
+            return View(_mapper.Map<List<DividendoViewModel>>(await _dividendoService.Get(includeProperties: "Papel")).OrderByDescending(f => f.Data));
         }
 
         // GET: Dividendo/Details/5
         [HttpGet]
         public async Task<ActionResult> Details(Guid id)
         {
-            DividendoViewModel dividendoViewModel = _mapper.Map<DividendoViewModel> (await _dividendoService.GetById(id));
+            DividendoViewModel dividendoViewModel = _mapper.Map<DividendoViewModel>(await _dividendoService.GetById(id));
             if (dividendoViewModel == null)
             {
                 return HttpNotFound();
             }
 
-            dividendoViewModel.Papel = _mapper.Map<List<PapelViewModel>>(await _papelService.Get(f=>f.Id == dividendoViewModel.PapelId)).FirstOrDefault();
-
+            dividendoViewModel.Papel = _mapper.Map<List<PapelViewModel>>(await _papelService.Get(f => f.Id == dividendoViewModel.PapelId)).FirstOrDefault();
+            ViewBag.Papel = dividendoViewModel.Papel.Codigo + " - " + dividendoViewModel.Papel.Nome + " | " + dividendoViewModel.Data.ToString("dd/MM/yyyy");
             return View(dividendoViewModel);
         }
 
@@ -87,6 +87,7 @@ namespace MinhasFinancas.Web.Controllers
 
             dividendoViewModel.Papel = _mapper.Map<List<PapelViewModel>>(await _papelService.Get(f => f.Id == dividendoViewModel.PapelId)).FirstOrDefault();
             dividendoViewModel = await PopularPapeis(dividendoViewModel);
+            ViewBag.Papel = dividendoViewModel.Papel.Codigo + " - " + dividendoViewModel.Papel.Nome + " | " + dividendoViewModel.Data.ToString("dd/MM/yyyy");
 
             return View(dividendoViewModel);
         }
@@ -120,6 +121,7 @@ namespace MinhasFinancas.Web.Controllers
             }
 
             dividendoViewModel.Papel = _mapper.Map<List<PapelViewModel>>(await _papelService.Get(f => f.Id == dividendoViewModel.PapelId)).FirstOrDefault();
+            ViewBag.Papel = dividendoViewModel.Papel.Codigo + " - " + dividendoViewModel.Papel.Nome + " | " + dividendoViewModel.Data.ToString("dd/MM/yyyy");
 
             return View(dividendoViewModel);
         }

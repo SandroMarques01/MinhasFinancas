@@ -6,6 +6,7 @@ using MinhasFinancas.Service.Segmento;
 using MinhasFinancas.Web.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
@@ -30,7 +31,7 @@ namespace MinhasFinancas.Web.Controllers
         // GET: Segmento
         public async Task<ActionResult> Index()
         {
-            return View(_mapper.Map<List<SegmentoViewModel>>(await _segmentoService.Get()));
+            return View(_mapper.Map<List<SegmentoViewModel>>(await _segmentoService.Get()).OrderBy(f => f.Nome));
         }
 
         // GET: Segmento/Details/5
@@ -41,6 +42,7 @@ namespace MinhasFinancas.Web.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.segmento = segmentoViewModel.Nome;
 
             return View(segmentoViewModel);
         }
@@ -76,6 +78,7 @@ namespace MinhasFinancas.Web.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.segmento = segmentoViewModel.Nome;
 
             return View(segmentoViewModel);
         }
@@ -108,6 +111,7 @@ namespace MinhasFinancas.Web.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.segmento = segmentoViewModel.Nome;
 
             return View(segmentoViewModel);
         }
