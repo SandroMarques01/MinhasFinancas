@@ -1,7 +1,7 @@
 ﻿@model MinhasFinancas.Web.ViewModels.SegmentoViewModel
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Detalhes do Segmento";
 }
 
 <h2>Detalhes do Segmento</h2>
@@ -37,6 +37,6 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Editar", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary" }) |
+    @Html.ActionLink("Voltar", "Index", new { area = "" }, new { @class = "btn btn-info" })
 </p>

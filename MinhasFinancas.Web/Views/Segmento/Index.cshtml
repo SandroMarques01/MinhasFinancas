@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<MinhasFinancas.Web.ViewModels.SegmentoViewModel>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Segmentos";
 }
 
 <h2>Segmentos</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Novo Segmento", "Create", new { area = "" }, new { @class = "btn btn-success" })
 </p>
 <table class="table">
     <tr>
@@ -35,9 +35,9 @@
             @Html.DisplayFor(modelItem => item.Ativo)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+            @Html.ActionLink("Editar", "Edit", new { id = item.Id }, new { @class = "btn btn-primary" }) |
+            @Html.ActionLink("Detalhe", "Details", new { id = item.Id }, new { @class = "btn btn-info" }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
         </td>
     </tr>
 }
