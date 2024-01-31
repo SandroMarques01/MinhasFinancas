@@ -27,7 +27,7 @@ namespace MinhasFinancas.Web.ViewModels
         public bool Ativo { get; set; }
 
 
-        //public virtual IEnumerable<PapelViewModel> Papels { get; set; }
+        public virtual IEnumerable<PapelViewModel> Papel { get; set; }
 
 
         /// <summary>

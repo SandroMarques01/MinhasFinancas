@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc.Routing.Constraints;
 
 namespace MinhasFinancas.Web.ViewModels
 {
@@ -40,13 +41,18 @@ namespace MinhasFinancas.Web.ViewModels
         [DisplayName("Ativo")]
         public bool Ativo { get; set; }
 
-        public virtual IEnumerable<TransacaoViewModel> Transacaos { get; set; }
-        public virtual IEnumerable<DividendoViewModel> Dividendos { get; set; }
-        public virtual IEnumerable<SegmentoViewModel> Segmentos { get; set; }
+        public virtual IEnumerable<TransacaoViewModel> Transacao { get; set; }
+        public virtual IEnumerable<DividendoViewModel> Dividendo { get; set; }
+        public virtual IEnumerable<SegmentoViewModel> Segmento { get; set; }
 
         /// <summary>
         /// Propriedades fora da classe
         /// </summary>
-        //public int QuantidadeTotal { get; set; }
+        public int QuantidadeTotal { get; set; }
+        public double TotalSaldo { get; set; }
+        public double TotalSaldoAtual { get; set; }
+        public double PrecoMedio { get; set; }
+        public double DividendosTotal { get; set; }
+        public double PercentDividendos { get; set; }
     }
 }

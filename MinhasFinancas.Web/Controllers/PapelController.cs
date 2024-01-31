@@ -30,8 +30,30 @@ namespace MinhasFinancas.Web.Controllers
         {
             List<PapelViewModel> lst = _mapper.Map<List<PapelViewModel>>(await _papelService.Get(includeProperties: "Transacao,Dividendo"));
 
+            double totalSaldo = 0;
+            double totalSaldoAtual = 0;
+            lst.ForEach(f =>
+            {
+                //Calculo de preços
+                f.QuantidadeTotal = f.Transacao.Sum(x => x.TipoTransacao == Infra.TipoTransacao.Compra ? x.Quantidade : x.Quantidade * -1);
 
+                f.PrecoMedio = f.QuantidadeTotal == 0 ? 0 : f.Transacao.Sum(x => x.Quantidade * x.ValorUnt) / f.QuantidadeTotal;
 
+                f.TotalSaldo = f.QuantidadeTotal * f.PrecoMedio;
+                totalSaldo += f.TotalSaldo;
+
+                f.TotalSaldoAtual = f.CotacaoAtual * f.QuantidadeTotal;
+                totalSaldoAtual += f.TotalSaldoAtual;
+
+                // Dividendos
+
+                f.DividendosTotal = f.Dividendo.Sum(x => x.ValorRecebido);
+                f.PercentDividendos = Math.Round((f.DividendosTotal / f.TotalSaldo) * 100, 2);
+            });
+
+            ViewBag.totalSaldo = totalSaldo;
+            ViewBag.totalSaldoAtual = totalSaldoAtual;
+            ViewBag.deltaPercentTotal = ((totalSaldoAtual / totalSaldo) * 100) - 100;
 
 
 
