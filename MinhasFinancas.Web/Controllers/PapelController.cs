@@ -28,7 +28,14 @@ namespace MinhasFinancas.Web.Controllers
         // GET: Papel
         public async Task<ActionResult> Index()
         {
-            return View(_mapper.Map<List<PapelViewModel>>(await _papelService.Get()).OrderBy(f => f.TipoPapel));
+            List<PapelViewModel> lst = _mapper.Map<List<PapelViewModel>>(await _papelService.Get(includeProperties: "Transacao,Dividendo"));
+
+
+
+
+
+
+            return View(lst);
         }
 
         // GET: Papel/Details/5
