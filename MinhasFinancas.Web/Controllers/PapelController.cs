@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using WebGrease.Css.Extensions;
 
 namespace MinhasFinancas.Web.Controllers
 {
@@ -45,15 +46,25 @@ namespace MinhasFinancas.Web.Controllers
                 f.TotalSaldoAtual = f.CotacaoAtual * f.QuantidadeTotal;
                 totalSaldoAtual += f.TotalSaldoAtual;
 
+                f.Valorizacao = Math.Round(((f.TotalSaldoAtual / f.TotalSaldo) * 100) - 100, 2);
+                f.GanhoUnt = Math.Round(f.CotacaoAtual - f.PrecoMedio, 2);
+                f.GanhoTotal = (f.CotacaoAtual - f.PrecoMedio) * f.QuantidadeTotal;
+
                 // Dividendos
 
                 f.DividendosTotal = f.Dividendo.Sum(x => x.ValorRecebido);
                 f.PercentDividendos = Math.Round((f.DividendosTotal / f.TotalSaldo) * 100, 2);
+
+                // 2 casas decimais
+                f.PrecoMedio = Math.Round(f.PrecoMedio, 2);
+                f.TotalSaldo = Math.Round(f.TotalSaldo, 2);
+                f.TotalSaldoAtual = Math.Round(f.TotalSaldoAtual, 2);
+                f.DividendosTotal = Math.Round(f.DividendosTotal, 2);
             });
 
-            ViewBag.totalSaldo = totalSaldo;
-            ViewBag.totalSaldoAtual = totalSaldoAtual;
-            ViewBag.deltaPercentTotal = ((totalSaldoAtual / totalSaldo) * 100) - 100;
+            ViewBag.totalSaldo = Math.Round(totalSaldo, 2);
+            ViewBag.totalSaldoAtual = Math.Round(totalSaldoAtual, 2);
+            ViewBag.deltaPercentTotal = Math.Round(((totalSaldoAtual / totalSaldo) * 100) - 100, 2);
 
 
 

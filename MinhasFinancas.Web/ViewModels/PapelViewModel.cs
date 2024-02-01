@@ -19,7 +19,7 @@ namespace MinhasFinancas.Web.ViewModels
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [StringLength(100, ErrorMessage = "O campo {0} precisa ter entre {2} e {1} caracteres", MinimumLength = 2)]
-        [DisplayName("Código")]
+        [DisplayName("#")]
         public string Codigo { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
@@ -31,7 +31,7 @@ namespace MinhasFinancas.Web.ViewModels
         public TipoPapel TipoPapel { get; set; }
 
         [Range(0, Double.PositiveInfinity)]
-        [DisplayName("Cotação atual")]
+        [DisplayName("Cot. atual")]
         public double CotacaoAtual { get; set; }
 
         [DisplayName("Descrição")]
@@ -48,11 +48,23 @@ namespace MinhasFinancas.Web.ViewModels
         /// <summary>
         /// Propriedades fora da classe
         /// </summary>
+        [DisplayName("Qtd")]
         public int QuantidadeTotal { get; set; }
+        [DisplayName("Total Inv.")]
         public double TotalSaldo { get; set; }
+        [DisplayName("Total")] 
         public double TotalSaldoAtual { get; set; }
+        [DisplayName("$ Médio")]
         public double PrecoMedio { get; set; }
+        [DisplayName("Div.")]
         public double DividendosTotal { get; set; }
+        [DisplayName("% Div.")]
         public double PercentDividendos { get; set; }
+        [DisplayName("Valorização")]
+        public double Valorizacao { get; set; }
+        [DisplayName("Ganho Unt")]
+        public double GanhoUnt { get; set; }
+        [DisplayName("Ganho T.")]
+        public double GanhoTotal { get; set; }
     }
 }
