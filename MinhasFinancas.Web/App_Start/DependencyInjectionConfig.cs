@@ -10,6 +10,7 @@ using MinhasFinancas.Service.Papel;
 using MinhasFinancas.Service.Segmento;
 using MinhasFinancas.Service.Transacao;
 using MinhasFinancas.Repository.Core;
+using MinhasFinancas.Service.Configuracao;
 
 namespace MinhasFinancas.Web.App_Start
 {
@@ -46,6 +47,7 @@ namespace MinhasFinancas.Web.App_Start
             container.Register<IPapelService, PapelService>(Lifestyle.Scoped);
             container.Register<ISegmentoService, SegmentoService>(Lifestyle.Scoped);
             container.Register<ITransacaoService, TransacaoService>(Lifestyle.Scoped);
+            container.Register<IConfiguracaoService, ConfiguracaoService>(Lifestyle.Scoped);
             container.Register<INotificador, Notificador>(Lifestyle.Scoped);
 
             DependencyInjectionConfigService.InitializeContainer(container);
