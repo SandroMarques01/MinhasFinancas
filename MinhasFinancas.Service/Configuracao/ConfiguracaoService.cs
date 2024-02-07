@@ -57,15 +57,21 @@ namespace MinhasFinancas.Service.Configuracao
                     {
                         string nomeCompletoPapel = planilha.Cell($"D{l}").Value.ToString();
                         string codigoPapel = nomeCompletoPapel.Split('-')[0].Trim();
+                        codigoPapel = codigoPapel.Replace("12", "11").Replace("13","11");
 
                         var papel = lstPapel.Where(x => x.Codigo == codigoPapel).FirstOrDefault();
 
-                        if (papel == null)
+                        var tipoMov = planilha.Cell($"C{l}").Value.ToString();
+
+                        if (papel == null && (tipoMov == "Bonificação em Ativos" || tipoMov == "Solicitação de Subscrição" ||
+                                              tipoMov == "Transferência - Liquidação" || tipoMov == "Juros Sobre Capital Próprio" ||
+                                              tipoMov == "Rendimento" || tipoMov == "Dividendo" || tipoMov == "Leilão de Fração" ||
+                                              tipoMov == "Desdobro"))
                         {
                             papel = new Infra.Models.Papel();
                             papel.Nome = nomeCompletoPapel.Replace(codigoPapel + " - ", "").Trim();
                             papel.Codigo = codigoPapel;
-                            papel.TipoPapel = codigoPapel.Contains("34") ? TipoPapel.BDR : (codigoPapel.Contains("11") || codigoPapel.Contains("13") ? TipoPapel.Fii : TipoPapel.Acao);
+                            papel.TipoPapel = codigoPapel.Contains("34") ? TipoPapel.BDR : (codigoPapel.Contains("11") || codigoPapel.Contains("12") || codigoPapel.Contains("13") ? TipoPapel.Fii : TipoPapel.Acao);
                             papel.CotacaoAtual = 0;
                             papel.Descricao = "";
                             papel.Ativo = true;
@@ -74,7 +80,7 @@ namespace MinhasFinancas.Service.Configuracao
                             lstPapel.Add(papel);
                         }
 
-                        switch (planilha.Cell($"C{l}").Value.ToString())
+                        switch (tipoMov)
                         {
                             case "Bonificação em Ativos":
                             case "Solicitação de Subscrição":
