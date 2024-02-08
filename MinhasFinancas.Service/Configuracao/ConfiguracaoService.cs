@@ -57,7 +57,7 @@ namespace MinhasFinancas.Service.Configuracao
                     {
                         string nomeCompletoPapel = planilha.Cell($"D{l}").Value.ToString();
                         string codigoPapel = nomeCompletoPapel.Split('-')[0].Trim();
-                        codigoPapel = codigoPapel.Replace("12", "11").Replace("13","11");
+                        codigoPapel = codigoPapel.Replace("12", "11").Replace("13", "11");
 
                         var papel = lstPapel.Where(x => x.Codigo == codigoPapel).FirstOrDefault();
 
@@ -96,13 +96,15 @@ namespace MinhasFinancas.Service.Configuracao
                                 transacao.Descricao = "";
                                 transacao.Ativo = true;
 
-                                //if (lstTransacao.Where(x => x.PapelId == transacao.PapelId
-                                //                        && x.Data == transacao.Data
-                                //                        && x.Quantidade == transacao.Quantidade).Count() == 0)
-                                //{
+                                //Verificar se já existe Transação
+                                if (!lstTransacao.Any(x => x.PapelId == transacao.PapelId
+                                                        && x.Data == transacao.Data
+                                                        && ((x.Quantidade == transacao.Quantidade && x.ValorUnt == transacao.ValorUnt) 
+                                                            || (!string.IsNullOrWhiteSpace(x.Descricao) && x.Descricao.StartsWith("D|")))))
+                                {
                                     await _transacaoService.Add(transacao);
                                     lstTransacao.Add(transacao);
-                                //}
+                                }
                                 break;
                             case "Juros Sobre Capital Próprio":
                             case "Rendimento":
@@ -114,39 +116,46 @@ namespace MinhasFinancas.Service.Configuracao
                                 string qtdD = planilha.Cell($"F{l}").Value.ToString() == "" ? "0" : planilha.Cell($"F{l}").Value.ToString();
                                 dividendo.Quantidade = Convert.ToInt32(Math.Round(Convert.ToDouble(qtdD), 0));
                                 dividendo.Data = Convert.ToDateTime(planilha.Cell($"B{l}").Value.ToString());
-                                dividendo.Descricao = planilha.Cell($"C{l}").Value.ToString();
                                 dividendo.Ativo = true;
 
                                 //Verificar se já existe dividendo
-
-                                //if (lstDividendo.Where(x => x.PapelId == dividendo.PapelId
-                                //                        && x.Data == dividendo.Data
-                                //                        && x.Quantidade == dividendo.Quantidade).Count() == 0)
-                                //{
+                                if (!lstDividendo.Exists(x => x.PapelId == dividendo.PapelId
+                                                        && x.Data == dividendo.Data
+                                                        && ((x.Quantidade == dividendo.Quantidade && x.ValorRecebido == dividendo.ValorRecebido)
+                                                            || (!string.IsNullOrWhiteSpace(x.Descricao) && x.Descricao.StartsWith("D|")))))
+                                {
                                     await _dividendoService.Add(dividendo);
                                     lstDividendo.Add(dividendo);
-                                //}
+                                }
                                 break;
                             case "Desdobro":
-                                var lstTransacaoDesdobro = lstTransacao.Where(x => x.PapelId == papel.Id).ToList();
-                                var lstDividendosDesdobro = lstDividendo.Where(x => x.PapelId == papel.Id).ToList();
+                                DateTime dataDesdobro = Convert.ToDateTime(planilha.Cell($"B{l}").Value.ToString());
+
+                                var lstTransacaoDesdobro = lstTransacao.Where(x => x.PapelId == papel.Id && x.Data < dataDesdobro && (string.IsNullOrWhiteSpace(x.Descricao) || !x.Descricao.StartsWith("D|") || x.Descricao.Substring(2, 10) != planilha.Cell($"B{l}").Value.ToString())).ToList();
+                                var lstDividendosDesdobro = lstDividendo.Where(x => x.PapelId == papel.Id && x.Data < dataDesdobro && (string.IsNullOrWhiteSpace(x.Descricao) || !x.Descricao.StartsWith("D|") || x.Descricao.Substring(2, 10) != planilha.Cell($"B{l}").Value.ToString())).ToList();
 
                                 var qntComprada = lstTransacaoDesdobro.Sum(x => x.Quantidade);
                                 var qntDesdobrada = Convert.ToInt32(planilha.Cell($"F{l}").Value.ToString());
-                                int fatorMultiplicador = (qntComprada + qntDesdobrada) / qntComprada;
 
-                                lstTransacaoDesdobro.ForEach(x =>
+                                if (lstTransacaoDesdobro.Any())
                                 {
-                                    x.Quantidade = x.Quantidade * fatorMultiplicador;
-                                    x.ValorUnt = x.ValorUnt / fatorMultiplicador;
-                                    _transacaoService.Update(x);
-                                });
+                                    int fatorMultiplicador = (qntComprada + qntDesdobrada) / qntComprada;
 
-                                lstDividendosDesdobro.ForEach(x =>
-                                {
-                                    x.Quantidade = x.Quantidade * fatorMultiplicador;
-                                    _dividendoService.Update(x);
-                                });
+                                    foreach (var item in lstTransacaoDesdobro)
+                                    {
+                                        item.Quantidade = item.Quantidade * fatorMultiplicador;
+                                        item.ValorUnt = item.ValorUnt / fatorMultiplicador;
+                                        item.Descricao = "D|" + planilha.Cell($"B{l}").Value.ToString() + "|";
+                                        await _transacaoService.Update(item);
+                                    }
+
+                                    foreach (var item in lstDividendosDesdobro)
+                                    {
+                                        item.Quantidade = item.Quantidade * fatorMultiplicador;
+                                        item.Descricao = "D|" + planilha.Cell($"B{l}").Value.ToString() + "|";
+                                        await _dividendoService.Update(item);
+                                    }
+                                }
                                 break;
                         }
 
