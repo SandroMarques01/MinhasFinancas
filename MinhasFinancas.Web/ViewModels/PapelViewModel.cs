@@ -1,4 +1,5 @@
 ﻿using MinhasFinancas.Infra;
+using MinhasFinancas.Web.Extensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -31,6 +32,7 @@ namespace MinhasFinancas.Web.ViewModels
         public TipoPapel TipoPapel { get; set; }
 
         [Range(0, Double.PositiveInfinity)]
+        [Moeda]
         [DisplayName("Cot. atual")]
         public double CotacaoAtual { get; set; }
 
@@ -51,10 +53,12 @@ namespace MinhasFinancas.Web.ViewModels
         [DisplayName("Qtd")]
         public int QuantidadeTotal { get; set; }
         [DisplayName("Total Inv.")]
+        [Moeda]
         public double TotalSaldo { get; set; }
         [DisplayName("Total")] 
         public double TotalSaldoAtual { get; set; }
         [DisplayName("$ Médio")]
+        [Moeda]
         public double PrecoMedio { get; set; }
         [DisplayName("Div.")]
         public double DividendosTotal { get; set; }

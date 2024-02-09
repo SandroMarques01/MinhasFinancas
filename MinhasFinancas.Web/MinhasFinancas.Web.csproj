@@ -218,6 +218,7 @@
   <ItemGroup>
     <Compile Include="App_Start\AutoMapperConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\CultureConfig.cs" />
     <Compile Include="App_Start\DependencyInjectionConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -228,6 +229,7 @@
     <Compile Include="Controllers\PapelController.cs" />
     <Compile Include="Controllers\SegmentoController.cs" />
     <Compile Include="Controllers\TransacaoController.cs" />
+    <Compile Include="Extensions\MoedaAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

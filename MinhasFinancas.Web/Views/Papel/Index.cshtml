@@ -91,9 +91,10 @@
         <td  scope="row">
             @Html.DisplayFor(modelItem => item.TipoPapel)
         </td>
-        <td  scope="row">
-            @Html.DisplayFor(modelItem => item.CotacaoAtual)
-        </td>
+        <td scope="row">
+                @item.CotacaoAtual.ToString("C")
+                @*@Html.DisplayFor(modelItem => item.CotacaoAtual)*@
+            </td>
         <td  scope="row">
             @Html.DisplayFor(modelItem => item.Descricao)
         </td>
@@ -106,8 +107,9 @@
         <td  scope="row">
             @Html.DisplayFor(modelItem => item.QuantidadeTotal)
         </td>
-        <td  scope="row">
-            @Html.DisplayFor(modelItem => item.PrecoMedio)
+        <td scope="row">
+            @item.PrecoMedio.ToString("C")
+            @*@Html.DisplayFor(modelItem => item.PrecoMedio)*@
         </td>
         <td  scope="row">
             @Html.DisplayFor(modelItem => item.TotalSaldo)
