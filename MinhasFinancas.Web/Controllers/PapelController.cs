@@ -27,9 +27,14 @@ namespace MinhasFinancas.Web.Controllers
         }
 
         // GET: Papel
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(int cbbTipoPapel = 0, bool Ativo = true)
         {
             List<PapelViewModel> lst = _mapper.Map<List<PapelViewModel>>(await _papelService.Get(includeProperties: "Transacao,Dividendo"));
+
+            if(cbbTipoPapel == 0)
+                lst = lst.Where(f=> f.Ativo == Ativo).ToList();
+            else
+                lst = lst.Where(f => f.Ativo == Ativo && Convert.ToInt32(f.TipoPapel) == cbbTipoPapel).ToList();
 
             double totalSaldo = 0;
             double totalSaldoAtual = 0;
@@ -66,9 +71,10 @@ namespace MinhasFinancas.Web.Controllers
             ViewBag.totalSaldoAtual = Math.Round(totalSaldoAtual, 2);
             ViewBag.deltaPercentTotal = Math.Round(((totalSaldoAtual / totalSaldo) * 100) - 100, 2);
 
+            if (Ativo)
+                lst = lst.Where(x => x.QuantidadeTotal > 0).ToList();
 
-
-            return View(lst);
+            return View(lst.OrderBy(f => f.TipoPapel).OrderByDescending(f => f.TotalSaldo));
         }
 
         // GET: Papel/Details/5

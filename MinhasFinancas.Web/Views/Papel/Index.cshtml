@@ -3,9 +3,31 @@
 @{
     ViewBag.Title = "Papeis";
 }
+@{
+    var listItems = new[] {
+        new { value = 0, text = "Selecione..." },
+        new { value = Convert.ToInt32(MinhasFinancas.Infra.TipoPapel.Acao), text = MinhasFinancas.Infra.TipoPapel.Acao.ToString() },
+        new { value = Convert.ToInt32(MinhasFinancas.Infra.TipoPapel.Fii), text = MinhasFinancas.Infra.TipoPapel.Fii.ToString() },
+        new { value = Convert.ToInt32(MinhasFinancas.Infra.TipoPapel.BDR), text = MinhasFinancas.Infra.TipoPapel.BDR.ToString() },
+        new { value = Convert.ToInt32(MinhasFinancas.Infra.TipoPapel.ETF), text = MinhasFinancas.Infra.TipoPapel.ETF.ToString() }
+    };
+}
+
 <style>
-    .btn {
+    .btnTbl {
         padding: 0;
+    }
+
+    #tblPapel {
+        font-size: 10pt;
+    }
+
+    .nomeCSS {
+        font-size: 9pt;
+    }
+
+    .form-control {
+        display: inline;
     }
 </style>
 
@@ -14,141 +36,162 @@
 <p>
     @Html.ActionLink("Novo Papel", "Create", new { area = "" }, new { @class = "btn btn-success" })
 </p>
+<div class="row">
+    <div class="col-md-12">
+        @using (Html.BeginForm("Index", "Papel", FormMethod.Post))
+        {
+            <div class="row">
+                <div class="col-md-4">
+                    Tipo papel:
+                    @Html.DropDownList("cbbTipoPapel", new SelectList(listItems, "Value", "Text"), new { @class = "form-control" })
+                </div>
+                <div class="col-md-2">
+                    Ativo:
+                    @Html.CheckBox("Ativo", true)
+                </div>
+                <div class="col-md-4">
+                    Filtro:
+                    <input type="text" id="filtroInput" class="form-control" placeholder="Filtrar tabela">
+                </div>
+                <div class="col-md-2">
+                    <input type="submit" value="Filtrar" class="btn btn-success" />
+                </div>
+            </div>
+            <br />
+        }
+    </div>
+</div>
 <p>
-    @ViewBag.totalSaldo - @ViewBag.totalSaldoAtual - @ViewBag.deltaPercentTotal
+    Saldo total: @ViewBag.totalSaldo - Saldo Atual: @ViewBag.totalSaldoAtual - DY total: @ViewBag.deltaPercentTotal %
 </p>
-<table class="table table-striped">
-    <tr>
-        <th scope="col">
-            @Html.DisplayNameFor(model => model.Codigo)
-        </th>
-        <th scope="col">
-            @Html.DisplayNameFor(model => model.Nome)
-        </th>
-        <th scope="col">
-            @Html.DisplayNameFor(model => model.TipoPapel)
-        </th>
-        <th scope="col">
-            @Html.DisplayNameFor(model => model.CotacaoAtual)
-        </th>
-        <th scope="col">
-            @Html.DisplayNameFor(model => model.Descricao)
-        </th>
-        <th scope="col">
-            @Html.DisplayNameFor(model => model.Ativo)
-        </th>
-        <th scope="col">
-            -
-        </th>
-        <th scope="col">
-            @Html.DisplayNameFor(model => model.QuantidadeTotal)
-        </th>
-        <th scope="col">
-            @Html.DisplayNameFor(model => model.PrecoMedio)
-        </th>
-        <th scope="col">
-            @Html.DisplayNameFor(model => model.TotalSaldo)
-        </th>
-        <th scope="col">
-            %
-        </th>
-        <th scope="col">
-            @Html.DisplayNameFor(model => model.TotalSaldoAtual)
-        </th>
-        <th scope="col">
-            %
-        </th>
-        <th scope="col">
-            @Html.DisplayNameFor(model => model.Valorizacao)%
-        </th>
-        <th scope="col">
-            @Html.DisplayNameFor(model => model.GanhoUnt)
-        </th>
-        <th scope="col">
-            @Html.DisplayNameFor(model => model.GanhoTotal)
-        </th>
-        <th scope="col">
-            @Html.DisplayNameFor(model => model.DividendosTotal)
-        </th>
-        <th scope="col">
-            @Html.DisplayNameFor(model => model.PercentDividendos)
-        </th>
-        <th scope="col">
-            -
-        </th>
-        <th scope="col"></th>
-    </tr>
+<table class="table table-bordered table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col" style="width:5%;">
+                @Html.DisplayNameFor(model => model.Codigo)
+            </th>
+            <th scope="col" style="width:14%;">
+                @Html.DisplayNameFor(model => model.Nome)
+            </th>
+            <th scope="col" style="width:4%;">
+                @Html.DisplayNameFor(model => model.TipoPapel)
+            </th>
+            <th scope="col" style="width:7%;">
+                @Html.DisplayNameFor(model => model.CotacaoAtual)
+            </th>
+            <th scope="col" style="width:5%;">
+                @Html.DisplayNameFor(model => model.QuantidadeTotal)
+            </th>
+            <th scope="col" style="width:7%;">
+                @Html.DisplayNameFor(model => model.PrecoMedio)
+            </th>
+            <th scope="col" style="width:8%;">
+                @Html.DisplayNameFor(model => model.TotalSaldo)
+            </th>
+            <th scope="col" style="width:4%;">
+                %
+            </th>
+            <th scope="col" style="width:8%;">
+                @Html.DisplayNameFor(model => model.TotalSaldoAtual)
+            </th>
+            <th scope="col" style="width:4%;">
+                %
+            </th>
+            <th scope="col" style="width:5%;">
+                @Html.DisplayNameFor(model => model.Valorizacao)%
+            </th>
+            <th scope="col" style="width:5%;">
+                @Html.DisplayNameFor(model => model.GanhoUnt)
+            </th>
+            <th scope="col" style="width:7%;">
+                @Html.DisplayNameFor(model => model.GanhoTotal)
+            </th>
+            <th scope="col" style="width:5%;">
+                @Html.DisplayNameFor(model => model.DividendosTotal)
+            </th>
+            <th scope="col" style="width:5%;">
+                @Html.DisplayNameFor(model => model.PercentDividendos)
+            </th>
+            <th scope="col" style="width:7%;"></th>
+        </tr>
+    </thead>
+    <tbody id="tblPapel">
 
-@foreach (var item in Model)
-{
-    <tr>
-        <td  scope="row">
-            @Html.DisplayFor(modelItem => item.Codigo)
-        </td>
-        <td  scope="row">
-            @Html.DisplayFor(modelItem => item.Nome)
-        </td>
-        <td  scope="row">
-            @Html.DisplayFor(modelItem => item.TipoPapel)
-        </td>
-        <td scope="row">
-                @item.CotacaoAtual.ToString("C")
-                @*@Html.DisplayFor(modelItem => item.CotacaoAtual)*@
-            </td>
-        <td  scope="row">
-            @Html.DisplayFor(modelItem => item.Descricao)
-        </td>
-        <td  scope="row">
-            @Html.DisplayFor(modelItem => item.Ativo)
-        </td>
-        <td  scope="row">
-            -
-        </td>
-        <td  scope="row">
-            @Html.DisplayFor(modelItem => item.QuantidadeTotal)
-        </td>
-        <td scope="row">
-            @item.PrecoMedio.ToString("C")
-            @*@Html.DisplayFor(modelItem => item.PrecoMedio)*@
-        </td>
-        <td  scope="row">
-            @Html.DisplayFor(modelItem => item.TotalSaldo)
-        </td>
-        <td  scope="row">
-            @{ var percentTotal = Math.Round(item.TotalSaldo * 100 / ViewBag.totalSaldo, 2); }
-            @percentTotal
-        </td>
-        <td  scope="row">
-            @Html.DisplayFor(modelItem => item.TotalSaldoAtual)
-        </td>
-        <td  scope="row">
-            @{ var percentTotalAtual = Math.Round(item.TotalSaldoAtual * 100 / ViewBag.totalSaldoAtual, 2); }
-            @percentTotalAtual
-        </td>
-        <td  scope="row">
-            @Html.DisplayFor(modelItem => item.Valorizacao)%
-        </td>
-        <td  scope="row">
-            @Html.DisplayFor(modelItem => item.GanhoUnt)
-        </td>
-        <td  scope="row">
-            @Html.DisplayFor(modelItem => item.GanhoTotal)
-        </td>
-        <td  scope="row">
-            @Html.DisplayFor(modelItem => item.DividendosTotal)
-        </td>
-        <td  scope="row">
-            @Html.DisplayFor(modelItem => item.PercentDividendos)
-        </td>
-        <td  scope="row">
-            -
-        </td>
-        <td  scope="row">
-            @Html.ActionLink("Editar", "Edit", new { id = item.Id }, new { @class = "btn btn-primary" }) |
-            @Html.ActionLink("Detalhe", "Details", new { id = item.Id }, new { @class = "btn btn-info" }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
-        </td>
-    </tr>
-}
+        @foreach (var item in Model.OrderByDescending(f => f.TotalSaldo).OrderBy(f => f.TipoPapel))
+        {
+            <tr>
+                <td scope="row">
+                    @Html.DisplayFor(modelItem => item.Codigo)
+                </td>
+                <td scope="row" class="nomeCSS">
+                    @Html.DisplayFor(modelItem => item.Nome)
+                </td>
+                <td scope="row">
+                    @Html.DisplayFor(modelItem => item.TipoPapel)
+                </td>
+                <td scope="row">
+                    @item.CotacaoAtual.ToString("C")
+                    @*@Html.DisplayFor(modelItem => item.CotacaoAtual)*@
+                </td>
+                <td scope="row">
+                    @Html.DisplayFor(modelItem => item.QuantidadeTotal)
+                </td>
+                <td scope="row">
+                    @item.PrecoMedio.ToString("C")
+                    @*@Html.DisplayFor(modelItem => item.PrecoMedio)*@
+                </td>
+                <td scope="row">
+                    @item.TotalSaldo.ToString("C")
+                    @*@Html.DisplayFor(modelItem => item.TotalSaldo)*@
+                </td>
+                <td scope="row">
+                    @{ var percentTotal = Math.Round(item.TotalSaldo * 100 / ViewBag.totalSaldo, 2); }
+                    @percentTotal
+                </td>
+                <td scope="row">
+                    @item.TotalSaldoAtual.ToString("C")
+                    @*@Html.DisplayFor(modelItem => item.TotalSaldoAtual)*@
+                </td>
+                <td scope="row">
+                    @{ var percentTotalAtual = Math.Round(item.TotalSaldoAtual * 100 / ViewBag.totalSaldoAtual, 2); }
+                    @percentTotalAtual
+                </td>
+                <td scope="row">
+                    @Html.DisplayFor(modelItem => item.Valorizacao)%
+                </td>
+                <td scope="row">
+                    @Html.DisplayFor(modelItem => item.GanhoUnt)
+                </td>
+                <td scope="row">
+                    @Html.DisplayFor(modelItem => item.GanhoTotal)
+                </td>
+                <td scope="row">
+                    @Html.DisplayFor(modelItem => item.DividendosTotal)
+                </td>
+                <td scope="row">
+                    @Html.DisplayFor(modelItem => item.PercentDividendos)
+                </td>
+                <td scope="row">
+                    @Html.ActionLink("E", "Edit", new { id = item.Id }, new { @class = "btn btn-primary btnTbl" }) |
+                    @Html.ActionLink("Inf", "Details", new { id = item.Id }, new { @class = "btn btn-info btnTbl" }) |
+                    @Html.ActionLink("D", "Delete", new { id = item.Id }, new { @class = "btn btn-danger btnTbl" })
+                </td>
+            </tr>
+        }
+    </tbody>
 
 </table>
+
+@*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>*@
+
+<script>
+    $(document).ready(function () {
+        $("#filtroInput").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#tblPapel tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+
+</script>

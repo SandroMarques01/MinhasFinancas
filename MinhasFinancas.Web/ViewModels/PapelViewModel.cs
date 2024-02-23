@@ -52,7 +52,7 @@ namespace MinhasFinancas.Web.ViewModels
         /// </summary>
         [DisplayName("Qtd")]
         public int QuantidadeTotal { get; set; }
-        [DisplayName("Total Inv.")]
+        [DisplayName("Total")]
         [Moeda]
         public double TotalSaldo { get; set; }
         [DisplayName("Total")] 
@@ -64,7 +64,7 @@ namespace MinhasFinancas.Web.ViewModels
         public double DividendosTotal { get; set; }
         [DisplayName("% Div.")]
         public double PercentDividendos { get; set; }
-        [DisplayName("Valorização")]
+        [DisplayName("Val.")]
         public double Valorizacao { get; set; }
         [DisplayName("Ganho Unt")]
         public double GanhoUnt { get; set; }
