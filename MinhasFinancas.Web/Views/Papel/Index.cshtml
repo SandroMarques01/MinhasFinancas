@@ -18,7 +18,7 @@
         padding: 0;
     }
 
-    #tblPapel {
+    #tbodyPapel {
         font-size: 10pt;
     }
 
@@ -115,7 +115,7 @@
             <th scope="col" style="width:7%;"></th>
         </tr>
     </thead>
-    <tbody id="tblPapel">
+    <tbody id="tbodyPapel">
 
         @foreach (var item in Model.OrderByDescending(f => f.TotalSaldo).OrderBy(f => f.TipoPapel))
         {
@@ -182,13 +182,13 @@
 
 </table>
 
-@*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>*@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 <script>
     $(document).ready(function () {
         $("#filtroInput").on("keyup", function () {
             var value = $(this).val().toLowerCase();
-            $("#tblPapel tr").filter(function () {
+            $("#tbodyPapel tr").filter(function () {
                 $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
             });
         });

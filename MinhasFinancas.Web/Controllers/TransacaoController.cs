@@ -18,8 +18,8 @@ namespace MinhasFinancas.Web.Controllers
         IPapelService _papelService;
         IMapper _mapper;
 
-        public TransacaoController(ITransacaoService transacaoService, 
-                                    IPapelService papelService, 
+        public TransacaoController(ITransacaoService transacaoService,
+                                    IPapelService papelService,
                                     IMapper mapper,
                                     INotificador notificador) : base(notificador)
         {
@@ -29,9 +29,18 @@ namespace MinhasFinancas.Web.Controllers
         }
 
         // GET: Transacao
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(int cbbTipoTrasacao = 0, int cbbTipoPapel = 0, string dtInicio = null, string dtFim = null)
         {
-            return View(_mapper.Map<List<TransacaoViewModel>>(await _transacaoService.Get(includeProperties: "Papel")).OrderByDescending(f => f.Data));
+            List<TransacaoViewModel> lst = _mapper.Map<List<TransacaoViewModel>>(await _transacaoService.Get(includeProperties: "Papel"));
+
+            if (cbbTipoTrasacao != 0)
+                lst = lst.Where(f => Convert.ToInt32(f.TipoTransacao) == cbbTipoTrasacao).ToList();
+            if (cbbTipoPapel != 0)
+                lst = lst.Where(f => Convert.ToInt32(f.Papel.TipoPapel) == cbbTipoPapel).ToList();
+            if(!string.IsNullOrEmpty(dtInicio) && !string.IsNullOrEmpty(dtFim))
+                lst = lst.Where(f=> f.Data >= Convert.ToDateTime(dtInicio) && f.Data <= Convert.ToDateTime(dtFim)).ToList();
+
+            return View(lst.OrderBy(f=>f.Data).OrderBy(f => f.TipoTransacao));
         }
 
         // GET: Transacao/Details/5
