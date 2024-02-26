@@ -25,7 +25,7 @@ namespace MinhasFinancas.Web.ViewModels
         public double ValorRecebido { get; set; }
 
         [Range(0, Double.PositiveInfinity)]
-        [DisplayName("Quantidade")]
+        [DisplayName("Qtd")]
         public int Quantidade { get; set; }
         
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
@@ -46,7 +46,10 @@ namespace MinhasFinancas.Web.ViewModels
         /// Propriedades fora da classe
         /// </summary>
         public virtual IEnumerable<PapelViewModel> Papels { get; set; }
-        public string CodigoPapel { get; set; }
+        [DisplayName("DY%")]
+        public double YieldOnCost { get; set; }
+        [DisplayName("$ Médio")]
+        public double PrecoMedio { get; set; }
 
 
     }

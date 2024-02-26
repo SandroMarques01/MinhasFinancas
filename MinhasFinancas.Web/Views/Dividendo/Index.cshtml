@@ -3,61 +3,193 @@
 @{
     ViewBag.Title = "Dividendos";
 }
+@{
+    var listItemsPapel = new[] {
+        new { value = 0, text = "Selecione..." },
+        new { value = Convert.ToInt32(MinhasFinancas.Infra.TipoPapel.Acao), text = MinhasFinancas.Infra.TipoPapel.Acao.ToString() },
+        new { value = Convert.ToInt32(MinhasFinancas.Infra.TipoPapel.Fii), text = MinhasFinancas.Infra.TipoPapel.Fii.ToString() },
+        new { value = Convert.ToInt32(MinhasFinancas.Infra.TipoPapel.BDR), text = MinhasFinancas.Infra.TipoPapel.BDR.ToString() },
+        new { value = Convert.ToInt32(MinhasFinancas.Infra.TipoPapel.ETF), text = MinhasFinancas.Infra.TipoPapel.ETF.ToString() }
+    };
+}
+
+<style>
+    .btnTbl {
+        padding: 0;
+    }
+
+    #tbodyDividendo {
+        font-size: 10pt;
+    }
+
+    .nomeCSS {
+        font-size: 9pt;
+    }
+
+    .form-control {
+        display: inline;
+    }
+</style>
 
 <h2>Dividendos</h2>
 
 <p>
     @Html.ActionLink("Novo Dividendo", "Create", new { area = "" }, new { @class = "btn btn-success" })
 </p>
+
+<div class="row">
+    <div class="col-md-12">
+        <input type="hidden" id="hdDtI" value="0" />
+        <input type="hidden" id="hdDtF" value="0" />
+        @using (Html.BeginForm("Index", "Dividendo", FormMethod.Post))
+        {
+            <div class="row">
+                <div class="col-md-6">
+                    Tipo papel:
+                    @Html.DropDownList("cbbTipoPapel", new SelectList(listItemsPapel, "Value", "Text"), new { @class = "form-control" })
+                </div>
+                <div class="col-md-6">
+                    Filtro:
+                    <input type="text" id="filtroInput" class="form-control" placeholder="Filtrar tabela">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    Início:
+                    <input type="date" id="dtInicio" name="dtInicio" min="2018-06-07" class="form-control" />
+                    <div class="btn btn-outline-info" title="Colocar início do mês" onclick="ColocarInicioMes()"><</div>
+                </div>
+                <div class="col-md-4">
+                    Fim:
+                    <input type="date" id="dtFim" name="dtFim" class="form-control" />
+                    <div class="btn btn-outline-info" title="Colocar início do mês" onclick="ColocarFinalMes()">></div>
+                </div>
+                <div class="col-md-1">
+                    <input type="submit" value="Filtrar" class="btn btn-success" />
+                </div>
+            </div>
+            <br />
+        }
+    </div>
+</div>
+
+<p>
+    Recebidos total: <span id="lblRecebidos"></span>
+</p>
+
 <table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.PapelId)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ValorRecebido)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Quantidade)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Data)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Descricao)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Ativo)
-        </th>
-        <th></th>
-    </tr>
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.PapelId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ValorRecebido)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Quantidade)
+            </th>
+            <th>
+                Valor Unt.
+            </th>
+            <th>
+                $ Médio
+            </th>
+            <th style="width:6%;">
+                DY%
+            </th>
+            <th style="width:8;">
+                @Html.DisplayNameFor(model => model.Data)
+            </th>
+            <th style="width:8;">
+                @Html.DisplayNameFor(model => model.Descricao)
+            </th>
+            <th style="width:7%;"></th>
+        </tr>
+    </thead>
+    <tbody id="tbodyDividendo">
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Papel.Codigo) - @Html.DisplayFor(modelItem => item.Papel.Nome)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ValorRecebido)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Quantidade)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Data)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Descricao)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Ativo)
-        </td>
-        <td>
-            @Html.ActionLink("Editar", "Edit", new { id = item.Id }, new { @class = "btn btn-primary" }) |
-            @Html.ActionLink("Detalhe", "Details", new { id = item.Id }, new { @class = "btn btn-info" }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
-        </td>
-    </tr>
-}
-
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="nomeCSS">
+                    @Html.DisplayFor(modelItem => item.Papel.Codigo) - @Html.DisplayFor(modelItem => item.Papel.Nome)
+                </td>
+                <td>
+                    @item.ValorRecebido.ToString("C")
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantidade)
+                </td>
+                <td>
+                    @{var unt = item.ValorRecebido / item.Quantidade;}
+                    @unt.ToString("C")
+                </td>
+                <td>
+                    @item.PrecoMedio.ToString("C")
+                </td>
+                <td>
+                    @Math.Round(item.YieldOnCost, 3) %
+                </td>
+                <td>
+                    @item.Data.ToString("dd/MM/yyyy")
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Descricao)
+                </td>
+                <td>
+                    @Html.ActionLink("E", "Edit", new { id = item.Id }, new { @class = "btn btn-primary btnTbl" }) |
+                    @Html.ActionLink("Inf", "Details", new { id = item.Id }, new { @class = "btn btn-info btnTbl" }) |
+                    @Html.ActionLink("D", "Delete", new { id = item.Id }, new { @class = "btn btn-danger btnTbl" })
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $("#filtroInput").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#tbodyDividendo tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+
+
+        $("#dtInicio").val("2020-01-01");
+
+        var dt = new Date();
+        dt = new Date(dt.getFullYear(), dt.getMonth() + 1, 1);
+        dt = new Date(dt - 1)
+        $("#dtFim").val(dt.getFullYear() + "-" + String(dt.getMonth() + 1).padStart(2, '0') + "-" + String(dt.getDate()).padStart(2, '0'));
+    });
+
+    function ColocarInicioMes() {
+        if ($("#hdDtI").val() == 0) {
+            $("#hdDtI").val("1");
+            var dt = new Date();
+            $("#dtInicio").val(dt.getFullYear() + "-" + String(dt.getMonth() + 1).padStart(2, '0') + "-" + String("01"));
+        }
+        else {
+            $("#hdDtI").val("0");
+            $("#dtInicio").val("2020-01-01");
+        }
+    }
+    function ColocarFinalMes() {
+        var dt = new Date();
+        if ($("#hdDtF").val() == 1) {
+            $("#hdDtF").val("0");
+            dt = new Date(dt.getFullYear(), dt.getMonth() + 1, 1);
+            dt = new Date(dt - 1)
+            $("#dtFim").val(dt.getFullYear() + "-" + String(dt.getMonth() + 1).padStart(2, '0') + "-" + String(dt.getDate()).padStart(2, '0'));
+        }
+        else {
+            $("#hdDtF").val("1");
+            $("#dtFim").val(dt.getFullYear() + "-" + 12 + "-" + 31);
+        }
+    }
+
+</script>

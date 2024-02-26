@@ -3,6 +3,7 @@ using MinhasFinancas.Infra.Models;
 using MinhasFinancas.Service.Core;
 using MinhasFinancas.Service.Dividendo;
 using MinhasFinancas.Service.Papel;
+using MinhasFinancas.Service.Transacao;
 using MinhasFinancas.Web.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -16,23 +17,51 @@ namespace MinhasFinancas.Web.Controllers
     {
         IDividendoService _dividendoService;
         IPapelService _papelService;
+        ITransacaoService _transacaoService;
         IMapper _mapper;
 
         public DividendoController(IDividendoService dividendoService,
                                     IPapelService papelService,
+                                    ITransacaoService transacaoService,
                                     IMapper mapper,
                                     INotificador notificador) : base(notificador)
         {
             _dividendoService = dividendoService;
             _papelService = papelService;
+            _transacaoService = transacaoService;
             _mapper = mapper;
         }
 
         // GET: Dividendo
-        [HttpGet]
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(int cbbTipoPapel = 0, string dtInicio = null, string dtFim = null)
         {
-            return View(_mapper.Map<List<DividendoViewModel>>(await _dividendoService.Get(includeProperties: "Papel")).OrderByDescending(f => f.Data));
+            List<DividendoViewModel> lst = _mapper.Map<List<DividendoViewModel>>(await _dividendoService.Get(includeProperties: "Papel")).ToList();
+
+            if (cbbTipoPapel != 0)
+                lst = lst.Where(f => Convert.ToInt32(f.Papel.TipoPapel) == cbbTipoPapel).ToList();
+            if (!string.IsNullOrEmpty(dtInicio) && !string.IsNullOrEmpty(dtFim))
+                lst = lst.Where(f => f.Data >= Convert.ToDateTime(dtInicio) && f.Data <= Convert.ToDateTime(dtFim)).ToList();
+
+            List<TransacaoViewModel> lstTransacao = _mapper.Map<List<TransacaoViewModel>>(await _transacaoService.Get());
+
+            lst.OrderBy(s => s.Data).ToList().ForEach(f => {
+
+                var lstT2 = new List<TransacaoViewModel>();
+
+                foreach (var t in lstTransacao.Where(a => a.PapelId == f.PapelId).OrderBy(s => s.Data).ToList())
+                {
+                    if (lstT2.Sum(y => y.Quantidade) < f.Quantidade)
+                        lstT2.Add(t);
+                    else
+                        break;
+                }
+
+                f.PrecoMedio = lstT2.Sum(y => y.Quantidade * y.ValorUnt) / f.Quantidade;
+                
+                f.YieldOnCost = f.ValorRecebido / (f.PrecoMedio * f.Quantidade) * 100;
+            });
+
+            return View(lst.OrderBy(f => f.Data));
         }
 
         // GET: Dividendo/Details/5
