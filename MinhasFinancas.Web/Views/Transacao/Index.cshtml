@@ -34,6 +34,12 @@
     .form-control {
         display: inline;
     }
+    .success {
+        background-color: lightblue !important;
+    }
+    .danger {
+        background-color: pink !important;
+    }
 </style>
 
 <h2>Transações</h2>
@@ -102,6 +108,12 @@
                 Total
             </th>
             <th>
+                $ Atual
+            </th>
+            <th>
+                $ ganho
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Data)
             </th>
             <th>
@@ -130,6 +142,14 @@
                 <td>
                     @{var total = item.Quantidade * item.ValorUnt;}
                     @total.ToString("C")
+                </td>
+                <td>
+                    @item.Papel.CotacaoAtual.ToString("C")
+                </td>
+                @{ string statusVarPapel = item.Papel.CotacaoAtual >= item.ValorUnt ? "success" : "danger"; }
+                <td class="@statusVarPapel">
+                    @{var difGanho = item.Papel.CotacaoAtual - item.ValorUnt;}
+                    @difGanho.ToString("C")
                 </td>
                 <td>
                     @item.Data.ToString("dd/MM/yyyy")

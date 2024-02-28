@@ -99,7 +99,7 @@ namespace MinhasFinancas.Service.Configuracao
                                 //Verificar se já existe Transação
                                 if (!lstTransacao.Any(x => x.PapelId == transacao.PapelId
                                                         && x.Data == transacao.Data
-                                                        && ((x.Quantidade == transacao.Quantidade && x.ValorUnt == transacao.ValorUnt) 
+                                                        && ((x.Quantidade == transacao.Quantidade && x.ValorUnt == transacao.ValorUnt)
                                                             || (!string.IsNullOrWhiteSpace(x.Descricao) && x.Descricao.StartsWith("D|")))))
                                 {
                                     await _transacaoService.Add(transacao);
@@ -160,6 +160,33 @@ namespace MinhasFinancas.Service.Configuracao
                         }
 
                         //await _papelService.Add(lstPapel.Where(a => a.Id == papel.Id).FirstOrDefault());
+                    }
+                }
+            }
+        }
+
+        public async Task ImportarExcelCotacaoAtual(HttpPostedFileBase fileB3)
+        {
+            using (var stream = fileB3.InputStream)
+            {
+                using (var workbook = new XLWorkbook(stream))
+                {
+                    var planilha = workbook.Worksheets.First();
+                    var totalLinhas = planilha.Rows().Count();
+
+                    for (int l = 1; l <= totalLinhas; l++)
+                    {
+                        string codPapel = planilha.Cell($"A{l}").Value.ToString();
+
+                        IEnumerable<Infra.Models.Papel> Ipapel = await _papelService.Get(f => f.Codigo == codPapel);
+                        Infra.Models.Papel papel = Ipapel.FirstOrDefault();
+
+                        if (papel != null)
+                        {
+                            papel.CotacaoAtual = Convert.ToDouble(planilha.Cell($"B{l}").Value.ToString().Replace("R$", "").Trim());
+
+                            await _papelService.Update(papel);
+                        }
                     }
                 }
             }

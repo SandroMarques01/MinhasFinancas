@@ -43,7 +43,28 @@ namespace MinhasFinancas.Web.Controllers
 
             await _configuracaoService.ImportarExcelB3(fileB3);
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index","Papel");
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> ImportarCotacaoAtual(HttpPostedFileBase fileCotacaoAtual)
+        {
+            //Verifica se o arquivo é nulo
+            if (fileCotacaoAtual == null || fileCotacaoAtual.ContentLength == 0)
+            {
+                throw new ArgumentException("O arquivo é nulo ou vazio.");
+            }
+
+            // Verifica se o arquivo é do tipo Excel
+            if (!fileCotacaoAtual.ContentType.Equals("application/vnd.ms-excel") &&
+                !fileCotacaoAtual.ContentType.Equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+            {
+                throw new ArgumentException("O arquivo não é do tipo Excel.");
+            }
+
+            await _configuracaoService.ImportarExcelCotacaoAtual(fileCotacaoAtual);
+
+            return RedirectToAction("Index", "Papel");
         }
     }
 }

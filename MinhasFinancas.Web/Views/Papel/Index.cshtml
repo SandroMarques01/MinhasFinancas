@@ -20,6 +20,7 @@
 
     #tbodyPapel {
         font-size: 10pt;
+        padding-bottom: 0;
     }
 
     .nomeCSS {
@@ -28,6 +29,12 @@
 
     .form-control {
         display: inline;
+    }
+    .success{
+        background-color: lightblue !important;
+    }
+    .danger {
+        background-color: pink !important;
     }
 </style>
 
@@ -62,7 +69,15 @@
     </div>
 </div>
 <p>
-    Saldo total: @ViewBag.totalSaldo - Saldo Atual: @ViewBag.totalSaldoAtual - DY total: @ViewBag.deltaPercentTotal %
+    @{ var st = ViewBag.totalSaldo;
+        var sta = ViewBag.totalSaldoAtual;
+        double variacao = Math.Round(((sta - st) / st) * 100, 2);
+        string statusVariacao = variacao >= 0 ? "success" : "danger";
+    }
+    Saldo total: @ViewBag.totalSaldo.ToString("C") - 
+    Saldo Atual: @ViewBag.totalSaldoAtual.ToString("C") - 
+    Val.%: <span class="@statusVariacao">@variacao%</span> - 
+    DY total: @ViewBag.deltaPercentTotal %
 </p>
 <table class="table table-bordered table-striped">
     <thead class="thead-dark">
@@ -73,12 +88,6 @@
             <th scope="col" style="width:14%;">
                 @Html.DisplayNameFor(model => model.Nome)
             </th>
-            <th scope="col" style="width:4%;">
-                @Html.DisplayNameFor(model => model.TipoPapel)
-            </th>
-            <th scope="col" style="width:7%;">
-                @Html.DisplayNameFor(model => model.CotacaoAtual)
-            </th>
             <th scope="col" style="width:5%;">
                 @Html.DisplayNameFor(model => model.QuantidadeTotal)
             </th>
@@ -88,19 +97,22 @@
             <th scope="col" style="width:8%;">
                 @Html.DisplayNameFor(model => model.TotalSaldo)
             </th>
-            <th scope="col" style="width:4%;">
+            <th scope="col" style="width:5%;">
                 %
+            </th>
+            <th scope="col" style="width:7%;">
+                @Html.DisplayNameFor(model => model.CotacaoAtual)
             </th>
             <th scope="col" style="width:8%;">
                 @Html.DisplayNameFor(model => model.TotalSaldoAtual)
             </th>
-            <th scope="col" style="width:4%;">
+            <th scope="col" style="width:5%;">
                 %
             </th>
             <th scope="col" style="width:5%;">
                 @Html.DisplayNameFor(model => model.Valorizacao)%
             </th>
-            <th scope="col" style="width:5%;">
+            <th scope="col" style="width:7%;">
                 @Html.DisplayNameFor(model => model.GanhoUnt)
             </th>
             <th scope="col" style="width:7%;">
@@ -127,13 +139,6 @@
                     @Html.DisplayFor(modelItem => item.Nome)
                 </td>
                 <td scope="row">
-                    @Html.DisplayFor(modelItem => item.TipoPapel)
-                </td>
-                <td scope="row">
-                    @item.CotacaoAtual.ToString("C")
-                    @*@Html.DisplayFor(modelItem => item.CotacaoAtual)*@
-                </td>
-                <td scope="row">
                     @Html.DisplayFor(modelItem => item.QuantidadeTotal)
                 </td>
                 <td scope="row">
@@ -146,7 +151,11 @@
                 </td>
                 <td scope="row">
                     @{ var percentTotal = Math.Round(item.TotalSaldo * 100 / ViewBag.totalSaldo, 2); }
-                    @percentTotal
+                    @percentTotal%
+                </td>
+                <td scope="row">
+                    @item.CotacaoAtual.ToString("C")
+                    @*@Html.DisplayFor(modelItem => item.CotacaoAtual)*@
                 </td>
                 <td scope="row">
                     @item.TotalSaldoAtual.ToString("C")
@@ -154,16 +163,17 @@
                 </td>
                 <td scope="row">
                     @{ var percentTotalAtual = Math.Round(item.TotalSaldoAtual * 100 / ViewBag.totalSaldoAtual, 2); }
-                    @percentTotalAtual
+                    @percentTotalAtual%
+                </td>
+                @{ string statusVarPapel = item.Valorizacao >= variacao ? "success" : "danger"; }
+                <td scope="row" class="@statusVarPapel">
+                    <span >@item.Valorizacao%</span>
                 </td>
                 <td scope="row">
-                    @Html.DisplayFor(modelItem => item.Valorizacao)%
+                    @item.GanhoUnt.ToString("C")
                 </td>
                 <td scope="row">
-                    @Html.DisplayFor(modelItem => item.GanhoUnt)
-                </td>
-                <td scope="row">
-                    @Html.DisplayFor(modelItem => item.GanhoTotal)
+                    @item.GanhoTotal.ToString("C")
                 </td>
                 <td scope="row">
                     @Html.DisplayFor(modelItem => item.DividendosTotal)
