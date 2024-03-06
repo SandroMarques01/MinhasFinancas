@@ -42,6 +42,8 @@ namespace MinhasFinancas.Web.Controllers
             if (!string.IsNullOrEmpty(dtInicio) && !string.IsNullOrEmpty(dtFim))
                 lst = lst.Where(f => f.Data >= Convert.ToDateTime(dtInicio) && f.Data <= Convert.ToDateTime(dtFim)).ToList();
 
+            ViewBag.dividendoTotal = lst.Sum(f => f.ValorRecebido);
+
             List<TransacaoViewModel> lstTransacao = _mapper.Map<List<TransacaoViewModel>>(await _transacaoService.Get());
 
             lst.OrderBy(s => s.Data).ToList().ForEach(f => {

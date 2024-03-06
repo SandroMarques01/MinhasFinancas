@@ -26,17 +26,19 @@ namespace MinhasFinancas.Web.Controllers
         }
 
         // GET: Papel
-        public async Task<ActionResult> Index(int cbbTipoPapel = 0, bool Ativo = true)
+        public async Task<ActionResult> Index(int cbbTipoPapel = 0, bool Ativo = true, string dtFim = null)
         {
             List<PapelViewModel> lst = _mapper.Map<List<PapelViewModel>>(await _papelService.Get(includeProperties: "Transacao,Dividendo"));
 
-            if(cbbTipoPapel == 0)
-                lst = lst.Where(f=> f.Ativo == Ativo).ToList();
-            else
-                lst = lst.Where(f => f.Ativo == Ativo && Convert.ToInt32(f.TipoPapel) == cbbTipoPapel).ToList();
+            //if (!string.IsNullOrEmpty(dtFim))
+            //    lst = lst.Where(f => f.Transacao.ToList().Data <= Convert.ToDateTime(dtFim)).ToList();
+
+            if (cbbTipoPapel != 0)
+                lst = lst.Where(f => Convert.ToInt32(f.TipoPapel) == cbbTipoPapel).ToList();
 
             double totalSaldo = 0;
             double totalSaldoAtual = 0;
+            double totalDividendos = 0;
             lst.ForEach(f =>
             {
                 //Calculo de preços
@@ -44,7 +46,7 @@ namespace MinhasFinancas.Web.Controllers
 
                 f.PrecoMedio = f.QuantidadeTotal == 0 ? 0 : f.Transacao.Sum(x => x.Quantidade * x.ValorUnt) / f.QuantidadeTotal;
 
-                f.TotalSaldo = f.QuantidadeTotal * f.PrecoMedio;
+                f.TotalSaldo = f.QuantidadeTotal == 0 ? 0 : f.Transacao.Sum(x => x.Quantidade * x.ValorUnt);
                 totalSaldo += f.TotalSaldo;
 
                 f.TotalSaldoAtual = f.CotacaoAtual * f.QuantidadeTotal;
@@ -58,6 +60,7 @@ namespace MinhasFinancas.Web.Controllers
 
                 f.DividendosTotal = f.Dividendo.Sum(x => x.ValorRecebido);
                 f.PercentDividendos = Math.Round((f.DividendosTotal / f.TotalSaldo) * 100, 2);
+                totalDividendos += f.DividendosTotal;
 
                 // 2 casas decimais
                 f.PrecoMedio = Math.Round(f.PrecoMedio, 2);
@@ -68,10 +71,13 @@ namespace MinhasFinancas.Web.Controllers
 
             ViewBag.totalSaldo = Math.Round(totalSaldo, 2);
             ViewBag.totalSaldoAtual = Math.Round(totalSaldoAtual, 2);
-            ViewBag.deltaPercentTotal = Math.Round(((totalSaldoAtual / totalSaldo) * 100) - 100, 2);
+            ViewBag.DYtotal = Math.Round(((totalDividendos / totalSaldo) * 100), 2);
 
             if (Ativo)
                 lst = lst.Where(x => x.QuantidadeTotal > 0).ToList();
+            else
+                lst = lst.Where(x => x.QuantidadeTotal == 0).ToList();
+
 
             return View(lst.OrderBy(f => f.TipoPapel).OrderByDescending(f => f.TotalSaldo));
         }
@@ -182,5 +188,28 @@ namespace MinhasFinancas.Web.Controllers
             }
             base.Dispose(disposing);
         }
+
+        // GET: Papel/TrocaPapel/5
+        public async Task<ActionResult> TrocaPapel()
+        {
+            List<PapelViewModel> lst = _mapper.Map<List<PapelViewModel>>(await _papelService.Get());
+
+            TrocaPapelViewModel trocaPapelViewModel = new TrocaPapelViewModel();
+            trocaPapelViewModel.PapelsOrigem = lst;
+            trocaPapelViewModel.PapelsDestino = lst;
+
+            return View(trocaPapelViewModel);
+        }
+
+        [HttpPost]
+
+        public async Task<ActionResult> TrocaPapel(TrocaPapelViewModel trocaPapelViewModel)
+        {
+            await _papelService.TrocaPapel(trocaPapelViewModel.PapelIdOrigem, trocaPapelViewModel.PapelIdDestino);
+
+            return View(Index());
+        }
+        
+
     }
 }

@@ -33,12 +33,18 @@ namespace MinhasFinancas.Web.Controllers
         {
             List<TransacaoViewModel> lst = _mapper.Map<List<TransacaoViewModel>>(await _transacaoService.Get(includeProperties: "Papel"));
 
-            if (cbbTipoTrasacao != 0)
-                lst = lst.Where(f => Convert.ToInt32(f.TipoTransacao) == cbbTipoTrasacao).ToList();
             if (cbbTipoPapel != 0)
                 lst = lst.Where(f => Convert.ToInt32(f.Papel.TipoPapel) == cbbTipoPapel).ToList();
             if(!string.IsNullOrEmpty(dtInicio) && !string.IsNullOrEmpty(dtFim))
                 lst = lst.Where(f=> f.Data >= Convert.ToDateTime(dtInicio) && f.Data <= Convert.ToDateTime(dtFim)).ToList();
+
+            if (cbbTipoTrasacao != 0)
+            {
+                lst = lst.Where(f => Convert.ToInt32(f.TipoTransacao) == cbbTipoTrasacao).ToList();
+                ViewBag.CompraTotal = lst.Sum(f => f.Quantidade * f.ValorUnt);
+            }
+            else
+                ViewBag.CompraTotal = lst.Where(f => Convert.ToInt32(f.TipoTransacao) == 1).Sum(f => f.Quantidade * f.ValorUnt);
 
             return View(lst.OrderBy(f=>f.Data).OrderBy(f => f.TipoTransacao));
         }

@@ -29,6 +29,12 @@
     .form-control {
         display: inline;
     }
+    .PagHoje {
+        background-color: lightgreen !important;
+    }
+    .pagSemana {
+        background-color: #90ee907d !important;
+    }
 </style>
 
 <h2>Dividendos</h2>
@@ -74,7 +80,7 @@
 </div>
 
 <p>
-    Recebidos total: <span id="lblRecebidos"></span>
+    Recebidos total: <span id="lblRecebidos">@ViewBag.dividendoTotal.ToString("C")</span>
 </p>
 
 <table class="table">
@@ -131,7 +137,8 @@
                 <td>
                     @Math.Round(item.YieldOnCost, 3) %
                 </td>
-                <td>
+                @{ string statusPagamentoHoje = item.Data.ToString("dd/MM/yyyy") == DateTime.Now.ToString("dd/MM/yyyy") ? "PagHoje" : (item.Data > DateTime.Now && item.Data < DateTime.Now.AddDays(6) ? "pagSemana" : ""); }
+                <td class="@statusPagamentoHoje">
                     @item.Data.ToString("dd/MM/yyyy")
                 </td>
                 <td>

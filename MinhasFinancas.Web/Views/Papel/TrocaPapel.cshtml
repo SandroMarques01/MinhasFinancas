@@ -1,0 +1,35 @@
+﻿@model MinhasFinancas.Web.ViewModels.TrocaPapelViewModel
+@{
+    ViewBag.Title = "Troca Do Codigo de Papel";
+}
+
+<h2>Troca do código de Papel</h2>
+
+<div class="container">
+
+    @using (Html.BeginForm("TrocaPapel", "Papel", FormMethod.Post))
+    {
+        <div class="row">
+            <div class="col-5">
+                Papel Origem:
+                @Html.DropDownListFor(model => model.PapelIdOrigem,
+                 new SelectList(Model.PapelsOrigem, "Id", "Codigo"),
+                 string.Empty, new { @class = "form-control" })
+            </div>
+            <div class="col-5">
+                Papel destino:
+                @Html.DropDownListFor(model => model.PapelIdDestino,
+                 new SelectList(Model.PapelsDestino, "Id", "Codigo"),
+                 string.Empty, new { @class = "form-control" })
+            </div>
+            <div class="col-2">
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Salvar" class="btn btn-success" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+

@@ -42,6 +42,8 @@
 
 <p>
     @Html.ActionLink("Novo Papel", "Create", new { area = "" }, new { @class = "btn btn-success" })
+    @Html.ActionLink("Desdobramento do Papel", "Create", new { area = "" }, new { @class = "btn btn-success" })
+    @Html.ActionLink("Troda de código", "TrocaPapel", new { area = "" }, new { @class = "btn btn-success" })
 </p>
 <div class="row">
     <div class="col-md-12">
@@ -52,15 +54,20 @@
                     Tipo papel:
                     @Html.DropDownList("cbbTipoPapel", new SelectList(listItems, "Value", "Text"), new { @class = "form-control" })
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-1">
                     Ativo:
                     @Html.CheckBox("Ativo", true)
                 </div>
                 <div class="col-md-4">
+                    Fim:
+                    <input type="date" id="dtFim" name="dtFim" class="form-control" />
+                    <div class="btn btn-outline-info" title="Colocar início do mês" onclick="ColocarFinalMes()">></div>
+                </div>
+                <div class="col-md-3">
                     Filtro:
                     <input type="text" id="filtroInput" class="form-control" placeholder="Filtrar tabela">
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-1">
                     <input type="submit" value="Filtrar" class="btn btn-success" />
                 </div>
             </div>
@@ -77,7 +84,7 @@
     Saldo total: @ViewBag.totalSaldo.ToString("C") - 
     Saldo Atual: @ViewBag.totalSaldoAtual.ToString("C") - 
     Val.%: <span class="@statusVariacao">@variacao%</span> - 
-    DY total: @ViewBag.deltaPercentTotal %
+    DY total: @ViewBag.DYtotal%
 </p>
 <table class="table table-bordered table-striped">
     <thead class="thead-dark">
@@ -112,13 +119,13 @@
             <th scope="col" style="width:5%;">
                 @Html.DisplayNameFor(model => model.Valorizacao)%
             </th>
-            <th scope="col" style="width:7%;">
+            <th scope="col" style="width:6%;">
                 @Html.DisplayNameFor(model => model.GanhoUnt)
             </th>
             <th scope="col" style="width:7%;">
                 @Html.DisplayNameFor(model => model.GanhoTotal)
             </th>
-            <th scope="col" style="width:5%;">
+            <th scope="col" style="width:6%;">
                 @Html.DisplayNameFor(model => model.DividendosTotal)
             </th>
             <th scope="col" style="width:5%;">
@@ -153,7 +160,7 @@
                     @{ var percentTotal = Math.Round(item.TotalSaldo * 100 / ViewBag.totalSaldo, 2); }
                     @percentTotal%
                 </td>
-                <td scope="row">
+                <td scope="row" style="background-color: moccasin;">
                     @item.CotacaoAtual.ToString("C")
                     @*@Html.DisplayFor(modelItem => item.CotacaoAtual)*@
                 </td>
@@ -176,7 +183,7 @@
                     @item.GanhoTotal.ToString("C")
                 </td>
                 <td scope="row">
-                    @Html.DisplayFor(modelItem => item.DividendosTotal)
+                    @item.DividendosTotal.ToString("C")
                 </td>
                 <td scope="row">
                     @Html.DisplayFor(modelItem => item.PercentDividendos)
@@ -202,6 +209,26 @@
                 $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
             });
         });
+
+        var dt = new Date();
+        dt = new Date(dt.getFullYear(), dt.getMonth() + 1, 1);
+        dt = new Date(dt - 1)
+        $("#dtFim").val(dt.getFullYear() + "-" + String(dt.getMonth() + 1).padStart(2, '0') + "-" + String(dt.getDate()).padStart(2, '0'));
+
     });
+
+    function ColocarFinalMes() {
+        var dt = new Date();
+        if ($("#hdDtF").val() == 1) {
+            $("#hdDtF").val("0");
+            dt = new Date(dt.getFullYear(), dt.getMonth() + 1, 1);
+            dt = new Date(dt - 1)
+            $("#dtFim").val(dt.getFullYear() + "-" + String(dt.getMonth() + 1).padStart(2, '0') + "-" + String(dt.getDate()).padStart(2, '0'));
+        }
+        else {
+            $("#hdDtF").val("1");
+            $("#dtFim").val(dt.getFullYear() + "-" + 12 + "-" + 31);
+        }
+    }
 
 </script>

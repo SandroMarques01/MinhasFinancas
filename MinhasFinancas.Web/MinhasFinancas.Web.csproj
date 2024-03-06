@@ -238,6 +238,7 @@
     <Compile Include="ViewModels\PapelViewModel.cs" />
     <Compile Include="ViewModels\SegmentoViewModel.cs" />
     <Compile Include="ViewModels\TransacaoViewModel.cs" />
+    <Compile Include="ViewModels\TrocaPapelViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-grid.css" />
@@ -311,6 +312,7 @@
     <Content Include="Views\Transacao\Edit.cshtml" />
     <Content Include="Views\Transacao\Index.cshtml" />
     <Content Include="Views\Configuracao\Index.cshtml" />
+    <Content Include="Views\Papel\TrocaPapel.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

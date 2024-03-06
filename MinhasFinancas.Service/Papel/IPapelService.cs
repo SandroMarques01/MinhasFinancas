@@ -12,6 +12,7 @@ namespace MinhasFinancas.Service.Papel
         Task DeleteById(Guid id);
         Task<IEnumerable<Infra.Models.Papel>> Get(Expression<Func<Infra.Models.Papel, bool>> filter = null, string includeProperties = null);
         Task<Infra.Models.Papel> GetById(Guid id);
+        Task TrocaPapel (Guid origem,  Guid destino);
 
     }
 }
