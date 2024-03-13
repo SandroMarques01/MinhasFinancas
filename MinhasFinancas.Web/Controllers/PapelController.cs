@@ -195,8 +195,8 @@ namespace MinhasFinancas.Web.Controllers
             List<PapelViewModel> lst = _mapper.Map<List<PapelViewModel>>(await _papelService.Get());
 
             TrocaPapelViewModel trocaPapelViewModel = new TrocaPapelViewModel();
-            trocaPapelViewModel.PapelsOrigem = lst;
-            trocaPapelViewModel.PapelsDestino = lst;
+            trocaPapelViewModel.PapelsOrigem = lst.OrderBy(x => x.Codigo);
+            trocaPapelViewModel.PapelsDestino = lst.OrderBy(x => x.Codigo);
 
             return View(trocaPapelViewModel);
         }
@@ -209,7 +209,7 @@ namespace MinhasFinancas.Web.Controllers
 
             return View(Index());
         }
-        
+
 
     }
 }

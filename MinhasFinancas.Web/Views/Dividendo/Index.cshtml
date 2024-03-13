@@ -174,27 +174,30 @@
         $("#dtFim").val(dt.getFullYear() + "-" + String(dt.getMonth() + 1).padStart(2, '0') + "-" + String(dt.getDate()).padStart(2, '0'));
     });
 
+    var hdDtI = 0
+    var hdDtF = 0
+
     function ColocarInicioMes() {
-        if ($("#hdDtI").val() == 0) {
-            $("#hdDtI").val("1");
+        if (hdDtI == 0) {
+            hdDtI = 1;
             var dt = new Date();
             $("#dtInicio").val(dt.getFullYear() + "-" + String(dt.getMonth() + 1).padStart(2, '0') + "-" + String("01"));
         }
         else {
-            $("#hdDtI").val("0");
+            hdDtI = 0;
             $("#dtInicio").val("2020-01-01");
         }
     }
     function ColocarFinalMes() {
         var dt = new Date();
-        if ($("#hdDtF").val() == 1) {
-            $("#hdDtF").val("0");
+        if (hdDtF == 1) {
+            hdDtF = 0;
             dt = new Date(dt.getFullYear(), dt.getMonth() + 1, 1);
             dt = new Date(dt - 1)
             $("#dtFim").val(dt.getFullYear() + "-" + String(dt.getMonth() + 1).padStart(2, '0') + "-" + String(dt.getDate()).padStart(2, '0'));
         }
         else {
-            $("#hdDtF").val("1");
+            hdDtF = 1;
             $("#dtFim").val(dt.getFullYear() + "-" + 12 + "-" + 31);
         }
     }

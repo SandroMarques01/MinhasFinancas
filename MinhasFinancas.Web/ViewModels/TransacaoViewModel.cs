@@ -40,7 +40,6 @@ namespace MinhasFinancas.Web.ViewModels
         [DisplayName("Descrição")]
         public string Descricao { get; set; }
 
-        [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [DisplayName("Ativo")]
         public bool Ativo { get; set; }
 

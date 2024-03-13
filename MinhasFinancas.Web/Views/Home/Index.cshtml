@@ -1,33 +1,206 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "Home";
 }
 
-<main>
-    <section class="row" aria-labelledby="aspnetTitle">
-        <h1 id="title">ASP.NET</h1>
-        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-        <p><a href="https://asp.net" class="btn btn-primary btn-md">Learn more &raquo;</a></p>
-    </section>
 
+<style>
+    tbody {
+        font-size: 10pt;
+        padding: 0, 1px;
+    }
+
+        tbody tr td {
+            padding: 3px 5px !important;
+        }
+
+    .small-box {
+        text-align: center;
+    }
+
+        .small-box > p, .small-box > div > p, .small-box > h3, .small-box > div > h3 {
+            color: azure;
+            margin-bottom: 0rem;
+        }
+
+    .PagHoje {
+        background-color: lightgreen !important;
+    }
+</style>
+
+<main>
+    <h1>Minhas Finanças</h1>
     <div class="row">
-        <section class="col-md-4" aria-labelledby="gettingStartedTitle">
-            <h2 id="gettingStartedTitle">Getting started</h2>
-            <p>
-                ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-                enables a clean separation of concerns and gives you full control over markup
-                for enjoyable, agile development.
-            </p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+        <section class="col-lg-2 col-sm-6">
+            <div class="card small-box bg-info">
+                <h3>@ViewBag.DividendosMes.ToString("C")</h3>
+                <p>Dividendos do mês</p>
+            </div>
         </section>
-        <section class="col-md-4" aria-labelledby="librariesTitle">
-            <h2 id="librariesTitle">Get more libraries</h2>
-            <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+        <section class="col-lg-3 col-sm-6">
+            <div class="card small-box bg-success">
+                <h3>@ViewBag.ValorAtualCarteira.ToString("C")</h3>
+                <p>Valor da carteira</p>
+            </div>
         </section>
-        <section class="col-md-4" aria-labelledby="hostingTitle">
-            <h2 id="hostingTitle">Web Hosting</h2>
-            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+        <section class="col-lg-4 col-sm-6">
+            <div class="card small-box bg-danger" style="display:block;">
+                <div style="width: 24%; display: inline-block">
+                    <h3>@Math.Round(20.58, 2)%</h3>
+                    <p>Ação</p>
+                </div>
+                <div style="width: 23%; display: inline-block ">
+                    <h3>@Math.Round(30.58, 2)%</h3>
+                    <p>FII</p>
+                </div>
+                <div style="width: 24%; display: inline-block; ">
+                    <h3>@Math.Round(40.58, 2)%</h3>
+                    <p>BDR</p>
+                </div>
+                <div style="width: 23%; display: inline-block; ">
+                    <h3>@Math.Round(10.58, 2)%</h3>
+                    <p>ETF</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="col-lg-3 col-sm-6">
+            <div class="card small-box bg-warning">
+                <h3>@ViewBag.DividendosFiisMes.ToString("C")</h3>
+                <p>Dividendos em Fiis no mês (@ViewBag.DividendosFiisMesPercent.ToString("C")%)</p>
+            </div>
         </section>
     </div>
+
+    <hr />
+
+    <div class="row">
+        <section class="col-md-4 col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Dividendos da semana</h5>
+                    <p class="card-text"> Valor: @ViewBag.ValorDividendoSemana.ToString("C") </p>
+                    <table class="table table-bordered table-striped" id="tbDividendos">
+                        <thead>
+                            <tr>
+                                <th style="width:67%;">Papel</th>
+                                <th style="width:24%;">Valor</th>
+                                <th style="width:10%;">Data</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyDividendos1">
+                            @foreach (var item in ViewBag.TabelaDividendosSemana)
+                            {
+                                <tr>
+                                    <td>@item.Papel.Codigo - <span style="font-size: 8pt;"> @item.Papel.Nome.Substring(0, item.Papel.Nome.Length > 24 ? 24 : item.Papel.Nome.Length) </span></td>
+                                    <td style="text-align: right;">@item.ValorRecebido.ToString("C") </td>
+                                    @{ string statusPagamentoHoje = item.Data.ToString("dd/MM/yyyy") == DateTime.Now.ToString("dd/MM/yyyy") ? "PagHoje" : ""; }
+                                    <td class="@statusPagamentoHoje">@item.Data.ToString("dd/MM") </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section class="col-md-4 col-sm-12" ">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Últimas Transações</h5>
+                    <p class="card-text"> Valor: @ViewBag.ValorTransacaoSemana.ToString("C") </p>
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th style="width:63%;">Papel</th>
+                                <th style="width:28%;">Valor</th>
+                                <th style="width:10%;">Data</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyTransacoes1">
+                            @foreach (var item in ViewBag.TabelaUltimasTransacoes)
+                            {
+                                <tr>
+                                    <td>@item.Papel.Codigo - <span style="font-size: 8pt;"> @item.Papel.Nome.Substring(0, item.Papel.Nome.Length > 24 ? 24 : item.Papel.Nome.Length) </span></td>
+                                    <td style="text-align: right;">@{var vlrTotal = item.ValorUnt * item.Quantidade;} @vlrTotal.ToString("C") </td>
+                                    <td>@item.Data.ToString("dd/MM") </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section class="col-md-4 col-sm-12" ">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Maiores posições</h5>
+                    <p class="card-text"> Valor: @ViewBag.ValorTotalPapel.ToString("C") </p>
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th style="width:59%;">Papel</th>
+                                <th style="width:22%;">Valor</th>
+                                <th style="width:18%;">Div.</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyTransacoes1">
+                            @foreach (var item in ViewBag.TabelaMaioresPapel)
+                            {
+                                <tr>
+                                    <td>@item.Codigo - <span style="font-size: 8pt;"> @item.Nome.Substring(0, item.Nome.Length > 24 ? 24 : item.Nome.Length) </span></td>
+                                    <td style="text-align: right;">@item.TotalSaldoAtual.ToString("C") </td>
+                                    <td style="text-align: right;">@item.DividendosTotal.ToString("C") </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+
+
 </main>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // Adiciona um ouvinte de evento de clique aos cabeçalhos da tabela
+        $('#tbDividendos th').click(function () {
+            var tabela = $(this).parents('table').eq(0); // Obtém a tabela
+            var colunaIndex = $(this).index(); // Obtém o índice da coluna clicada
+            var ordem = $(this).hasClass('ordenado') ? 'desc' : 'asc'; // Verifica a ordem atual
+
+            // Remove a classe 'ordenado' de todos os cabeçalhos
+            tabela.find('th').removeClass('ordenado');
+            // Adiciona a classe 'ordenado' apenas ao cabeçalho clicado
+            $(this).addClass('ordenado');
+
+            // Obtém as linhas da tabela exceto pelo cabeçalho
+            var linhas = tabela.find('tbody > tr').toArray().sort(function (a, b) {
+                var valorA = $(a).find('td').eq(colunaIndex).text().toUpperCase();
+                var valorB = $(b).find('td').eq(colunaIndex).text().toUpperCase();
+
+                if (valorA.includes("R$")) {
+                    valorA = parseFloat(valorA.replace('R$ ', '').replace(',', '.'));
+                    valorB = parseFloat(valorB.replace('R$ ', '').replace(',', '.'));
+                }
+                else if (valorA.includes('/')) {
+                    console.log(valorA);
+                }
+
+                if (ordem === 'asc') {
+                    return (valorA < valorB) ? -1 : (valorA > valorB) ? 1 : 0;
+                } else {
+                    return (valorA > valorB) ? -1 : (valorA < valorB) ? 1 : 0;
+                }
+            });
+            // Atualiza a tabela com as linhas reordenadas
+            $.each(linhas, function (index, linha) {
+                tabela.children('tbody').append(linha);
+            });
+        });
+    });
+</script>

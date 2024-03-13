@@ -52,6 +52,12 @@ namespace MinhasFinancas.Service.Papel
             return retorno;
         }
 
+        public async Task<IEnumerable<Infra.Models.Papel>> GetDividendosSemana(string includeProperties = null)
+        {
+            var retorno = await _baseRepository.Get(filter: null, includeProperties: includeProperties);
+            return retorno;
+        }
+
         public async Task<Infra.Models.Papel> GetById(Guid id)
         {
             var retorno = await _baseRepository.GetById(id);
@@ -69,8 +75,9 @@ namespace MinhasFinancas.Service.Papel
         public async Task TrocaPapel(Guid origem, Guid destino)
         {
             #region troca de Transações
-            var transacoes = await _transacaoService.Get(f=>f.PapelId == origem);
-            transacoes.ToList().ForEach(t => {
+            var transacoes = await _transacaoService.Get(f => f.PapelId == origem);
+            transacoes.ToList().ForEach(t =>
+            {
                 t.PapelId = destino;
                 _transacaoService.Update(t);
             });
@@ -78,11 +85,12 @@ namespace MinhasFinancas.Service.Papel
 
             #region troca de dividendos
             var dividendos = await _dividendoService.Get(f => f.PapelId == origem);
-            dividendos.ToList().ForEach(t =>
-            {
-                t.PapelId = destino;
-                _dividendoService.Update(t);
-            });
+            if (dividendos.Any())
+                dividendos.ToList().ForEach(t =>
+                {
+                    t.PapelId = destino;
+                    _dividendoService.Update(t);
+                });
             #endregion
         }
 
