@@ -37,36 +37,36 @@
             </div>
         </section>
         <section class="col-lg-3 col-sm-6">
-            <div class="card small-box bg-success">
+            <div class="card small-box bg-info">
                 <h3>@ViewBag.ValorAtualCarteira.ToString("C")</h3>
                 <p>Valor da carteira</p>
             </div>
         </section>
         <section class="col-lg-4 col-sm-6">
-            <div class="card small-box bg-danger" style="display:block;">
+            <div class="card small-box bg-success" style="display:block;">
                 <div style="width: 24%; display: inline-block">
-                    <h3>@Math.Round(20.58, 2)%</h3>
+                    <h3>@Math.Round(ViewBag.PercentAcao, 2)%</h3>
                     <p>Ação</p>
                 </div>
                 <div style="width: 23%; display: inline-block ">
-                    <h3>@Math.Round(30.58, 2)%</h3>
+                    <h3>@Math.Round(ViewBag.PercentFII, 2)%</h3>
                     <p>FII</p>
                 </div>
                 <div style="width: 24%; display: inline-block; ">
-                    <h3>@Math.Round(40.58, 2)%</h3>
+                    <h3>@Math.Round(ViewBag.PercentBDR, 2)%</h3>
                     <p>BDR</p>
                 </div>
                 <div style="width: 23%; display: inline-block; ">
-                    <h3>@Math.Round(10.58, 2)%</h3>
+                    <h3>@Math.Round(ViewBag.PercentETF, 2)%</h3>
                     <p>ETF</p>
                 </div>
             </div>
         </section>
 
         <section class="col-lg-3 col-sm-6">
-            <div class="card small-box bg-warning">
+            <div class="card small-box bg-info">
                 <h3>@ViewBag.DividendosFiisMes.ToString("C")</h3>
-                <p>Dividendos em Fiis no mês (@ViewBag.DividendosFiisMesPercent.ToString("C")%)</p>
+                <p>Dividendos em Fiis no mês (@Math.Round(ViewBag.DividendosFiisMesPercent,2)%)</p>
             </div>
         </section>
     </div>
@@ -171,12 +171,18 @@
         $('#tbDividendos th').click(function () {
             var tabela = $(this).parents('table').eq(0); // Obtém a tabela
             var colunaIndex = $(this).index(); // Obtém o índice da coluna clicada
-            var ordem = $(this).hasClass('ordenado') ? 'desc' : 'asc'; // Verifica a ordem atual
+            var ordem = $(this).hasClass('ordenado') && !$(this).hasClass('desc') ? 'desc' : 'asc'; // Verifica a ordem atual
 
             // Remove a classe 'ordenado' de todos os cabeçalhos
             tabela.find('th').removeClass('ordenado');
+            tabela.find('th').removeClass('desc');
             // Adiciona a classe 'ordenado' apenas ao cabeçalho clicado
             $(this).addClass('ordenado');
+
+            // Adiciona a classe 'desc' apenas ao cabeçalho clicado e quando ordem for desc
+            if (ordem == "desc") {
+                $(this).addClass('desc');
+            }
 
             // Obtém as linhas da tabela exceto pelo cabeçalho
             var linhas = tabela.find('tbody > tr').toArray().sort(function (a, b) {

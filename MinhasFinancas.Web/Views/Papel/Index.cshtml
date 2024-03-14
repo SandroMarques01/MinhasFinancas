@@ -87,7 +87,7 @@
     DY total: @ViewBag.DYtotal%
 </p>
 <table class="table table-bordered table-striped">
-    <thead class="thead-dark">
+    <thead class="thead-dark" id="tbPapeis">
         <tr>
             <th scope="col" style="width:5%;">
                 @Html.DisplayNameFor(model => model.Codigo)
@@ -186,7 +186,7 @@
                     @item.DividendosTotal.ToString("C")
                 </td>
                 <td scope="row">
-                    @Html.DisplayFor(modelItem => item.PercentDividendos)
+                    @Html.DisplayFor(modelItem => item.PercentDividendos)%
                 </td>
                 <td scope="row">
                     @Html.ActionLink("E", "Edit", new { id = item.Id }, new { @class = "btn btn-primary btnTbl" }) |
@@ -215,6 +215,43 @@
         dt = new Date(dt - 1)
         $("#dtFim").val(dt.getFullYear() + "-" + String(dt.getMonth() + 1).padStart(2, '0') + "-" + String(dt.getDate()).padStart(2, '0'));
 
+
+        $('#tbPapeis th').click(function () {
+            var tabela = $(this).parents('table').eq(0); 
+            var colunaIndex = $(this).index(); 
+            var ordem = $(this).hasClass('ordenado') && !$(this).hasClass('desc') ? 'desc' : 'asc'; 
+
+            tabela.find('th').removeClass('ordenado');
+            tabela.find('th').removeClass('desc');
+            $(this).addClass('ordenado');
+
+            if (ordem == "desc") {
+                $(this).addClass('desc');
+            }
+
+            var linhas = tabela.find('tbody > tr').toArray().sort(function (a, b) {
+                var valorA = $(a).find('td').eq(colunaIndex).text().toUpperCase();
+                var valorB = $(b).find('td').eq(colunaIndex).text().toUpperCase();
+
+                if (valorA.includes("R$")) {
+                    valorA = parseFloat(valorA.replace('R$ ', '').replace('.', '').replace(',', '.'));
+                    valorB = parseFloat(valorB.replace('R$ ', '').replace('.', '').replace(',', '.'));
+                }
+                else if (valorA.includes('%')) {
+                    valorA = parseFloat(valorA.replace(',', '.'));
+                    valorB = parseFloat(valorB.replace(',', '.'));
+                }
+
+                if (ordem === 'asc') {
+                    return (valorA < valorB) ? -1 : (valorA > valorB) ? 1 : 0;
+                } else {
+                    return (valorA > valorB) ? -1 : (valorA < valorB) ? 1 : 0;
+                }
+            });
+            $.each(linhas, function (index, linha) {
+                tabela.children('tbody').append(linha);
+            });
+        });
     });
 
     function ColocarFinalMes() {

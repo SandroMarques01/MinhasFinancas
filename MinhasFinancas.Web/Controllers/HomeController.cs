@@ -76,6 +76,11 @@ namespace MinhasFinancas.Web.Controllers
             ViewBag.ValorTotalPapel = lstP.Sum(x => x.TotalSaldoAtual);
             ViewBag.TabelaMaioresPapel = lstP.OrderByDescending(x => x.TotalSaldoAtual).Take(10);
 
+            ViewBag.PercentAcao = lstP.Where(x => x.TipoPapel == Infra.TipoPapel.Acao).Sum(x => x.TotalSaldoAtual) * 100 / ViewBag.ValorTotalPapel;
+            ViewBag.PercentFII = lstP.Where(x => x.TipoPapel == Infra.TipoPapel.Fii).Sum(x => x.TotalSaldoAtual) * 100 / ViewBag.ValorTotalPapel;
+            ViewBag.PercentBDR = lstP.Where(x => x.TipoPapel == Infra.TipoPapel.BDR).Sum(x => x.TotalSaldoAtual) * 100 / ViewBag.ValorTotalPapel;
+            ViewBag.PercentETF = lstP.Where(x => x.TipoPapel == Infra.TipoPapel.ETF).Sum(x => x.TotalSaldoAtual) * 100 / ViewBag.ValorTotalPapel;
+
 
             return View();
         }
