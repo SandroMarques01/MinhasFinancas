@@ -8,6 +8,6 @@ namespace MinhasFinancas.Service.Configuracao
     {
         Task ImportarExcelB3(HttpPostedFileBase fileB3);
         Task ImportarExcelCotacaoAtual(HttpPostedFileBase fileB3);
-
+        Task DeletaTodoBanco();
     }
 }

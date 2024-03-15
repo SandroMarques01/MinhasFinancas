@@ -192,6 +192,26 @@ namespace MinhasFinancas.Service.Configuracao
             }
         }
 
+        public async Task DeletaTodoBanco()
+        {
+            var tran = await _transacaoService.Get();
+            var divi = await _dividendoService.Get();
+            var papel = await _papelService.Get();
+
+            foreach (var item in tran)
+            {
+                await _transacaoService.DeleteById(item.Id);
+            }
+            foreach (var item in divi)
+            {
+                await _dividendoService.DeleteById(item.Id);
+            }
+            foreach (var item in papel)
+            {
+                await _papelService.DeleteById(item.Id);
+            }
+        }
+
         public void Dispose()
         {
             //_baseRepository?.Dispose();

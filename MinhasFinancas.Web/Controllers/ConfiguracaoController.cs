@@ -66,5 +66,12 @@ namespace MinhasFinancas.Web.Controllers
 
             return RedirectToAction("Index", "Papel");
         }
+
+        public async Task<ActionResult> DeletarBanco()
+        {
+            await _configuracaoService.DeletaTodoBanco();
+
+            return RedirectToAction("Index", "Home");
+        }
     }
 }
