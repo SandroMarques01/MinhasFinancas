@@ -85,6 +85,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Dividendo.cs" />
     <Compile Include="Models\Entity.cs" />
+    <Compile Include="Models\Enums\TipoDividendo.cs" />
     <Compile Include="Models\Papel.cs" />
     <Compile Include="Models\Enums\TipoPapel.cs" />
     <Compile Include="Models\Enums\TipoTransacao.cs" />

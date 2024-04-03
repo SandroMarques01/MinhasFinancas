@@ -27,7 +27,8 @@ namespace MinhasFinancas.Service.Transacao
             if (!ExecutarValidacao(new TransacaoValidation(), obj)) return;
 
             var transPapel = await _baseRepository.Get(x => x.PapelId == obj.PapelId);
-            if (transPapel.Sum(x=> x.Quantidade * (x.TipoTransacao == Infra.TipoTransacao.Venda ? -1 : 1)) == 0)
+            if (transPapel.ToList().Sum(x => x.Quantidade) > 0 && 
+                (transPapel.ToList().Sum(x=> x.Quantidade * (x.TipoTransacao == Infra.TipoTransacao.Venda ? -1 : 1)) + (obj.TipoTransacao == Infra.TipoTransacao.Venda ? -1 : 1) * obj.Quantidade) == 0)
             {
                 var papel = await _papelRepository.GetById(obj.PapelId);
                 papel.Ativo = false;
@@ -46,8 +47,7 @@ namespace MinhasFinancas.Service.Transacao
 
         public void Dispose()
         {
-            //_baseRepository?.Dispose();
-            //_baseRepository?.Dispose();
+            //_baseRepository.Dispose();
         }
 
         public async Task<IEnumerable<Infra.Models.Transacao>> Get(Expression<Func<Infra.Models.Transacao, bool>> filter = null, string includeProperties = null)
@@ -67,7 +67,8 @@ namespace MinhasFinancas.Service.Transacao
             if (!ExecutarValidacao(new TransacaoValidation(), obj)) return;
 
             var transPapel = await _baseRepository.Get(x => x.PapelId == obj.PapelId);
-            if (transPapel.Sum(x => x.Quantidade * (x.TipoTransacao == Infra.TipoTransacao.Venda ? -1 : 1)) == 0)
+            if (transPapel.ToList().Sum(x => x.Quantidade) > 0 &&
+                (transPapel.ToList().Sum(x => x.Quantidade * (x.TipoTransacao == Infra.TipoTransacao.Venda ? -1 : 1)) + (obj.TipoTransacao == Infra.TipoTransacao.Venda ? -1 : 1) * obj.Quantidade) == 0)
             {
                 var papel = await _papelRepository.GetById(obj.PapelId);
                 papel.Ativo = false;
@@ -77,5 +78,15 @@ namespace MinhasFinancas.Service.Transacao
             await _baseRepository.Update(obj);
             await _baseRepository.SaveChanges();
         }
+
+        public async Task UpdateTrocaPapel(Infra.Models.Transacao obj)
+        {
+            if (!ExecutarValidacao(new TransacaoValidation(), obj)) return;
+
+            await _baseRepository.Update(obj);
+            await _baseRepository.SaveChanges();
+        }
+
+
     }
 }

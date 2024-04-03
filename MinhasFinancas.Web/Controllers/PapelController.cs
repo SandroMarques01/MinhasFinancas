@@ -31,10 +31,22 @@ namespace MinhasFinancas.Web.Controllers
             List<PapelViewModel> lst = _mapper.Map<List<PapelViewModel>>(await _papelService.Get(includeProperties: "Transacao,Dividendo"));
 
             //if (!string.IsNullOrEmpty(dtFim))
-            //    lst = lst.Where(f => f.Transacao.ToList().Data <= Convert.ToDateTime(dtFim)).ToList();
+            //lst = lst.Where(f => f.Transacao.data <= Convert.ToDateTime(dtFim)).ToList();
 
             if (cbbTipoPapel != 0)
                 lst = lst.Where(f => Convert.ToInt32(f.TipoPapel) == cbbTipoPapel).ToList();
+
+            ViewBag.DataFim = dtFim;
+
+            if (!string.IsNullOrEmpty(dtFim))
+            {
+                foreach (var item in lst)
+                {
+                    item.Transacao = item.Transacao.Where(x => x.Data <= Convert.ToDateTime(dtFim)).ToList();
+                    item.Dividendo = item.Dividendo.Where(x => x.Data <= Convert.ToDateTime(dtFim)).ToList();
+                }
+            }
+
 
             double totalSaldo = 0;
             double totalSaldoAtual = 0;
@@ -207,7 +219,7 @@ namespace MinhasFinancas.Web.Controllers
         {
             await _papelService.TrocaPapel(trocaPapelViewModel.PapelIdOrigem, trocaPapelViewModel.PapelIdDestino);
 
-            return View(Index());
+            return RedirectToAction("Index");
         }
 
 

@@ -24,6 +24,9 @@ namespace MinhasFinancas.Infra.Mappings
             Property(f => f.Ativo)
                 .IsRequired();
 
+            Property(f => f.TipoDividendo)
+                .IsRequired();
+
             HasRequired(d => d.Papel)
                 .WithMany(p => p.Dividendo)
                 .HasForeignKey(d => d.PapelId);

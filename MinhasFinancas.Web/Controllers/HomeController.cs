@@ -41,7 +41,7 @@ namespace MinhasFinancas.Web.Controllers
             List<TransacaoViewModel> lstT = _mapper.Map<List<TransacaoViewModel>>(await _transacaoService.Get(includeProperties: "Papel"));
             lstT = lstT.ToList().Where(x => x.Papel.Ativo).ToList();
 
-            double totalInvestido = lstT.Where(x=>x.TipoTransacao == Infra.TipoTransacao.Compra).Sum(x => x.Quantidade * x.ValorUnt);
+            double totalInvestido = lstT.Where(x => x.TipoTransacao == Infra.TipoTransacao.Compra).Sum(x => x.Quantidade * x.ValorUnt);
 
             //dividendos
             ViewBag.DividendosMes = lstD.Where(f => f.Data >= Convert.ToDateTime(DateTime.Now.Year + "-" + (DateTime.Now.Month) + "-01")
@@ -49,9 +49,11 @@ namespace MinhasFinancas.Web.Controllers
 
             ViewBag.DividendosFiisMes = lstD.Where(f => f.Papel.TipoPapel == Infra.TipoPapel.Fii && f.Data >= Convert.ToDateTime(DateTime.Now.Year + "-" + (DateTime.Now.Month) + "-01")
                                                     && f.Data <= ultimoDiaMes).Sum(x => x.ValorRecebido);
-            ViewBag.DividendosFiisMesPercent = ViewBag.DividendosFiisMes*100 / lstT.Where(x => x.Papel.TipoPapel == Infra.TipoPapel.Fii
-                                                                            && x.TipoTransacao == Infra.TipoTransacao.Compra).Sum(x => x.Quantidade * x.ValorUnt);
 
+            ViewBag.DividendosFiisMesPercent = ViewBag.DividendosFiisMes * 100 / lstT.Where(x => x.Papel.TipoPapel == Infra.TipoPapel.Fii
+                                                                            && x.TipoTransacao == Infra.TipoTransacao.Compra
+                                                                            && x.Data < Convert.ToDateTime(DateTime.Now.Year + "-" + DateTime.Now.Month + "-01")).Sum(x => x.Quantidade * x.ValorUnt);
+            
             ViewBag.ValorAtualCarteira = totalInvestido;
 
             lstD = lstD.Where(f => f.Data >= DateTime.Now.AddDays(-1) && f.Data <= DateTime.Now.AddDays(6)).ToList();

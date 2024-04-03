@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MinhasFinancas.Infra;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -37,6 +38,7 @@ namespace MinhasFinancas.Web.ViewModels
 
         [DisplayName("Ativo")]
         public bool Ativo { get; set; }
+        public TipoDividendo TipoDividendo { get; set; }
 
         /* Relações EF */
         public virtual PapelViewModel Papel { get; set; }

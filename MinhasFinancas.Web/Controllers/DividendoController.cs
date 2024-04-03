@@ -40,7 +40,11 @@ namespace MinhasFinancas.Web.Controllers
             if (cbbTipoPapel != 0)
                 lst = lst.Where(f => Convert.ToInt32(f.Papel.TipoPapel) == cbbTipoPapel).ToList();
             if (!string.IsNullOrEmpty(dtInicio) && !string.IsNullOrEmpty(dtFim))
+            {
                 lst = lst.Where(f => f.Data >= Convert.ToDateTime(dtInicio) && f.Data <= Convert.ToDateTime(dtFim)).ToList();
+                ViewBag.DataIni = dtInicio;
+                ViewBag.DataFim = dtFim;
+            }
 
             ViewBag.dividendoTotal = lst.Sum(f => f.ValorRecebido);
 

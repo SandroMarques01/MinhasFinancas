@@ -18,6 +18,9 @@ namespace MinhasFinancas.Service.Dividendo
 
             RuleFor(d => d.Ativo)
                 .NotEmpty().WithMessage("O campo {PropertyName} não pode estar vazio");
+
+            RuleFor(t => t.TipoDividendo)
+                .NotEmpty().WithMessage("O campo {PropertyName} não pode estar vazio");
         }
     }
 }

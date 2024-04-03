@@ -10,6 +10,7 @@ namespace MinhasFinancas.Infra.Models
         public DateTime Data { get; set; }
         public string Descricao { get; set; }
         public bool Ativo { get; set; }
+        public TipoDividendo TipoDividendo { get; set; }
 
         /* Relações EF */
         public virtual Papel Papel { get; set; }

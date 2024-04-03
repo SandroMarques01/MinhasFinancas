@@ -62,6 +62,7 @@
                     Fim:
                     <input type="date" id="dtFim" name="dtFim" class="form-control" />
                     <div class="btn btn-outline-info" title="Colocar início do mês" onclick="ColocarFinalMes()">></div>
+                    <input type="hidden" id="hddData" value="@ViewBag.DataFim" />
                 </div>
                 <div class="col-md-3">
                     Filtro:
@@ -210,11 +211,15 @@
             });
         });
 
-        var dt = new Date();
-        dt = new Date(dt.getFullYear(), dt.getMonth() + 1, 1);
-        dt = new Date(dt - 1)
-        $("#dtFim").val(dt.getFullYear() + "-" + String(dt.getMonth() + 1).padStart(2, '0') + "-" + String(dt.getDate()).padStart(2, '0'));
-
+        if ($("#hddData").val() == '') {
+            var dt = new Date();
+            dt = new Date(dt.getFullYear(), dt.getMonth() + 1, 1);
+            dt = new Date(dt - 1)
+            $("#dtFim").val(dt.getFullYear() + "-" + String(dt.getMonth() + 1).padStart(2, '0') + "-" + String(dt.getDate()).padStart(2, '0'));
+        }
+        else {
+            $("#dtFim").val($("#hddData").val());
+        }
 
         $('#tbPapeis th').click(function () {
             var tabela = $(this).parents('table').eq(0); 
@@ -254,16 +259,17 @@
         });
     });
 
+    var hdDtF = 0
     function ColocarFinalMes() {
         var dt = new Date();
-        if ($("#hdDtF").val() == 1) {
-            $("#hdDtF").val("0");
+        if (hdDtF == 1) {
+            hdDtF = 0;
             dt = new Date(dt.getFullYear(), dt.getMonth() + 1, 1);
             dt = new Date(dt - 1)
             $("#dtFim").val(dt.getFullYear() + "-" + String(dt.getMonth() + 1).padStart(2, '0') + "-" + String(dt.getDate()).padStart(2, '0'));
         }
         else {
-            $("#hdDtF").val("1");
+            hdDtF = 1;
             $("#dtFim").val(dt.getFullYear() + "-" + 12 + "-" + 31);
         }
     }

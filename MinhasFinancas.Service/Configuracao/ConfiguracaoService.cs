@@ -61,12 +61,12 @@ namespace MinhasFinancas.Service.Configuracao
 
                         var papel = lstPapel.Where(x => x.Codigo == codigoPapel).FirstOrDefault();
 
-                        var tipoMov = planilha.Cell($"C{l}").Value.ToString();
+                        var tipoMov = planilha.Cell($"C{l}").Value.ToString().Trim().ToUpper();
 
-                        if (papel == null && (tipoMov == "Bonificação em Ativos" || tipoMov == "Solicitação de Subscrição" ||
-                                              tipoMov == "Transferência - Liquidação" || tipoMov == "Juros Sobre Capital Próprio" ||
-                                              tipoMov == "Rendimento" || tipoMov == "Dividendo" || tipoMov == "Leilão de Fração" ||
-                                              tipoMov == "Desdobro"))
+                        if (papel == null && (tipoMov == "BONIFICAÇÃO EM ATIVOS" || tipoMov == "SOLICITAÇÃO DE SUBSCRIÇÃO" ||
+                                              tipoMov == "TRANSFERÊNCIA - LIQUIDAÇÃO" || tipoMov == "JUROS SOBRE CAPITAL PRÓPRIO" ||
+                                              tipoMov == "RENDIMENTO" || tipoMov == "DIVIDENDO" || tipoMov == "LEILÃO DE FRAÇÃO" ||
+                                              tipoMov == "DESDOBRO"))
                         {
                             papel = new Infra.Models.Papel();
                             papel.Nome = nomeCompletoPapel.Replace(codigoPapel + " - ", "").Trim();
@@ -82,9 +82,9 @@ namespace MinhasFinancas.Service.Configuracao
 
                         switch (tipoMov)
                         {
-                            case "Bonificação em Ativos":
-                            case "Solicitação de Subscrição":
-                            case "Transferência - Liquidação":
+                            case "BONIFICAÇÃO EM ATIVOS":
+                            case "SOLICITAÇÃO DE SUBSCRIÇÃO":
+                            case "TRANSFERÊNCIA - LIQUIDAÇÃO":
                                 var transacao = new Infra.Models.Transacao();
                                 transacao.PapelId = papel.Id;
                                 string valorUnt = planilha.Cell($"G{l}").Value.ToString();
@@ -106,10 +106,10 @@ namespace MinhasFinancas.Service.Configuracao
                                     lstTransacao.Add(transacao);
                                 }
                                 break;
-                            case "Juros Sobre Capital Próprio":
-                            case "Rendimento":
-                            case "Dividendo":
-                            case "Leilão de Fração":
+                            case "JUROS SOBRE CAPITAL PRÓPRIO":
+                            case "RENDIMENTO":
+                            case "DIVIDENDO":
+                            case "LEILÃO DE FRAÇÃO":
                                 var dividendo = new Infra.Models.Dividendo();
                                 dividendo.PapelId = papel.Id;
                                 dividendo.ValorRecebido = Convert.ToDouble(planilha.Cell($"H{l}").Value.ToString());
@@ -117,6 +117,11 @@ namespace MinhasFinancas.Service.Configuracao
                                 dividendo.Quantidade = Convert.ToInt32(Math.Round(Convert.ToDouble(qtdD), 0));
                                 dividendo.Data = Convert.ToDateTime(planilha.Cell($"B{l}").Value.ToString());
                                 dividendo.Ativo = true;
+                                dividendo.TipoDividendo = tipoMov == "DIVIDENDO" ? TipoDividendo.Dividendo
+                                    : tipoMov == "JUROS SOBRE CAPITAL PRÓPRIO" ? TipoDividendo.JSCP
+                                    : tipoMov == "RENDIMENTO" ? TipoDividendo.Rendimento
+                                    : TipoDividendo.Outro;
+
 
                                 //Verificar se já existe dividendo
                                 if (!lstDividendo.Exists(x => x.PapelId == dividendo.PapelId
@@ -128,7 +133,7 @@ namespace MinhasFinancas.Service.Configuracao
                                     lstDividendo.Add(dividendo);
                                 }
                                 break;
-                            case "Desdobro":
+                            case "DESDOBRO":
                                 DateTime dataDesdobro = Convert.ToDateTime(planilha.Cell($"B{l}").Value.ToString());
 
                                 var lstTransacaoDesdobro = lstTransacao.Where(x => x.PapelId == papel.Id && x.Data < dataDesdobro && (string.IsNullOrWhiteSpace(x.Descricao) || !x.Descricao.StartsWith("D|") || x.Descricao.Substring(2, 10) != planilha.Cell($"B{l}").Value.ToString())).ToList();
@@ -198,15 +203,15 @@ namespace MinhasFinancas.Service.Configuracao
             var divi = await _dividendoService.Get();
             var papel = await _papelService.Get();
 
-            foreach (var item in tran)
+            foreach (var item in tran.ToList())
             {
                 await _transacaoService.DeleteById(item.Id);
             }
-            foreach (var item in divi)
+            foreach (var item in divi.ToList())
             {
                 await _dividendoService.DeleteById(item.Id);
             }
-            foreach (var item in papel)
+            foreach (var item in papel.ToList())
             {
                 await _papelService.DeleteById(item.Id);
             }

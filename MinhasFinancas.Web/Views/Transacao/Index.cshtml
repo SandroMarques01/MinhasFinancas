@@ -34,9 +34,11 @@
     .form-control {
         display: inline;
     }
+
     .success {
         background-color: lightblue !important;
     }
+
     .danger {
         background-color: pink !important;
     }
@@ -73,11 +75,13 @@
                     Início:
                     <input type="date" id="dtInicio" name="dtInicio" min="2018-06-07" class="form-control" />
                     <div class="btn btn-outline-info" title="Colocar início do mês" onclick="ColocarInicioMes()"><</div>
+                    <input type="hidden" id="hddDataIni" value="@ViewBag.DataIni" />
                 </div>
                 <div class="col-md-4">
                     Fim:
                     <input type="date" id="dtFim" name="dtFim" class="form-control" />
                     <div class="btn btn-outline-info" title="Colocar início do mês" onclick="ColocarFinalMes()">></div>
+                    <input type="hidden" id="hddDataFim" value="@ViewBag.DataFim" />
                 </div>
                 <div class="col-md-1">
                     <input type="submit" value="Filtrar" class="btn btn-success" />
@@ -182,13 +186,22 @@
         });
 
 
-        $("#dtInicio").val("2020-01-01");
+        if ($("#hddDataIni").val() == '') {
+            $("#dtInicio").val("2020-01-01");
+        }
+        else {
+            $("#dtInicio").val($("#hddDataIni").val());
+        }
 
-        var dt = new Date();
-        dt = new Date(dt.getFullYear(), dt.getMonth() + 1, 1);
-        dt = new Date(dt - 1)
-        $("#dtFim").val(dt.getFullYear() + "-" + String(dt.getMonth() + 1).padStart(2, '0') + "-" + String(dt.getDate()).padStart(2, '0'));
-
+        if ($("#hddDataFim").val() == '') {
+            var dt = new Date();
+            dt = new Date(dt.getFullYear(), dt.getMonth() + 1, 1);
+            dt = new Date(dt - 1)
+            $("#dtFim").val(dt.getFullYear() + "-" + String(dt.getMonth() + 1).padStart(2, '0') + "-" + String(dt.getDate()).padStart(2, '0'));
+        }
+        else {
+            $("#dtFim").val($("#hddDataFim").val());
+        }
 
 
         $('#tbTransacoes th').click(function () {
