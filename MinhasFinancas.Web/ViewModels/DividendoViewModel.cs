@@ -52,6 +52,9 @@ namespace MinhasFinancas.Web.ViewModels
         [DisplayName("$ Médio")]
         public double PrecoMedio { get; set; }
 
+        [DisplayName("Evolução")]
+        public double Evolucao { get; set; }
+
 
     }
 }

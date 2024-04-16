@@ -14,6 +14,12 @@ namespace MinhasFinancas.Web
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
+                name: "PorCodigo",
+                url: "Papel/{action}/{codigo}",
+                defaults: new { controller = "Papel", action = "Det", codigo = "" }
+            );
+
+            routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }

@@ -50,5 +50,10 @@ namespace MinhasFinancas.Web.ViewModels
         /// Propriedades fora da classe
         /// </summary>
         public virtual IEnumerable<PapelViewModel> Papels { get; set; }
+
+        [DisplayName("Evolução")]
+        public double Evolucao { get; set; }
+        [DisplayName("Evolução Atual")]
+        public double EvolucaoAtual { get; set; }
     }
 }
