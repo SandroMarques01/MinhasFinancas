@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DocumentFormat.OpenXml.Office2010.Excel;
+using MinhasFinancas.Infra;
 using MinhasFinancas.Infra.Models;
 using MinhasFinancas.Service.Core;
 using MinhasFinancas.Service.Papel;
@@ -56,11 +57,11 @@ namespace MinhasFinancas.Web.Controllers
             lst.ForEach(f =>
             {
                 //Calculo de preços
-                f.QuantidadeTotal = f.Transacao.Sum(x => x.TipoTransacao == Infra.TipoTransacao.Compra ? x.Quantidade : x.Quantidade * -1);
+                f.QuantidadeTotal = f.Transacao.Sum(x => x.TipoTransacao == TipoTransacao.Compra ? x.Quantidade : x.Quantidade * -1);
 
-                f.PrecoMedio = f.QuantidadeTotal == 0 ? 0 : f.Transacao.Sum(x => x.Quantidade * x.ValorUnt) / f.QuantidadeTotal;
+                f.PrecoMedio = CalculoPrecoMedio(f.Transacao.ToList());
 
-                f.TotalSaldo = f.QuantidadeTotal == 0 ? 0 : f.Transacao.Sum(x => x.Quantidade * x.ValorUnt);
+                f.TotalSaldo = f.QuantidadeTotal * f.PrecoMedio;
                 totalSaldo += f.TotalSaldo;
 
                 f.TotalSaldoAtual = f.CotacaoAtual * f.QuantidadeTotal;
@@ -96,6 +97,29 @@ namespace MinhasFinancas.Web.Controllers
             return View(lst.OrderBy(f => f.TipoPapel).OrderByDescending(f => f.TotalSaldo));
         }
 
+        private double CalculoPrecoMedio(List<TransacaoViewModel> transacoes)
+        {
+            double precoMedio = 0;
+            double valorYotal = 0;
+            double qtdYotal = 0;
+            foreach (var transacao in transacoes.OrderBy(o => o.Data))
+            {
+                if (transacao.TipoTransacao == TipoTransacao.Compra)
+                {
+                    valorYotal += transacao.Quantidade * transacao.ValorUnt;
+                    qtdYotal += transacao.Quantidade;
+                    precoMedio = valorYotal / qtdYotal;
+                }
+                else
+                {
+                    qtdYotal -= transacao.Quantidade;
+                    valorYotal = precoMedio * qtdYotal;
+                }
+            }
+
+            return precoMedio;
+        }
+
         [HttpGet]
         public async Task<ActionResult> Details(string codigo)
         {
@@ -118,7 +142,8 @@ namespace MinhasFinancas.Web.Controllers
 
 
             double evolucaoDiv = 0;
-            papelViewModel.Dividendo.OrderBy(s => s.Data).ToList().ForEach(f => {
+            papelViewModel.Dividendo.OrderBy(s => s.Data).ToList().ForEach(f =>
+            {
 
                 evolucaoDiv += f.ValorRecebido;
                 f.Evolucao = evolucaoDiv;
@@ -140,7 +165,8 @@ namespace MinhasFinancas.Web.Controllers
 
             double evolucao = 0;
             double evolucaoAtual = 0;
-            papelViewModel.Transacao.OrderBy(s => s.Data).ToList().ForEach(f => {
+            papelViewModel.Transacao.OrderBy(s => s.Data).ToList().ForEach(f =>
+            {
                 evolucao += f.Quantidade * f.ValorUnt;
                 f.Evolucao = evolucao;
 
@@ -177,7 +203,8 @@ namespace MinhasFinancas.Web.Controllers
 
 
             double evolucaoDiv = 0;
-            papelViewModel.Dividendo.OrderBy(s => s.Data).ToList().ForEach(f => {
+            papelViewModel.Dividendo.OrderBy(s => s.Data).ToList().ForEach(f =>
+            {
 
                 evolucaoDiv += f.ValorRecebido;
                 f.Evolucao = evolucaoDiv;
@@ -199,7 +226,8 @@ namespace MinhasFinancas.Web.Controllers
 
             double evolucao = 0;
             double evolucaoAtual = 0;
-            papelViewModel.Transacao.OrderBy(s => s.Data).ToList().ForEach(f => {
+            papelViewModel.Transacao.OrderBy(s => s.Data).ToList().ForEach(f =>
+            {
                 evolucao += f.Quantidade * f.ValorUnt;
                 f.Evolucao = evolucao;
 
@@ -208,7 +236,7 @@ namespace MinhasFinancas.Web.Controllers
 
             });
 
-                ViewBag.TabelaTransacaoPorPapel = papelViewModel.Transacao.OrderBy(x=>x.Data);
+            ViewBag.TabelaTransacaoPorPapel = papelViewModel.Transacao.OrderBy(x => x.Data);
             ViewBag.TabelaDividendosPorPapel = papelViewModel.Dividendo.OrderBy(x => x.Data);
 
             return View(papelViewModel);
@@ -329,6 +357,24 @@ namespace MinhasFinancas.Web.Controllers
             return RedirectToAction("Index");
         }
 
+        // GET: Papel/TrocaPapel/5
+        public async Task<ActionResult> Desdobramento()
+        {
+            List<PapelViewModel> lst = _mapper.Map<List<PapelViewModel>>(await _papelService.Get());
 
+            TrocaPapelViewModel trocaPapelViewModel = new TrocaPapelViewModel();
+            trocaPapelViewModel.PapelsOrigem = lst.OrderBy(x => x.Codigo);
+
+            return View(trocaPapelViewModel);
+        }
+
+        [HttpPost]
+
+        public async Task<ActionResult> Desdobramento(TrocaPapelViewModel trocaPapelViewModel)
+        {
+            await _papelService.Desdobramento(trocaPapelViewModel.PapelIdOrigem, trocaPapelViewModel.QuantidadeDesdobro, trocaPapelViewModel.DataDesdobro);
+
+            return RedirectToAction("Index");
+        }
     }
 }

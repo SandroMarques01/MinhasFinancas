@@ -1,4 +1,5 @@
-﻿using MinhasFinancas.Repository.Dividendo;
+﻿using MinhasFinancas.Infra.Models;
+using MinhasFinancas.Repository.Dividendo;
 using MinhasFinancas.Repository.Papel;
 using MinhasFinancas.Repository.Transacao;
 using MinhasFinancas.Service.Core;
@@ -112,6 +113,37 @@ namespace MinhasFinancas.Service.Papel
             papel.Ativo = false;
             await _baseRepository.Update(papel);
             await _baseRepository.SaveChanges();
+        }
+
+        public async Task Desdobramento(Guid origem, int quantidade, DateTime dataDesdobro)
+        {
+            var lstTransacao = await _transacaoService.Get();
+            var lstDividendo = await _dividendoRepository.Get();
+
+            var lstTransacaoDesdobro = lstTransacao.Where(x => x.PapelId == origem && x.Data < dataDesdobro && (string.IsNullOrWhiteSpace(x.Descricao) || !x.Descricao.StartsWith("D|") || x.Descricao.Substring(2, 10) != dataDesdobro.ToString("dd/MM/yyyy"))).ToList();
+            var lstDividendosDesdobro = lstDividendo.Where(x => x.PapelId == origem && x.Data < dataDesdobro && (string.IsNullOrWhiteSpace(x.Descricao) || !x.Descricao.StartsWith("D|") || x.Descricao.Substring(2, 10) != dataDesdobro.ToString("dd/MM/yyyy"))).ToList();
+
+            if (lstTransacaoDesdobro.Any())
+            {
+                int fatorMultiplicador = quantidade;
+
+                foreach (var item in lstTransacaoDesdobro)
+                {
+                    item.Quantidade = item.Quantidade * fatorMultiplicador;
+                    item.ValorUnt = item.ValorUnt / fatorMultiplicador;
+                    item.Descricao = "D|" + dataDesdobro.ToString("dd/MM/yyyy") + "|";
+                    await _transacaoService.Update(item);
+                }
+
+                foreach (var item in lstDividendosDesdobro)
+                {
+                    item.Quantidade = item.Quantidade * fatorMultiplicador;
+                    item.Descricao = "D|" + dataDesdobro.ToString("dd/MM/yyyy") + "|";
+                    await _dividendoService.Update(item);
+                }
+            }
+
+
         }
 
     }

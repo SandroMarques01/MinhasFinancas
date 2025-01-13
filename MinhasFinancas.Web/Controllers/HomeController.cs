@@ -34,8 +34,10 @@ namespace MinhasFinancas.Web.Controllers
 
         public async Task<ActionResult> Index()
         {
-            DateTime ultimoDiaMes = Convert.ToDateTime(DateTime.Now.Year + "-" + (DateTime.Now.Month + 1) + "-01").AddDays(-1);
-
+            DateTime ultimoDiaMes = Convert.ToDateTime((DateTime.Now.Month == 12 ? DateTime.Now.Year + 1 : DateTime.Now.Year)
+                                                        + "-" + 
+                                                        (DateTime.Now.Month == 12 ? "01" : (DateTime.Now.Month + 1).ToString()) 
+                                                        + "-01").AddDays(-1);
 
             List<DividendoViewModel> lstD = _mapper.Map<List<DividendoViewModel>>(await _dividendoService.Get(includeProperties: "Papel"));
             List<TransacaoViewModel> lstT = _mapper.Map<List<TransacaoViewModel>>(await _transacaoService.Get(includeProperties: "Papel"));

@@ -13,6 +13,7 @@ namespace MinhasFinancas.Service.Papel
         Task<IEnumerable<Infra.Models.Papel>> Get(Expression<Func<Infra.Models.Papel, bool>> filter = null, string includeProperties = null);
         Task<Infra.Models.Papel> GetById(Guid id);
         Task TrocaPapel (Guid origem,  Guid destino);
+        Task Desdobramento(Guid origem, int quantidade, DateTime dataDesdobro);
         Task<IEnumerable<Infra.Models.Papel>> GetDividendosSemana(string includeProperties = null);
 
     }

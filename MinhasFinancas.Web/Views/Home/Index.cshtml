@@ -66,7 +66,7 @@
         <section class="col-lg-3 col-sm-6">
             <div class="card small-box bg-info">
                 <h3>@ViewBag.DividendosFiisMes.ToString("C")</h3>
-                <p>Dividendos em Fiis no mês (@Math.Round(ViewBag.DividendosFiisMesPercent,2)%)</p>
+                <p>Dividendos em Fiis no mês (@Math.Round(ViewBag.DividendosFiisMesPercent, 2)%)</p>
             </div>
         </section>
     </div>
@@ -161,8 +161,16 @@
     </div>
 
 
+    <div class="row">
+        <section class="col-md-6 col-sm-12">
+            <div id="columnchart_material" style="width: 100%; height: 500px;"></div>
+        </section>
+    </div>
+
+
 </main>
 
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 <script>
@@ -208,5 +216,31 @@
                 tabela.children('tbody').append(linha);
             });
         });
+
     });
+
+    google.charts.load('current', { 'packages': ['bar'] });
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+            ['Year', 'Sales', 'Expenses', 'Profit'],
+            ['2014', 1000, 400, 200],
+            ['2015', 1170, 460, 250],
+            ['2016', 660, 1120, 300],
+            ['2017', 1030, 540, 350]
+        ]);
+
+        var options = {
+            chart: {
+                title: 'Company Performance',
+                subtitle: 'Sales, Expenses, and Profit: 2014-2017',
+            }
+        };
+
+        var chart = new google.charts.Bar(document.getElementById('columnchart_material'));
+
+        chart.draw(data, google.charts.Bar.convertOptions(options));
+    }
+
 </script>

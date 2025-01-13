@@ -313,6 +313,7 @@
     <Content Include="Views\Transacao\Index.cshtml" />
     <Content Include="Views\Configuracao\Index.cshtml" />
     <Content Include="Views\Papel\TrocaPapel.cshtml" />
+    <Content Include="Views\Papel\Desdobramento.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

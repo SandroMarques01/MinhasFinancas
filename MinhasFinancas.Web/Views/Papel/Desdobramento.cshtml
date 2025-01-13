@@ -1,0 +1,37 @@
+﻿@model MinhasFinancas.Web.ViewModels.TrocaPapelViewModel
+@{
+    ViewBag.Title = "Desdobramento";
+}
+
+<h2>Desdobramento</h2>
+
+
+<div class="container">
+
+    @using (Html.BeginForm("Desdobramento", "Papel", FormMethod.Post))
+    {
+        <div class="row">
+            <div class="col-3">
+                Papel Origem:
+                @Html.DropDownListFor(model => model.PapelIdOrigem,
+                 new SelectList(Model.PapelsOrigem, "Id", "Codigo"),
+                 string.Empty, new { @class = "form-control" })
+            </div>
+            <div class="col-3">
+                Quantidade de vezes:
+                @Html.EditorFor(model => model.QuantidadeDesdobro, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+            <div class="col-3">
+                Data:
+                @Html.EditorFor(model => model.DataDesdobro, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+            <div class="col-3">
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Reaizar desdobramento" class="btn btn-success" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
