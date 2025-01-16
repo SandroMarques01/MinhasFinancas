@@ -207,6 +207,10 @@
                 else if (valorA.includes('/')) {
                     console.log(valorA);
                 }
+                else if (Number.isInteger(parseInt(valorA))) {
+                    valorA = parseInt(valorA);
+                    valorB = parseInt(valorB);
+                }
 
                 if (ordem === 'asc') {
                     return (valorA < valorB) ? -1 : (valorA > valorB) ? 1 : 0;

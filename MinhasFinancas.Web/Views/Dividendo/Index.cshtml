@@ -217,6 +217,14 @@
                     valorA = parseFloat(valorA.replace(',', '.'));
                     valorB = parseFloat(valorB.replace(',', '.'));
                 }
+                else if (valorA.includes('/')) {
+                    valorA = new Date(valorA.trim().substring(6, 10), (parseInt(valorA.trim().substring(3, 5)) - 1), valorA.trim().substring(0, 2));
+                    valorB = new Date(valorB.trim().substring(6, 10), (parseInt(valorB.trim().substring(3, 5)) - 1), valorB.trim().substring(0, 2));
+                }
+                else if (Number.isInteger(parseInt(valorA))) {
+                    valorA = parseInt(valorA);
+                    valorB = parseInt(valorB);
+                }
 
                 if (ordem === 'asc') {
                     return (valorA < valorB) ? -1 : (valorA > valorB) ? 1 : 0;
