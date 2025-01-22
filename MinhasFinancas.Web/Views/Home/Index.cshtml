@@ -1,4 +1,5 @@
-﻿@{
+﻿@using MinhasFinancas.Web.ViewModels;
+@{
     ViewBag.Title = "Home";
 }
 
@@ -44,20 +45,23 @@
         </section>
         <section class="col-lg-4 col-sm-6">
             <div class="card small-box bg-success" style="display:block;">
+                @{ 
+                    double total = ViewBag.PercentAcao + ViewBag.PercentFII + ViewBag.PercentBDR + ViewBag.PercentETF;
+                }
                 <div style="width: 24%; display: inline-block">
-                    <h3>@Math.Round(ViewBag.PercentAcao, 2)%</h3>
+                    <h3>@Math.Round(ViewBag.PercentAcao * 100 / total, 1)%</h3>
                     <p>Ação</p>
                 </div>
                 <div style="width: 23%; display: inline-block ">
-                    <h3>@Math.Round(ViewBag.PercentFII, 2)%</h3>
+                    <h3>@Math.Round(ViewBag.PercentFII * 100 / total, 1)%</h3>
                     <p>FII</p>
                 </div>
                 <div style="width: 24%; display: inline-block; ">
-                    <h3>@Math.Round(ViewBag.PercentBDR, 2)%</h3>
+                    <h3>@Math.Round(ViewBag.PercentBDR * 100 / total, 1)%</h3>
                     <p>BDR</p>
                 </div>
                 <div style="width: 23%; display: inline-block; ">
-                    <h3>@Math.Round(ViewBag.PercentETF, 2)%</h3>
+                    <h3>@Math.Round(ViewBag.PercentETF * 100 / total, 1)%</h3>
                     <p>ETF</p>
                 </div>
             </div>
@@ -96,7 +100,7 @@
                                     @{ string statusPagamentoHoje = item.Data.ToString("dd/MM/yyyy") == DateTime.Now.ToString("dd/MM/yyyy") ? "PagHoje" : ""; }
                                     <td class="@statusPagamentoHoje">@item.Data.ToString("dd/MM") </td>
                                 </tr>
-                                        }
+                            }
                         </tbody>
                     </table>
                 </div>
@@ -124,7 +128,7 @@
                                     <td style="text-align: right;">@{var vlrTotal = item.ValorUnt * item.Quantidade;} @vlrTotal.ToString("C") </td>
                                     <td>@item.Data.ToString("dd/MM") </td>
                                 </tr>
-                                        }
+                            }
                         </tbody>
                     </table>
                 </div>
@@ -226,49 +230,55 @@
 
     });
 
-    google.charts.load('current', { 'packages': ['bar'] });
+    google.charts.load("current", { packages: ['corechart'] });
     google.charts.setOnLoadCallback(drawChart);
+    var dividendosGrafico = new Array();
+    @{
+        List<DividendoViewModel> lstAcao = (List<DividendoViewModel>)ViewData["DivGraficoAcao"];
+        List<DividendoViewModel> lstFII = (List<DividendoViewModel>)ViewData["DivGraficoFII"];
+        List<DividendoViewModel> lstBDR = (List<DividendoViewModel>)ViewData["DivGraficoBDR"];
+        List<DividendoViewModel> lstETF = (List<DividendoViewModel>)ViewData["DivGraficoETF"];
 
+        int c = lstAcao.Count() > lstFII.Count() ? lstAcao.Count() : lstFII.Count();
+        c = c > lstBDR.Count() ? c : lstBDR.Count();
+        c = c > lstETF.Count() ? c : lstETF.Count();
+
+    }
     function drawChart() {
         var data = google.visualization.arrayToDataTable([
-            ['Year', 'Sales', 'Expenses', 'Profit'],
-            ['2014', 1000, 400, 200],
-            ['2015', 1170, 460, 250],
-            ['2016', 660, 1120, 300],
-            ['2017', 1030, 540, 350]
+            ['Data', 'Ação', 'FII', 'BDR', 'ETF'],
+
+            @for (int i = 0; i < c; i++)
+            {
+                var dataFormatada = lstAcao[i].Data.ToString("MM/yyyy");
+                var valA = lstAcao[i].ValorRecebido.ToString().Replace(',', '.');
+                var valF = lstFII[i].ValorRecebido.ToString().Replace(',', '.');
+                var valB = lstBDR[i].ValorRecebido.ToString().Replace(',', '.');
+                var valE = lstETF.Count() == 0 ? "0" : lstETF[i].ValorRecebido.ToString().Replace(',', '.');
+                @:["@dataFormatada", @valA, @valF, @valB, @valE],
+            }
         ]);
 
         var options = {
             chart: {
-                title: 'Company Performance',
-                subtitle: 'Sales, Expenses, and Profit: 2014-2017',
+                title: 'Desempenho dos dividendos',
+                subtitle: 'Dividendos por Mês'
             }
         };
 
-        var chart = new google.charts.Bar(document.getElementById('columnchart_material'));
-
-        chart.draw(data, google.charts.Bar.convertOptions(options));
+        var chart = new google.visualization.ColumnChart(document.getElementById("columnchart_material"));
+        chart.draw(data, options);
     }
-
-    var PercentAcao = 0;
-    var PercentFII = 0;
-    var PercentBDR = 0;
-    var PercentETF = 0;
-
-    PercentAcao = @Math.Round(ViewBag.PercentAcao, 2)
-    PercentFII = @Math.Round(ViewBag.PercentFII, 2)
-    PercentBDR = @Math.Round(ViewBag.PercentBDR, 2)
-    PercentETF = @Math.Round(ViewBag.PercentETF, 2)
 
     google.charts.load("current", { packages: ["corechart"] });
     google.charts.setOnLoadCallback(drawChartPizza);
     function drawChartPizza() {
         var data = google.visualization.arrayToDataTable([
             ['Papel', '% cotas'],
-            ['Ação', PercentAcao],
-            ['FII', PercentFII],
-            ['BDR', PercentBDR],
-            ['ETF', PercentETF]
+            ['Ação', @Math.Round(ViewBag.PercentAcao, 2).ToString().Replace(',', '.')],
+            ['FII', @Math.Round(ViewBag.PercentFII, 2).ToString().Replace(',', '.')],
+            ['BDR', @Math.Round(ViewBag.PercentBDR, 2).ToString().Replace(',', '.')],
+            ['ETF', @Math.Round(ViewBag.PercentETF, 2).ToString().Replace(',', '.')]
         ]);
 
         var options = {

@@ -1,8 +1,12 @@
-﻿using MinhasFinancas.Infra.Data;
+﻿using Dapper;
+using MinhasFinancas.Infra.Data;
 using MinhasFinancas.Repository.Core;
 using System;
+using System.Linq;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 
 namespace MinhasFinancas.Repository.Dividendo
 {
@@ -10,29 +14,40 @@ namespace MinhasFinancas.Repository.Dividendo
     {
         public DividendoRepository(AppDbContext db) : base(db) { }
 
-        //public List<Infra.Models.Dividendo> RetornaTotalDividendosPorMes(int mesRetroativo, Guid acaoId = default)
-        //{
-        //    using (SqlConnection oSqlConnection = new SqlConnection(GetConnectionString()))
-        //    {
-        //        oSqlConnection.Open();
+        public async Task<IEnumerable<Infra.Models.Dividendo>> RetornaTotalDividendosPorMes(int mesRetroativo, int tipoPapel = 0, Guid papelId = default)
+        {
+            using (SqlConnection oSqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["MinhasFinancasDB"].ConnectionString))
+            {
+                oSqlConnection.Open();
 
-        //        var parameters = new { mesRetroativo = mesRetroativo, acaoId = acaoId };
+                var parameters = new { @MesRetroativo = mesRetroativo, TipoPapel = tipoPapel, PapelId = papelId };
 
-        //        string sComando = $@"   select FORMAT(d.Data , 'MM-yyyy') as Data, FORMAT(d.Data , 'yyyy-MM') as Ordenacao,
-        //                                sum(d.ValorRecebido) as ValorRecebido
-        //                                from TbDividendo d
-        //                                where cast(concat(YEAR(d.Data),'-',MONTH(d.Data),'-01') as date) >= DATEADD (MONTH,-5, cast(concat(YEAR(GETDATE()),'-',MONTH(GETDATE()),'-01') as date))
-        //                                group by  FORMAT(d.Data , 'MM-yyyy'), FORMAT(d.Data , 'yyyy-MM')
-        //                                order by FORMAT(d.Data , 'yyyy-MM')
-        //                            ";
+                string sComando = $@"   select FORMAT(d.Data , 'MM-yyyy') as Data, FORMAT(d.Data , 'yyyy-MM') as Ordenacao,
+                                        sum(d.ValorRecebido) as ValorRecebido
+                                        from TbDividendo d
+                                        join TbPapel p on d.PapelId = p.Id
+                                        where cast(concat(YEAR(d.Data),'-',MONTH(d.Data),'-01') as date) >= DATEADD (MONTH,-@MesRetroativo, cast(concat(YEAR(GETDATE()),'-',MONTH(GETDATE()),'-01') as date))
+                                    ";
+                if(tipoPapel > 0)
+                {
+                    sComando += $@"     and tipoPapel = @TipoPapel ";
+                }
+                if (papelId != default)
+                {
+                    sComando += $@"     and d.PapelId = @PapelId ";
+                }
+
+                sComando += $@"         group by  FORMAT(d.Data , 'MM-yyyy'), FORMAT(d.Data , 'yyyy-MM')
+                                        order by FORMAT(d.Data , 'yyyy-MM')
+                                    ";
 
 
-        //        List<Infra.Models.Dividendo> finishedProductReview = oSqlConnection.Query<Infra.Models.Dividendo>(sComando, parameters).ToList();
-        //        oSqlConnection.Close();
+                List<Infra.Models.Dividendo> finishedProductReview = oSqlConnection.Query<Infra.Models.Dividendo>(sComando, parameters).ToList();
+                oSqlConnection.Close();
 
-        //        return finishedProductReview;
-        //    }
-        //}
+                return finishedProductReview;
+            }
+        }
 
         //public List<Infra.Models.Dividendo> RetornaDividendosPorMeseTipo(int mesRetroativo)
         //{

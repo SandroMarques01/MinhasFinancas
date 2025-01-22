@@ -12,6 +12,6 @@ namespace MinhasFinancas.Service.Dividendo
         Task DeleteById(Guid id);
         Task<IEnumerable<Infra.Models.Dividendo>> Get(Expression<Func<Infra.Models.Dividendo, bool>> filter = null, string includeProperties = null);
         Task<Infra.Models.Dividendo> GetById(Guid id);
-
+        Task<IEnumerable<Infra.Models.Dividendo>> RetornaTotalDividendosPorMes(int mesRetroativo, int tipoPapel = 0, Guid papelId = default);
     }
 }

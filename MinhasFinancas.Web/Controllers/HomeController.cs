@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using MinhasFinancas.Infra.Models;
 using MinhasFinancas.Service.Core;
 using MinhasFinancas.Service.Dividendo;
 using MinhasFinancas.Service.Papel;
@@ -80,11 +79,20 @@ namespace MinhasFinancas.Web.Controllers
             ViewBag.ValorTotalPapel = lstP.Sum(x => x.TotalSaldoAtual);
             ViewBag.TabelaMaioresPapel = lstP.OrderByDescending(x => x.TotalSaldoAtual).Take(10);
 
-            ViewBag.PercentAcao = lstP.Where(x => x.TipoPapel == Infra.TipoPapel.Acao).Sum(x => x.TotalSaldoAtual) * 100 / ViewBag.ValorTotalPapel;
-            ViewBag.PercentFII = lstP.Where(x => x.TipoPapel == Infra.TipoPapel.Fii).Sum(x => x.TotalSaldoAtual) * 100 / ViewBag.ValorTotalPapel;
-            ViewBag.PercentBDR = lstP.Where(x => x.TipoPapel == Infra.TipoPapel.BDR).Sum(x => x.TotalSaldoAtual) * 100 / ViewBag.ValorTotalPapel;
-            ViewBag.PercentETF = lstP.Where(x => x.TipoPapel == Infra.TipoPapel.ETF).Sum(x => x.TotalSaldoAtual) * 100 / ViewBag.ValorTotalPapel;
+            ViewBag.PercentAcao = lstP.Where(x => x.TipoPapel == Infra.TipoPapel.Acao).Sum(x => x.TotalSaldoAtual);
+            ViewBag.PercentFII = lstP.Where(x => x.TipoPapel == Infra.TipoPapel.Fii).Sum(x => x.TotalSaldoAtual);
+            ViewBag.PercentBDR = lstP.Where(x => x.TipoPapel == Infra.TipoPapel.BDR).Sum(x => x.TotalSaldoAtual);
+            ViewBag.PercentETF = lstP.Where(x => x.TipoPapel == Infra.TipoPapel.ETF).Sum(x => x.TotalSaldoAtual);
 
+            //Gráfico Dividendos
+            List<DividendoViewModel> lstDGraficoAcao = _mapper.Map<List<DividendoViewModel>>(await _dividendoService.RetornaTotalDividendosPorMes(5, tipoPapel: 1));
+            ViewData["DivGraficoAcao"] = lstDGraficoAcao;
+            List<DividendoViewModel> lstDGraficoFII = _mapper.Map<List<DividendoViewModel>>(await _dividendoService.RetornaTotalDividendosPorMes(5, tipoPapel: 2));
+            ViewData["DivGraficoFII"] = lstDGraficoFII;
+            List<DividendoViewModel> lstDGraficoBDR = _mapper.Map<List<DividendoViewModel>>(await _dividendoService.RetornaTotalDividendosPorMes(5, tipoPapel: 3));
+            ViewData["DivGraficoBDR"] = lstDGraficoBDR;
+            List<DividendoViewModel> lstDGraficoETF = _mapper.Map<List<DividendoViewModel>>(await _dividendoService.RetornaTotalDividendosPorMes(5, tipoPapel: 4));
+            ViewData["DivGraficoETF"] = lstDGraficoETF;
 
             return View();
         }
