@@ -14,9 +14,33 @@ namespace MinhasFinancas.Web
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
-                name: "PorCodigo",
-                url: "Papel/{action}/{codigo}",
-                defaults: new { controller = "Papel", action = "Det", codigo = "" }
+                name: "PorCodigoAcao",
+                url: "Acao/{codigo}",
+                defaults: new { controller = "Papel", action = "Detalhes", codigo = "" }
+            );
+
+            routes.MapRoute(
+                name: "PorCodigoFII",
+                url: "FII/{codigo}",
+                defaults: new { controller = "Papel", action = "Detalhes", codigo = "" }
+            );
+
+            routes.MapRoute(
+                name: "PorCodigoBDR",
+                url: "BDR/{codigo}",
+                defaults: new { controller = "Papel", action = "Detalhes", codigo = "" }
+            );
+
+            routes.MapRoute(
+                name: "PorCodigoETF",
+                url: "ETF/{codigo}",
+                defaults: new { controller = "Papel", action = "Detalhes", codigo = "" }
+            );
+
+            routes.MapRoute(
+                name: "Normal",
+                url: "Papel/{action}",
+                defaults: new { controller = "Papel", action = "Index" }
             );
 
             routes.MapRoute(

@@ -3,7 +3,7 @@
     public enum TipoPapel
     {
         Acao = 1,
-        Fii = 2,
+        FII = 2,
         BDR = 3,
         ETF = 4
     }

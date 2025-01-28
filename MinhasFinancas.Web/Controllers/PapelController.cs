@@ -121,7 +121,7 @@ namespace MinhasFinancas.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> Details(string codigo)
+        public async Task<ActionResult> Detalhes(string codigo)
         {
             PapelViewModel papelViewModel;
             try
@@ -189,57 +189,15 @@ namespace MinhasFinancas.Web.Controllers
             {
                 var listpapelViewModel = _mapper.Map<List<PapelViewModel>>(await _papelService.Get(x => x.Id == id, "Transacao,Dividendo"));
                 papelViewModel = listpapelViewModel.FirstOrDefault();
+
+                return Redirect(@"/"+ papelViewModel.TipoPapel.ToString() + "/" + papelViewModel.Codigo);
             }
             catch (Exception ex)
             {
+                return View("");
                 throw ex;
             }
 
-            if (papelViewModel == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.Papel = papelViewModel.Codigo + " - " + papelViewModel.Nome;
-
-
-            double evolucaoDiv = 0;
-            papelViewModel.Dividendo.OrderBy(s => s.Data).ToList().ForEach(f =>
-            {
-
-                evolucaoDiv += f.ValorRecebido;
-                f.Evolucao = evolucaoDiv;
-
-                var lstT2 = new List<TransacaoViewModel>();
-
-                foreach (var t in papelViewModel.Transacao.Where(a => a.PapelId == f.PapelId).OrderBy(s => s.Data).ToList())
-                {
-                    if (lstT2.Sum(y => y.Quantidade) < f.Quantidade)
-                        lstT2.Add(t);
-                    else
-                        break;
-                }
-
-                f.PrecoMedio = lstT2.Sum(y => y.Quantidade * y.ValorUnt) / f.Quantidade;
-
-                f.YieldOnCost = f.ValorRecebido / (f.PrecoMedio * f.Quantidade) * 100;
-            });
-
-            double evolucao = 0;
-            double evolucaoAtual = 0;
-            papelViewModel.Transacao.OrderBy(s => s.Data).ToList().ForEach(f =>
-            {
-                evolucao += f.Quantidade * f.ValorUnt;
-                f.Evolucao = evolucao;
-
-                evolucaoAtual += f.Quantidade * papelViewModel.CotacaoAtual;
-                f.EvolucaoAtual = evolucaoAtual;
-
-            });
-
-            ViewBag.TabelaTransacaoPorPapel = papelViewModel.Transacao.OrderBy(x => x.Data);
-            ViewBag.TabelaDividendosPorPapel = papelViewModel.Dividendo.OrderBy(x => x.Data);
-
-            return View(papelViewModel);
         }
 
         // GET: Papel/Create

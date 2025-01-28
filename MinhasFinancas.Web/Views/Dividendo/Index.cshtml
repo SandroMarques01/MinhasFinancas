@@ -7,7 +7,7 @@
     var listItemsPapel = new[] {
         new { value = 0, text = "Selecione..." },
         new { value = Convert.ToInt32(MinhasFinancas.Infra.TipoPapel.Acao), text = MinhasFinancas.Infra.TipoPapel.Acao.ToString() },
-        new { value = Convert.ToInt32(MinhasFinancas.Infra.TipoPapel.Fii), text = MinhasFinancas.Infra.TipoPapel.Fii.ToString() },
+        new { value = Convert.ToInt32(MinhasFinancas.Infra.TipoPapel.FII), text = MinhasFinancas.Infra.TipoPapel.FII.ToString() },
         new { value = Convert.ToInt32(MinhasFinancas.Infra.TipoPapel.BDR), text = MinhasFinancas.Infra.TipoPapel.BDR.ToString() },
         new { value = Convert.ToInt32(MinhasFinancas.Infra.TipoPapel.ETF), text = MinhasFinancas.Infra.TipoPapel.ETF.ToString() }
     };
@@ -104,6 +104,12 @@
                 $ Médio
             </th>
             <th style="width:6%;">
+                D on cost%
+            </th>
+            <th>
+                $ Atual
+            </th>
+            <th style="width:6%;">
                 DY%
             </th>
             <th style="width:8;">
@@ -142,6 +148,14 @@
                 <td>
                     @Math.Round(item.YieldOnCost, 3)%
                 </td>
+
+                <td>
+                    @item.Papel.CotacaoAtual.ToString("C")
+                </td>
+                <td>
+                    @Math.Round(unt * 100 / item.Papel.CotacaoAtual, 3)%
+                </td>
+
                 @{ string statusPagamentoHoje = item.Data.ToString("dd/MM/yyyy") == DateTime.Now.ToString("dd/MM/yyyy") ? "PagHoje" : (item.Data > DateTime.Now && item.Data < DateTime.Now.AddDays(6) ? "pagSemana" : ""); }
                 <td class="@statusPagamentoHoje">
                     @item.Data.ToString("dd/MM/yyyy")

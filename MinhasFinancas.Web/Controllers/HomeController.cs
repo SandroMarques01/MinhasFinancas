@@ -48,10 +48,10 @@ namespace MinhasFinancas.Web.Controllers
             ViewBag.DividendosMes = lstD.Where(f => f.Data >= Convert.ToDateTime(DateTime.Now.Year + "-" + (DateTime.Now.Month) + "-01")
                                                     && f.Data <= ultimoDiaMes).Sum(x => x.ValorRecebido);
 
-            ViewBag.DividendosFiisMes = lstD.Where(f => f.Papel.TipoPapel == Infra.TipoPapel.Fii && f.Data >= Convert.ToDateTime(DateTime.Now.Year + "-" + (DateTime.Now.Month) + "-01")
+            ViewBag.DividendosFiisMes = lstD.Where(f => f.Papel.TipoPapel == Infra.TipoPapel.FII && f.Data >= Convert.ToDateTime(DateTime.Now.Year + "-" + (DateTime.Now.Month) + "-01")
                                                     && f.Data <= ultimoDiaMes).Sum(x => x.ValorRecebido);
 
-            ViewBag.DividendosFiisMesPercent = ViewBag.DividendosFiisMes * 100 / lstT.Where(x => x.Papel.TipoPapel == Infra.TipoPapel.Fii
+            ViewBag.DividendosFiisMesPercent = ViewBag.DividendosFiisMes * 100 / lstT.Where(x => x.Papel.TipoPapel == Infra.TipoPapel.FII
                                                                             && x.TipoTransacao == Infra.TipoTransacao.Compra
                                                                             && x.Data < Convert.ToDateTime(DateTime.Now.Year + "-" + DateTime.Now.Month + "-01")).Sum(x => x.Quantidade * x.ValorUnt);
             
@@ -80,7 +80,7 @@ namespace MinhasFinancas.Web.Controllers
             ViewBag.TabelaMaioresPapel = lstP.OrderByDescending(x => x.TotalSaldoAtual).Take(10);
 
             ViewBag.PercentAcao = lstP.Where(x => x.TipoPapel == Infra.TipoPapel.Acao).Sum(x => x.TotalSaldoAtual);
-            ViewBag.PercentFII = lstP.Where(x => x.TipoPapel == Infra.TipoPapel.Fii).Sum(x => x.TotalSaldoAtual);
+            ViewBag.PercentFII = lstP.Where(x => x.TipoPapel == Infra.TipoPapel.FII).Sum(x => x.TotalSaldoAtual);
             ViewBag.PercentBDR = lstP.Where(x => x.TipoPapel == Infra.TipoPapel.BDR).Sum(x => x.TotalSaldoAtual);
             ViewBag.PercentETF = lstP.Where(x => x.TipoPapel == Infra.TipoPapel.ETF).Sum(x => x.TotalSaldoAtual);
 

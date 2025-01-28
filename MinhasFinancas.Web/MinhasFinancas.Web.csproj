@@ -314,6 +314,7 @@
     <Content Include="Views\Configuracao\Index.cshtml" />
     <Content Include="Views\Papel\TrocaPapel.cshtml" />
     <Content Include="Views\Papel\Desdobramento.cshtml" />
+    <Content Include="Views\Papel\Detalhes.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

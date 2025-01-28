@@ -1,0 +1,246 @@
+﻿@model MinhasFinancas.Web.ViewModels.PapelViewModel
+
+@{
+    ViewBag.Title = "Detalhes do Papel";
+}
+<style>
+    .PagHoje {
+        background-color: lightgreen !important;
+    }
+
+    .success {
+        background-color: lightblue !important;
+    }
+
+    .danger {
+        background-color: pink !important;
+    }
+</style>
+
+<h2>Detalhes do Papel</h2>
+
+<div>
+    <h4>@ViewBag.Papel</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Codigo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Codigo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Nome)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nome)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TipoPapel)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TipoPapel)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CotacaoAtual)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CotacaoAtual)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Descricao)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Descricao)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Ativo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Ativo)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Editar", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary" }) |
+    @Html.ActionLink("Voltar", "Index", new { area = "" }, new { @class = "btn btn-info" })
+</p>
+
+<section>
+    <div class="row">
+        <h3>Transação</h3>
+        <div class="card-body">
+            <table class="table table-bordered table-striped" id="tbDividendos">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Valor Unt</th>
+                        <th>Quantidade</th>
+                        <th>Total</th>
+                        <th>Evolução</th>
+                        <th>$ Atual</th>
+                        <th>$ ganho</th>
+                        <th>Evolução atual</th>
+                        <th>Tipo</th>
+                        <th style="width:7%;">Descrição</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyDividendos1">
+                    @foreach (var item in ViewBag.TabelaTransacaoPorPapel)
+                    {
+
+                        <tr>
+                            <td>@item.Data.ToString("dd/MM/yyyy")</td>
+                            <td>@item.ValorUnt.ToString("C")</td>
+                            <td>@item.Quantidade</td>
+                            <td>
+                                @{var total = item.Quantidade * item.ValorUnt;}
+                                @total.ToString("C")
+                            </td>
+                            <td>@item.Evolucao.ToString("C")</td>
+                            <td>@Model.CotacaoAtual.ToString("C")</td>
+                            @{ string statusVarPapel = Model.CotacaoAtual >= item.ValorUnt ? "success" : "danger"; }
+                            <td class="@statusVarPapel">
+                                @{var difGanho = Model.CotacaoAtual - item.ValorUnt;}
+                                @difGanho.ToString("C")
+                            </td>
+                            <td>@item.EvolucaoAtual.ToString("C")</td>
+                            <td>@item.TipoTransacao</td>
+                            <td>@item.Descricao</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="row">
+        <h3>Dividendos</h3>
+        <div class="card-body">
+            <table class="table table-bordered table-striped" id="tbDividendos">
+                <thead>
+                    <tr>
+                        <th style="width:11%;">Data</th>
+                        <th style="width:10%;">Valor Recebido</th>
+                        <th style="width:8%;">Qtd</th>
+                        <th style="width:10%;">Valor Unt.</th>
+                        <th style="width:10%;">$ Médio</th>
+                        <th style="width:8%;">D on Cost%</th>
+                        <th style="width:10%;">$ Atual</th>
+                        <th style="width:8%;">DY%</th>
+                        <th style="width:10%;">Evolução</th>
+                        <th style="width:10%;">Evolução %</th>
+                        <th style="width:12%;">Tipo</th>
+                        <th style="width:12%;">Descrição</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyDividendos1">
+                    @foreach (var item in ViewBag.TabelaDividendosPorPapel)
+                    {
+
+                        <tr>
+                            @{ string statusPagamentoHoje = item.Data.ToString("dd/MM/yyyy") == DateTime.Now.ToString("dd/MM/yyyy") ? "PagHoje" : (item.Data > DateTime.Now && item.Data < DateTime.Now.AddDays(6) ? "pagSemana" : ""); }
+                            <td class="@statusPagamentoHoje">
+                                @item.Data.ToString("dd/MM/yyyy")
+                            </td>
+                            <td>@item.ValorRecebido.ToString("C")</td>
+                            <td>@item.Quantidade</td>
+                            <td>
+                                @{var unt = item.ValorRecebido / item.Quantidade;}
+                                @unt.ToString("C")
+                            </td>
+                            <td>@item.PrecoMedio.ToString("C")</td>
+                            <td>@Math.Round(item.YieldOnCost, 3)%</td>
+
+                            <td>@Html.DisplayFor(model => model.CotacaoAtual)</td>
+                            <td>@Math.Round(unt * 100 / Model.CotacaoAtual , 3)%</td>
+
+                            <td>@item.Evolucao.ToString("C")</td>
+                            <td>
+                                @{ var evoYield = (item.Evolucao * 100) / (item.PrecoMedio * item.Quantidade); }
+                                @Math.Round(evoYield, 2)%
+                            </td>
+                            <td>@item.TipoDividendo</td>
+                            <td>@item.Descricao</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // Adiciona um ouvinte de evento de clique aos cabeçalhos da tabela
+        $('#tbDividendos th').click(function () {
+            var tabela = $(this).parents('table').eq(0); // Obtém a tabela
+            var colunaIndex = $(this).index(); // Obtém o índice da coluna clicada
+            var ordem = $(this).hasClass('ordenado') && !$(this).hasClass('desc') ? 'desc' : 'asc'; // Verifica a ordem atual
+
+            // Remove a classe 'ordenado' de todos os cabeçalhos
+            tabela.find('th').removeClass('ordenado');
+            tabela.find('th').removeClass('desc');
+            // Adiciona a classe 'ordenado' apenas ao cabeçalho clicado
+            $(this).addClass('ordenado');
+
+            // Adiciona a classe 'desc' apenas ao cabeçalho clicado e quando ordem for desc
+            if (ordem == "desc") {
+                $(this).addClass('desc');
+            }
+
+            // Obtém as linhas da tabela exceto pelo cabeçalho
+            var linhas = tabela.find('tbody > tr').toArray().sort(function (a, b) {
+                var valorA = $(a).find('td').eq(colunaIndex).text().toUpperCase();
+                var valorB = $(b).find('td').eq(colunaIndex).text().toUpperCase();
+
+                if (valorA.includes("R$")) {
+                    valorA = parseFloat(valorA.replace('R$ ', '').replace('.', '').replace(',', '.'));
+                    valorB = parseFloat(valorB.replace('R$ ', '').replace('.', '').replace(',', '.'));
+                }
+                else if (valorA.includes('%')) {
+                    valorA = parseFloat(valorA.replace(',', '.'));
+                    valorB = parseFloat(valorB.replace(',', '.'));
+                }
+                else if (valorA.includes('/')) {
+                    valorA = new Date(valorA.trim().substring(6, 10), (parseInt(valorA.trim().substring(3, 5)) - 1), valorA.trim().substring(0, 2));
+                    valorB = new Date(valorB.trim().substring(6, 10), (parseInt(valorB.trim().substring(3, 5)) - 1), valorB.trim().substring(0, 2));
+                }
+                else if (Number.isInteger(parseInt(valorA))) {
+                    valorA = parseInt(valorA);
+                    valorB = parseInt(valorB);
+                }
+
+                if (ordem === 'asc') {
+                    return (valorA < valorB) ? -1 : (valorA > valorB) ? 1 : 0;
+                } else {
+                    return (valorA > valorB) ? -1 : (valorA < valorB) ? 1 : 0;
+                }
+            });
+            // Atualiza a tabela com as linhas reordenadas
+            $.each(linhas, function (index, linha) {
+                tabela.children('tbody').append(linha);
+            });
+        });
+    });
+</script>

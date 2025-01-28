@@ -71,7 +71,7 @@ namespace MinhasFinancas.Service.Configuracao
                             papel = new Infra.Models.Papel();
                             papel.Nome = nomeCompletoPapel.Replace(codigoPapel + " - ", "").Trim();
                             papel.Codigo = codigoPapel;
-                            papel.TipoPapel = codigoPapel.Contains("34") ? TipoPapel.BDR : (codigoPapel.Contains("11") || codigoPapel.Contains("12") || codigoPapel.Contains("13") ? TipoPapel.Fii : TipoPapel.Acao);
+                            papel.TipoPapel = codigoPapel.Contains("34") ? TipoPapel.BDR : (codigoPapel.Contains("11") || codigoPapel.Contains("12") || codigoPapel.Contains("13") ? TipoPapel.FII : TipoPapel.Acao);
                             papel.CotacaoAtual = 0;
                             papel.Descricao = "";
                             papel.Ativo = true;
