@@ -27,6 +27,9 @@ namespace MinhasFinancas.Infra.Mappings
             Property(f => f.TipoDividendo)
                 .IsRequired();
 
+            Property(f => f.Historico)
+                .HasColumnType("nvarchar(max)");
+
             HasRequired(d => d.Papel)
                 .WithMany(p => p.Dividendo)
                 .HasForeignKey(d => d.PapelId);

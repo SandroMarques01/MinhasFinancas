@@ -31,10 +31,10 @@ namespace MinhasFinancas.Web.Controllers
         // GET: Papel
         public async Task<ActionResult> Index(int cbbTipoPapel = 0, bool Ativo = true, string dtFim = null)
         {
-            List<PapelViewModel> lst = _mapper.Map<List<PapelViewModel>>(await _papelService.Get(includeProperties: "Transacao,Dividendo"));
+            if (string.IsNullOrEmpty(userId))
+                return Redirect(@"/Login/Index");
 
-            //if (!string.IsNullOrEmpty(dtFim))
-            //lst = lst.Where(f => f.Transacao.data <= Convert.ToDateTime(dtFim)).ToList();
+            List<PapelViewModel> lst = _mapper.Map<List<PapelViewModel>>(await _papelService.Get(x => x.LoginId.ToString() == userId, includeProperties: "Transacao,Dividendo"));
 
             if (cbbTipoPapel != 0)
                 lst = lst.Where(f => Convert.ToInt32(f.TipoPapel) == cbbTipoPapel).ToList();
@@ -126,7 +126,7 @@ namespace MinhasFinancas.Web.Controllers
             PapelViewModel papelViewModel;
             try
             {
-                var listpapelViewModel = _mapper.Map<List<PapelViewModel>>(await _papelService.Get(x => x.Codigo == codigo, "Transacao,Dividendo"));
+                var listpapelViewModel = _mapper.Map<List<PapelViewModel>>(await _papelService.Get(x => x.Codigo == codigo && x.LoginId.ToString() == userId, "Transacao,Dividendo"));
                 papelViewModel = listpapelViewModel.FirstOrDefault();
             }
             catch (Exception ex)
@@ -187,7 +187,7 @@ namespace MinhasFinancas.Web.Controllers
             PapelViewModel papelViewModel;
             try
             {
-                var listpapelViewModel = _mapper.Map<List<PapelViewModel>>(await _papelService.Get(x => x.Id == id, "Transacao,Dividendo"));
+                var listpapelViewModel = _mapper.Map<List<PapelViewModel>>(await _papelService.Get(x => x.Id == id && x.LoginId.ToString() == userId, "Transacao,Dividendo"));
                 papelViewModel = listpapelViewModel.FirstOrDefault();
 
                 return Redirect(@"/"+ papelViewModel.TipoPapel.ToString() + "/" + papelViewModel.Codigo);
@@ -297,7 +297,7 @@ namespace MinhasFinancas.Web.Controllers
         // GET: Papel/TrocaPapel/5
         public async Task<ActionResult> TrocaPapel()
         {
-            List<PapelViewModel> lst = _mapper.Map<List<PapelViewModel>>(await _papelService.Get());
+            List<PapelViewModel> lst = _mapper.Map<List<PapelViewModel>>(await _papelService.Get(x => x.LoginId.ToString() == userId));
 
             TrocaPapelViewModel trocaPapelViewModel = new TrocaPapelViewModel();
             trocaPapelViewModel.PapelsOrigem = lst.OrderBy(x => x.Codigo);
@@ -318,7 +318,7 @@ namespace MinhasFinancas.Web.Controllers
         // GET: Papel/TrocaPapel/5
         public async Task<ActionResult> Desdobramento()
         {
-            List<PapelViewModel> lst = _mapper.Map<List<PapelViewModel>>(await _papelService.Get());
+            List<PapelViewModel> lst = _mapper.Map<List<PapelViewModel>>(await _papelService.Get(x => x.LoginId.ToString() == userId));
 
             TrocaPapelViewModel trocaPapelViewModel = new TrocaPapelViewModel();
             trocaPapelViewModel.PapelsOrigem = lst.OrderBy(x => x.Codigo);
@@ -330,7 +330,7 @@ namespace MinhasFinancas.Web.Controllers
 
         public async Task<ActionResult> Desdobramento(TrocaPapelViewModel trocaPapelViewModel)
         {
-            await _papelService.Desdobramento(trocaPapelViewModel.PapelIdOrigem, trocaPapelViewModel.QuantidadeDesdobro, trocaPapelViewModel.DataDesdobro);
+            await _papelService.Desdobramento(trocaPapelViewModel.PapelIdOrigem, trocaPapelViewModel.QuantidadeDesdobro, trocaPapelViewModel.DataDesdobro, userId);
 
             return RedirectToAction("Index");
         }

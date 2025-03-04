@@ -79,6 +79,7 @@
   <ItemGroup>
     <Compile Include="Data\AppDbContext.cs" />
     <Compile Include="Mappings\DividendosConfig.cs" />
+    <Compile Include="Mappings\LoginConfig.cs" />
     <Compile Include="Mappings\PapelConfig.cs" />
     <Compile Include="Mappings\SegmentoConfig.cs" />
     <Compile Include="Mappings\TransacaoConfig.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="Models\Dividendo.cs" />
     <Compile Include="Models\Entity.cs" />
     <Compile Include="Models\Enums\TipoDividendo.cs" />
+    <Compile Include="Models\Login.cs" />
     <Compile Include="Models\Papel.cs" />
     <Compile Include="Models\Enums\TipoPapel.cs" />
     <Compile Include="Models\Enums\TipoTransacao.cs" />

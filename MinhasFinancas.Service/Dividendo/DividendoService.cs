@@ -56,9 +56,9 @@ namespace MinhasFinancas.Service.Dividendo
             await _baseRepository.SaveChanges();
         }
 
-        public async Task<IEnumerable<Infra.Models.Dividendo>> RetornaTotalDividendosPorMes(int mesRetroativo, int tipoPapel = 0, Guid papelId = default)
+        public async Task<IEnumerable<Infra.Models.Dividendo>> RetornaTotalDividendosPorMes(string userId, int mesRetroativo, int tipoPapel = 0, Guid papelId = default)
         {
-            var retorno = await _baseRepository.RetornaTotalDividendosPorMes(mesRetroativo, tipoPapel, papelId);
+            var retorno = await _baseRepository.RetornaTotalDividendosPorMes(userId, mesRetroativo, tipoPapel, papelId);
             return retorno;
         }
     }

@@ -7,6 +7,6 @@ namespace MinhasFinancas.Repository.Dividendo
 {
     public interface IDividendoRepository : IRepository<Infra.Models.Dividendo>
     {
-        Task<IEnumerable<Infra.Models.Dividendo>> RetornaTotalDividendosPorMes(int mesRetroativo, int tipoPapel = 0, Guid papelId = default);
+        Task<IEnumerable<Infra.Models.Dividendo>> RetornaTotalDividendosPorMes(string userId, int mesRetroativo, int tipoPapel = 0, Guid papelId = default);
     }
 }

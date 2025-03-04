@@ -11,6 +11,7 @@ using MinhasFinancas.Service.Segmento;
 using MinhasFinancas.Service.Transacao;
 using MinhasFinancas.Repository.Core;
 using MinhasFinancas.Service.Configuracao;
+using MinhasFinancas.Service.Login;
 
 namespace MinhasFinancas.Web.App_Start
 {
@@ -45,6 +46,7 @@ namespace MinhasFinancas.Web.App_Start
             container.Register<AppDbContext>(Lifestyle.Scoped);
             container.Register<IDividendoService, DividendoService>(Lifestyle.Scoped);
             container.Register<IPapelService, PapelService>(Lifestyle.Scoped);
+            container.Register<ILoginService, LoginService>(Lifestyle.Scoped);
             container.Register<ISegmentoService, SegmentoService>(Lifestyle.Scoped);
             container.Register<ITransacaoService, TransacaoService>(Lifestyle.Scoped);
             container.Register<IConfiguracaoService, ConfiguracaoService>(Lifestyle.Scoped);

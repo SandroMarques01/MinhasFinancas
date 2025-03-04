@@ -29,7 +29,7 @@ namespace MinhasFinancas.Service.Configuracao
             _dividendoService = dividendoService;
         }
 
-        public async Task ImportarExcelB3(HttpPostedFileBase fileB3)
+        public async Task ImportarExcelB3(HttpPostedFileBase fileB3, string userId)
         {
             // Abre o arquivo Excel
             using (var stream = fileB3.InputStream)
@@ -40,9 +40,9 @@ namespace MinhasFinancas.Service.Configuracao
                     var totalLinhas = planilha.Rows().Count();
 
                     #region gambiarra
-                    var lstP = await _papelService.Get(includeProperties: "Transacao,Dividendo");
-                    var lstT = await _transacaoService.Get();
-                    var lstD = await _dividendoService.Get();
+                    var lstP = await _papelService.Get(x => x.LoginId.ToString() == userId, includeProperties: "Transacao,Dividendo");
+                    var lstT = await _transacaoService.Get(x => x.Papel.LoginId.ToString() == userId, includeProperties: "Papel");
+                    var lstD = await _dividendoService.Get(x => x.Papel.LoginId.ToString() == userId, includeProperties: "Papel");
 
                     List<Infra.Models.Papel> lstPapel = lstP.ToList();
                     List<Infra.Models.Transacao> lstTransacao = lstT.ToList();
@@ -75,6 +75,7 @@ namespace MinhasFinancas.Service.Configuracao
                             papel.CotacaoAtual = 0;
                             papel.Descricao = "";
                             papel.Ativo = true;
+                            papel.LoginId = new Guid(userId);
 
                             await _papelService.Add(papel);
                             lstPapel.Add(papel);
@@ -90,7 +91,7 @@ namespace MinhasFinancas.Service.Configuracao
                                 string valorUnt = planilha.Cell($"G{l}").Value.ToString();
                                 transacao.ValorUnt = Convert.ToDouble(valorUnt.Trim().Replace("-", "") == "" ? "0" : valorUnt);
                                 string qtdT = planilha.Cell($"F{l}").Value.ToString() == "" ? "0" : planilha.Cell($"F{l}").Value.ToString();
-                                transacao.Quantidade = Convert.ToInt32(Math.Round(Convert.ToDouble(qtdT), 0));
+                                transacao.Quantidade = Convert.ToDouble(qtdT);
                                 transacao.Data = Convert.ToDateTime(planilha.Cell($"B{l}").Value.ToString());
                                 transacao.TipoTransacao = planilha.Cell($"C{l}").Value.ToString() == "Solicitação de Subscrição" ? TipoTransacao.Compra : planilha.Cell($"A{l}").Value.ToString() == "Credito" ? TipoTransacao.Compra : TipoTransacao.Venda;
                                 transacao.Descricao = "";
@@ -114,7 +115,7 @@ namespace MinhasFinancas.Service.Configuracao
                                 dividendo.PapelId = papel.Id;
                                 dividendo.ValorRecebido = Convert.ToDouble(planilha.Cell($"H{l}").Value.ToString());
                                 string qtdD = planilha.Cell($"F{l}").Value.ToString() == "" ? "0" : planilha.Cell($"F{l}").Value.ToString();
-                                dividendo.Quantidade = Convert.ToInt32(Math.Round(Convert.ToDouble(qtdD), 0));
+                                dividendo.Quantidade = Convert.ToDouble(qtdD);
                                 dividendo.Data = Convert.ToDateTime(planilha.Cell($"B{l}").Value.ToString());
                                 dividendo.Ativo = true;
                                 dividendo.TipoDividendo = tipoMov == "DIVIDENDO" ? TipoDividendo.Dividendo
@@ -144,7 +145,7 @@ namespace MinhasFinancas.Service.Configuracao
 
                                 if (lstTransacaoDesdobro.Any())
                                 {
-                                    int fatorMultiplicador = (qntComprada + qntDesdobrada) / qntComprada;
+                                    double fatorMultiplicador = (qntComprada + qntDesdobrada) / qntComprada;
 
                                     foreach (var item in lstTransacaoDesdobro)
                                     {
@@ -170,7 +171,7 @@ namespace MinhasFinancas.Service.Configuracao
             }
         }
 
-        public async Task ImportarExcelCotacaoAtual(HttpPostedFileBase fileB3)
+        public async Task ImportarExcelCotacaoAtual(HttpPostedFileBase fileB3, string userId)
         {
             using (var stream = fileB3.InputStream)
             {
@@ -181,34 +182,44 @@ namespace MinhasFinancas.Service.Configuracao
 
                     for (int l = 1; l <= totalLinhas; l++)
                     {
-                        string codPapel = planilha.Cell($"A{l}").Value.ToString();
-
-                        IEnumerable<Infra.Models.Papel> Ipapel = await _papelService.Get(f => f.Codigo == codPapel);
-                        Infra.Models.Papel papel = Ipapel.FirstOrDefault();
-
-                        if (papel != null)
+                        try
                         {
-                            papel.CotacaoAtual = Convert.ToDouble(planilha.Cell($"B{l}").Value.ToString().Replace("R$", "").Trim());
+                            string codPapel = planilha.Cell($"A{l}").Value.ToString();
 
-                            await _papelService.Update(papel);
+                            IEnumerable<Infra.Models.Papel> Ipapel = await _papelService.Get(f => f.Codigo == codPapel && f.LoginId.ToString() == userId);
+                            Infra.Models.Papel papel = Ipapel.FirstOrDefault();
+
+                            if (papel != null)
+                            {
+                                papel.CotacaoAtual = Convert.ToDouble(planilha.Cell($"B{l}").Value.ToString().Replace("R$", "").Trim());
+
+                                await _papelService.Update(papel);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+
+                            throw ex;
                         }
                     }
                 }
             }
         }
 
-        public async Task DeletaTodoBanco()
+        public async Task DeletaTodoBanco(string userId)
         {
-            var tran = await _transacaoService.Get();
-            var divi = await _dividendoService.Get();
-            var papel = await _papelService.Get();
+            var tran = await _transacaoService.Get(x => x.Papel.LoginId.ToString() == userId, includeProperties: "Papel");
+            var divi = await _dividendoService.Get(x => x.Papel.LoginId.ToString() == userId, includeProperties: "Papel");
+            var papel = await _papelService.Get(x => x.LoginId.ToString() == userId);
 
             foreach (var item in tran.ToList())
             {
+                item.Papel = null;
                 await _transacaoService.DeleteById(item.Id);
             }
             foreach (var item in divi.ToList())
             {
+                item.Papel = null;
                 await _dividendoService.DeleteById(item.Id);
             }
             foreach (var item in papel.ToList())

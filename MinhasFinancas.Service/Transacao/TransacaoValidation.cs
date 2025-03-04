@@ -10,8 +10,7 @@ namespace MinhasFinancas.Service.Transacao
                 .GreaterThanOrEqualTo(0).WithMessage("O campo {PropertyName} precisa ser maior que {ComparisonValue}");
 
             RuleFor(t => t.Quantidade)
-                .NotEmpty().WithMessage("O campo {PropertyName} não pode estar vazio")
-                .GreaterThan(0).WithMessage("O campo {PropertyName} precisa ser maior que {ComparisonValue}");
+                .GreaterThanOrEqualTo(0).WithMessage("O campo {PropertyName} precisa ser maior que {ComparisonValue}");
 
             RuleFor(t => t.Data)
                 .NotEmpty().WithMessage("O campo {PropertyName} não pode estar vazio"); //Validar depois

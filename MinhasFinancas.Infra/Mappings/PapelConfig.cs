@@ -27,6 +27,11 @@ namespace MinhasFinancas.Infra.Mappings
 
             HasMany(f => f.Segmento).WithMany(e => e.Papel);
 
+            HasRequired(t => t.Login)
+                .WithMany(p => p.Papel)
+                .HasForeignKey(t => t.LoginId);
+
+
             ToTable("TbPapel");
         }
     }

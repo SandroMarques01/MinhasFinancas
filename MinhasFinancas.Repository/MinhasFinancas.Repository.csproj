@@ -84,6 +84,8 @@
     <Compile Include="Core\Repository.cs" />
     <Compile Include="Dividendo\DividendoRepository.cs" />
     <Compile Include="Dividendo\IDividendoRepository.cs" />
+    <Compile Include="Login\ILoginRepository.cs" />
+    <Compile Include="Login\LoginRepository.cs" />
     <Compile Include="Papel\PapelRepository.cs" />
     <Compile Include="Papel\IPapelRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

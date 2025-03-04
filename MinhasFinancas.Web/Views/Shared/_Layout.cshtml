@@ -6,6 +6,14 @@
     <title>@ViewBag.Title - Minhas Finança$</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        .cantoDireito {
+            right: 20px;
+            position: absolute;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
@@ -15,21 +23,26 @@
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
+            <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between" id="navbarNav">
                 <ul class="navbar-nav flex-grow-1">
-                    <li>@Html.ActionLink("Papeis", "Index", "Papel", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Segmentos", "Index", "Segmento", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Transações", "Index", "Transacao", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Dividendos", "Index", "Dividendo", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Configurações", "Index", "Configuracao", new { area = "" }, new { @class = "nav-link" })</li>
+                    <li>@Html.ActionLink(" ", "Index", "Papel", new { area = "" }, new { @class = "nav-link fa-solid fa-file-lines", title = "Papéis" })</li>
+                    <li>@Html.ActionLink(" ", "Index", "Segmento", new { area = "" }, new { @class = "nav-link fa-solid fa-table-columns", title = "Segmentos" })</li>
+                    <li>@Html.ActionLink(" ", "Index", "Transacao", new { area = "" }, new { @class = "nav-link fa-solid fa-arrows-spin", title = "Transações" })</li>
+                    <li>@Html.ActionLink(" ", "Index", "Dividendo", new { area = "" }, new { @class = "nav-link fa-solid fa-landmark", title = "Dividendos" })</li>
+                    <li>@Html.ActionLink(" ", "Index", "Configuracao", new { area = "" }, new { @class = "nav-link fa-solid fa-certificate", title = "Configurações" })</li>
+                    <li><span class="nav-link" style = "padding: 3px 10px;">|</span></li>
+                    <li style = "right: 70px; position: absolute;">@Html.ActionLink(" ", "AlterarSenha", "Configuracao", new { area = "" }, new { @class = "nav-link fa-solid fa-user", title = "Alterar Nome/Senha" })</listyle>
+                    <li style = "right: 50px; position: absolute;"><span class="nav-link" style = "padding: 3px 10px;">|</span></li>
+                    <li style = "right: 20px; position: absolute;">@Html.ActionLink(" ", "Sair", "Configuracao", new { area = "" }, new { @class = "nav-link fa-solid fa-power-off", title = "Sair" })</li>
+                
                 </ul>
             </div>
         </div>
     </nav>
     <div class="container body-content">
         @RenderBody()
-        <hr />
         <footer>
+            <hr />
             <p>&copy; 2024 - Minhas Finanças - Sandro Marques</p>
         </footer>
     </div>
@@ -37,5 +50,6 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+
 </body>
 </html>

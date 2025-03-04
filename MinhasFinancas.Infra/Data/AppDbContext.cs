@@ -27,6 +27,7 @@ namespace MinhasFinancas.Infra.Data
 
             modelBuilder.Properties<string>().Configure(p => p.HasColumnType("varchar").HasMaxLength(100));
 
+            modelBuilder.Configurations.Add(new LoginConfig());
             modelBuilder.Configurations.Add(new PapelConfig());
             modelBuilder.Configurations.Add(new TransacaoConfig());
             modelBuilder.Configurations.Add(new DividendosConfig());
@@ -35,6 +36,7 @@ namespace MinhasFinancas.Infra.Data
             base.OnModelCreating(modelBuilder);
         }
 
+        public DbSet<Login> Logins { get; set; }
         public DbSet<Papel> Papels { get; set; }
         public DbSet<Transacao> Transacaos { get; set; }
         public DbSet<Dividendo> Dividendos { get; set; }

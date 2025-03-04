@@ -1,4 +1,5 @@
-﻿using MinhasFinancas.Infra.Models;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using MinhasFinancas.Infra.Models;
 using MinhasFinancas.Repository.Dividendo;
 using MinhasFinancas.Repository.Papel;
 using MinhasFinancas.Repository.Transacao;
@@ -115,10 +116,10 @@ namespace MinhasFinancas.Service.Papel
             await _baseRepository.SaveChanges();
         }
 
-        public async Task Desdobramento(Guid origem, int quantidade, DateTime dataDesdobro)
+        public async Task Desdobramento(Guid origem, int quantidade, DateTime dataDesdobro, string userId)
         {
-            var lstTransacao = await _transacaoService.Get();
-            var lstDividendo = await _dividendoRepository.Get();
+            var lstTransacao = await _transacaoService.Get(x => x.Papel.LoginId.ToString() == userId, includeProperties: "Papel");
+            var lstDividendo = await _dividendoRepository.Get(x => x.Papel.LoginId.ToString() == userId, includeProperties: "Papel");
 
             var lstTransacaoDesdobro = lstTransacao.Where(x => x.PapelId == origem && x.Data < dataDesdobro && (string.IsNullOrWhiteSpace(x.Descricao) || !x.Descricao.StartsWith("D|") || x.Descricao.Substring(2, 10) != dataDesdobro.ToString("dd/MM/yyyy"))).ToList();
             var lstDividendosDesdobro = lstDividendo.Where(x => x.PapelId == origem && x.Data < dataDesdobro && (string.IsNullOrWhiteSpace(x.Descricao) || !x.Descricao.StartsWith("D|") || x.Descricao.Substring(2, 10) != dataDesdobro.ToString("dd/MM/yyyy"))).ToList();
@@ -129,17 +130,33 @@ namespace MinhasFinancas.Service.Papel
 
                 foreach (var item in lstTransacaoDesdobro)
                 {
-                    item.Quantidade = item.Quantidade * fatorMultiplicador;
-                    item.ValorUnt = item.ValorUnt / fatorMultiplicador;
-                    item.Descricao = "D|" + dataDesdobro.ToString("dd/MM/yyyy") + "|";
-                    await _transacaoService.Update(item);
+                    try
+                    {
+                        item.Papel = null;
+                        item.Quantidade = item.Quantidade * fatorMultiplicador;
+                        item.ValorUnt = item.ValorUnt / fatorMultiplicador;
+                        item.Descricao = "D|" + dataDesdobro.ToString("dd/MM/yyyy") + "|";
+                        await _transacaoService.Update(item);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
                 }
 
                 foreach (var item in lstDividendosDesdobro)
                 {
-                    item.Quantidade = item.Quantidade * fatorMultiplicador;
-                    item.Descricao = "D|" + dataDesdobro.ToString("dd/MM/yyyy") + "|";
-                    await _dividendoService.Update(item);
+                    try
+                    {
+                        item.Papel = null;
+                        item.Quantidade = item.Quantidade * fatorMultiplicador;
+                        item.Descricao = "D|" + dataDesdobro.ToString("dd/MM/yyyy") + "|";
+                        await _dividendoService.Update(item);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
                 }
             }
 

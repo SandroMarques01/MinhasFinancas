@@ -1,4 +1,5 @@
 ﻿using MinhasFinancas.Repository.Dividendo;
+using MinhasFinancas.Repository.Login;
 using MinhasFinancas.Repository.Papel;
 using MinhasFinancas.Repository.Segmento;
 using MinhasFinancas.Repository.Transacao;
@@ -21,6 +22,7 @@ namespace MinhasFinancas.Repository.Core
 
             container.Register<IDividendoRepository, DividendoRepository>(Lifestyle.Scoped);
             container.Register<IPapelRepository, PapelRepository>(Lifestyle.Scoped);
+            container.Register<ILoginRepository, LoginRepository>(Lifestyle.Scoped);
             container.Register<ISegmentoRepository, SegmentoRepository>(Lifestyle.Scoped);
             container.Register<ITransacaoRepository, TransacaoRepository>(Lifestyle.Scoped);
 

@@ -254,7 +254,7 @@
                 var valA = lstAcao[i].ValorRecebido.ToString().Replace(',', '.');
                 var valF = lstFII[i].ValorRecebido.ToString().Replace(',', '.');
                 var valB = lstBDR[i].ValorRecebido.ToString().Replace(',', '.');
-                var valE = lstETF.Count() == 0 ? "0" : lstETF[i].ValorRecebido.ToString().Replace(',', '.');
+                var valE = lstETF[i].ValorRecebido.ToString().Replace(',', '.');
                 @:["@dataFormatada", @valA, @valF, @valB, @valE],
             }
         ]);

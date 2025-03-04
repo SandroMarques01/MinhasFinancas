@@ -56,6 +56,12 @@ namespace MinhasFinancas.Service.Transacao
             return retorno;
         }
 
+        public async Task<IEnumerable<Infra.Models.Transacao>> GetByLogin(string login)
+        {
+            var retorno = await _baseRepository.Get(x => x.Papel.Login.Usuario == login, includeProperties: "Papel");
+            return retorno;
+        }
+
         public async Task<Infra.Models.Transacao> GetById(Guid id)
         {
             var retorno = await _baseRepository.GetById(id);

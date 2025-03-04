@@ -27,7 +27,7 @@ namespace MinhasFinancas.Web.ViewModels
 
         [Range(0, Double.PositiveInfinity)]
         [DisplayName("Qtd")]
-        public int Quantidade { get; set; }
+        public double Quantidade { get; set; }
         
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [DisplayName("Data")]
@@ -39,6 +39,7 @@ namespace MinhasFinancas.Web.ViewModels
         [DisplayName("Ativo")]
         public bool Ativo { get; set; }
         public TipoDividendo TipoDividendo { get; set; }
+        public string Historico { get; set; }
 
         /* Relações EF */
         public virtual PapelViewModel Papel { get; set; }

@@ -1,4 +1,7 @@
 ﻿using MinhasFinancas.Service.Core;
+using MinhasFinancas.Web.ViewModels;
+using System.Collections.Generic;
+using System.Configuration;
 using System.Web.Mvc;
 
 namespace MinhasFinancas.Web.Controllers
@@ -12,6 +15,16 @@ namespace MinhasFinancas.Web.Controllers
             _notificador = notificador;
         }
 
+        public string userName
+        {
+            get { return ConfigurationManager.AppSettings.Get("User"); }
+        }
+
+        public string userId
+        {
+            get { return ConfigurationManager.AppSettings.Get("UserId"); }
+        }
+
         protected bool OperacaoValida()
         {
             if (!_notificador.TemNotificacao()) return true;
@@ -20,5 +33,12 @@ namespace MinhasFinancas.Web.Controllers
             notificacoes.ForEach(c => ViewData.ModelState.AddModelError(string.Empty, c.Mensagem));
             return false;
         }
+
+        //protected void IsActiveUser()
+        //{
+        //    if (string.IsNullOrEmpty(userId))
+        //        return Redirect(@"/Login/Index");
+        //}
+
     }
 }

@@ -202,6 +202,9 @@
     <Compile Include="Dividendo\DividendoService.cs" />
     <Compile Include="Dividendo\DividendoValidation.cs" />
     <Compile Include="Dividendo\IDividendoService.cs" />
+    <Compile Include="Login\ILoginService.cs" />
+    <Compile Include="Login\LoginService.cs" />
+    <Compile Include="Login\LoginValidation.cs" />
     <Compile Include="Papel\IPapelService.cs" />
     <Compile Include="Papel\PapelService.cs" />
     <Compile Include="Papel\PapelValidation.cs" />

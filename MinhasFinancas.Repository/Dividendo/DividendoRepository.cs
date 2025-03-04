@@ -14,31 +14,39 @@ namespace MinhasFinancas.Repository.Dividendo
     {
         public DividendoRepository(AppDbContext db) : base(db) { }
 
-        public async Task<IEnumerable<Infra.Models.Dividendo>> RetornaTotalDividendosPorMes(int mesRetroativo, int tipoPapel = 0, Guid papelId = default)
+        public async Task<IEnumerable<Infra.Models.Dividendo>> RetornaTotalDividendosPorMes(string userId, int mesRetroativo, int tipoPapel = 0, Guid papelId = default)
         {
             using (SqlConnection oSqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["MinhasFinancasDB"].ConnectionString))
             {
                 oSqlConnection.Open();
 
-                var parameters = new { @MesRetroativo = mesRetroativo, TipoPapel = tipoPapel, PapelId = papelId };
+                var parameters = new { UserId = userId, MesRetroativo = mesRetroativo, TipoPapel = tipoPapel, PapelId = papelId };
 
-                string sComando = $@"   select FORMAT(d.Data , 'MM-yyyy') as Data, FORMAT(d.Data , 'yyyy-MM') as Ordenacao,
-                                        sum(d.ValorRecebido) as ValorRecebido
-                                        from TbDividendo d
-                                        join TbPapel p on d.PapelId = p.Id
-                                        where cast(concat(YEAR(d.Data),'-',MONTH(d.Data),'-01') as date) >= DATEADD (MONTH,-@MesRetroativo, cast(concat(YEAR(GETDATE()),'-',MONTH(GETDATE()),'-01') as date))
-                                    ";
-                if(tipoPapel > 0)
-                {
-                    sComando += $@"     and tipoPapel = @TipoPapel ";
-                }
-                if (papelId != default)
-                {
-                    sComando += $@"     and d.PapelId = @PapelId ";
-                }
-
-                sComando += $@"         group by  FORMAT(d.Data , 'MM-yyyy'), FORMAT(d.Data , 'yyyy-MM')
-                                        order by FORMAT(d.Data , 'yyyy-MM')
+                string sComando = $@"   WITH UltimosSeisMeses AS (
+                                            SELECT 
+                                                FORMAT(DATEADD(MONTH, -n, GETDATE()), 'MM-yyyy') AS Data,
+                                                FORMAT(DATEADD(MONTH, -n, GETDATE()), 'yyyy-MM') AS Ordenacao
+                                            FROM (VALUES (0), (1), (2), (3), (4), (5)) AS T(n)
+                                        )
+                                        SELECT 
+                                            u.Data, 
+                                            u.Ordenacao, 
+                                            ISNULL(SUM(sub.ValorRecebido), 0) AS ValorRecebido
+                                        FROM UltimosSeisMeses u
+                                        LEFT JOIN (
+                                            SELECT 
+                                                FORMAT(d.Data, 'yyyy-MM') AS Ordenacao, 
+                                                SUM(d.ValorRecebido) AS ValorRecebido
+                                            FROM TbDividendo d
+                                            JOIN TbPapel p ON d.PapelId = p.Id
+                                            WHERE p.LoginId = @UserId
+                                            AND p.TipoPapel = @TipoPapel
+                                            AND CAST(CONCAT(YEAR(d.Data), '-', MONTH(d.Data), '-01') AS DATE) >= 
+                                                DATEADD(MONTH, -5, CAST(CONCAT(YEAR(GETDATE()), '-', MONTH(GETDATE()), '-01') AS DATE))
+                                            GROUP BY FORMAT(d.Data, 'yyyy-MM')
+                                        ) sub ON u.Ordenacao = sub.Ordenacao
+                                        GROUP BY u.Data, u.Ordenacao
+                                        ORDER BY u.Ordenacao;
                                     ";
 
 

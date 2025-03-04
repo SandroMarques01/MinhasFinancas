@@ -29,6 +29,7 @@ namespace MinhasFinancas.Web.App_Start
     {
         public AutoMapperProfile()
         {
+            CreateMap<Login, LoginViewModel>().ReverseMap();
             CreateMap<Papel, PapelViewModel>().ReverseMap();
             CreateMap<Dividendo, DividendoViewModel>().ReverseMap();
             CreateMap<Segmento, SegmentoViewModel>().ReverseMap();

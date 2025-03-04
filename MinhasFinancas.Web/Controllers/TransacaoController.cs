@@ -31,7 +31,10 @@ namespace MinhasFinancas.Web.Controllers
         // GET: Transacao
         public async Task<ActionResult> Index(int cbbTipoTrasacao = 0, int cbbTipoPapel = 0, string dtInicio = null, string dtFim = null)
         {
-            List<TransacaoViewModel> lst = _mapper.Map<List<TransacaoViewModel>>(await _transacaoService.Get(includeProperties: "Papel"));
+            if (string.IsNullOrEmpty(userId))
+                return Redirect(@"/Login/Index");
+
+            List<TransacaoViewModel> lst = _mapper.Map<List<TransacaoViewModel>>(await _transacaoService.Get(x => x.Papel.LoginId.ToString() == userId, includeProperties: "Papel"));
 
             if (cbbTipoPapel != 0)
                 lst = lst.Where(f => Convert.ToInt32(f.Papel.TipoPapel) == cbbTipoPapel).ToList();
@@ -162,7 +165,7 @@ namespace MinhasFinancas.Web.Controllers
 
         private async Task<TransacaoViewModel> PopularPapeis(TransacaoViewModel transacao)
         {
-            transacao.Papels = _mapper.Map<List<PapelViewModel>>(await _papelService.Get());
+            transacao.Papels = _mapper.Map<List<PapelViewModel>>(await _papelService.Get(x => x.LoginId.ToString() == userId));
             return transacao;
         }
 

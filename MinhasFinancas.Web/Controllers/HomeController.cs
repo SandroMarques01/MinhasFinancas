@@ -33,13 +33,16 @@ namespace MinhasFinancas.Web.Controllers
 
         public async Task<ActionResult> Index()
         {
+            if (string.IsNullOrEmpty(userId))
+                return Redirect(@"/Login/Index");
+
             DateTime ultimoDiaMes = Convert.ToDateTime((DateTime.Now.Month == 12 ? DateTime.Now.Year + 1 : DateTime.Now.Year)
                                                         + "-" + 
                                                         (DateTime.Now.Month == 12 ? "01" : (DateTime.Now.Month + 1).ToString()) 
                                                         + "-01").AddDays(-1);
 
-            List<DividendoViewModel> lstD = _mapper.Map<List<DividendoViewModel>>(await _dividendoService.Get(includeProperties: "Papel"));
-            List<TransacaoViewModel> lstT = _mapper.Map<List<TransacaoViewModel>>(await _transacaoService.Get(includeProperties: "Papel"));
+            List<DividendoViewModel> lstD = _mapper.Map<List<DividendoViewModel>>(await _dividendoService.Get(x => x.Papel.LoginId.ToString() == userId, includeProperties: "Papel"));
+            List<TransacaoViewModel> lstT = _mapper.Map<List<TransacaoViewModel>>(await _transacaoService.Get(x => x.Papel.LoginId.ToString() == userId, includeProperties: "Papel"));
             lstT = lstT.ToList().Where(x => x.Papel.Ativo).ToList();
 
             double totalInvestido = lstT.Where(x => x.TipoTransacao == Infra.TipoTransacao.Compra).Sum(x => x.Quantidade * x.ValorUnt);
@@ -68,7 +71,7 @@ namespace MinhasFinancas.Web.Controllers
             ViewBag.ValorTransacaoSemana = lstT.Sum(x => (Convert.ToInt32(x.TipoTransacao) == 1 ? x.ValorUnt : x.ValorUnt * -1) * x.Quantidade);
             ViewBag.TabelaUltimasTransacoes = lstT.OrderBy(x => x.Data);
 
-            List<PapelViewModel> lstP = _mapper.Map<List<PapelViewModel>>(await _papelService.Get(includeProperties: "Transacao,Dividendo"));
+            List<PapelViewModel> lstP = _mapper.Map<List<PapelViewModel>>(await _papelService.Get(x => x.LoginId.ToString() == userId, includeProperties: "Transacao,Dividendo"));
             lstP.ForEach(f =>
             {
                 f.QuantidadeTotal = f.Transacao.Sum(x => x.TipoTransacao == Infra.TipoTransacao.Compra ? x.Quantidade : x.Quantidade * -1);
@@ -85,13 +88,13 @@ namespace MinhasFinancas.Web.Controllers
             ViewBag.PercentETF = lstP.Where(x => x.TipoPapel == Infra.TipoPapel.ETF).Sum(x => x.TotalSaldoAtual);
 
             //Gráfico Dividendos
-            List<DividendoViewModel> lstDGraficoAcao = _mapper.Map<List<DividendoViewModel>>(await _dividendoService.RetornaTotalDividendosPorMes(5, tipoPapel: 1));
+            List<DividendoViewModel> lstDGraficoAcao = _mapper.Map<List<DividendoViewModel>>(await _dividendoService.RetornaTotalDividendosPorMes(userId, 5, tipoPapel: 1));
             ViewData["DivGraficoAcao"] = lstDGraficoAcao;
-            List<DividendoViewModel> lstDGraficoFII = _mapper.Map<List<DividendoViewModel>>(await _dividendoService.RetornaTotalDividendosPorMes(5, tipoPapel: 2));
+            List<DividendoViewModel> lstDGraficoFII = _mapper.Map<List<DividendoViewModel>>(await _dividendoService.RetornaTotalDividendosPorMes(userId, 5, tipoPapel: 2));
             ViewData["DivGraficoFII"] = lstDGraficoFII;
-            List<DividendoViewModel> lstDGraficoBDR = _mapper.Map<List<DividendoViewModel>>(await _dividendoService.RetornaTotalDividendosPorMes(5, tipoPapel: 3));
+            List<DividendoViewModel> lstDGraficoBDR = _mapper.Map<List<DividendoViewModel>>(await _dividendoService.RetornaTotalDividendosPorMes(userId, 5, tipoPapel: 3));
             ViewData["DivGraficoBDR"] = lstDGraficoBDR;
-            List<DividendoViewModel> lstDGraficoETF = _mapper.Map<List<DividendoViewModel>>(await _dividendoService.RetornaTotalDividendosPorMes(5, tipoPapel: 4));
+            List<DividendoViewModel> lstDGraficoETF = _mapper.Map<List<DividendoViewModel>>(await _dividendoService.RetornaTotalDividendosPorMes(userId, 5, tipoPapel: 4));
             ViewData["DivGraficoETF"] = lstDGraficoETF;
 
             return View();

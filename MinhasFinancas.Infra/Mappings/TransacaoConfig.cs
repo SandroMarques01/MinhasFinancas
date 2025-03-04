@@ -24,6 +24,9 @@ namespace MinhasFinancas.Infra.Mappings
             Property(f => f.Ativo)
                 .IsRequired();
 
+            Property(f => f.Historico)
+                .HasColumnType("nvarchar(max)");
+
             HasRequired(t => t.Papel)
                 .WithMany(p => p.Transacao)
                 .HasForeignKey(t => t.PapelId);
