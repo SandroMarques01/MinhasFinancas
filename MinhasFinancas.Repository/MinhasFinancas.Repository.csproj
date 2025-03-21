@@ -80,12 +80,20 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Ativo\IAtivoRepository.cs" />
+    <Compile Include="Ativo\AtivoRepository.cs" />
+    <Compile Include="Conta\ContaRepository.cs" />
+    <Compile Include="Conta\IContaRepository.cs" />
     <Compile Include="Core\IRepository.cs" />
     <Compile Include="Core\Repository.cs" />
     <Compile Include="Dividendo\DividendoRepository.cs" />
     <Compile Include="Dividendo\IDividendoRepository.cs" />
+    <Compile Include="Inventario\InventarioRepository.cs" />
+    <Compile Include="Inventario\IInventarioRepository.cs" />
     <Compile Include="Login\ILoginRepository.cs" />
     <Compile Include="Login\LoginRepository.cs" />
+    <Compile Include="Pagamento\PagamentoRepository.cs" />
+    <Compile Include="Pagamento\IPagamentoRepository.cs" />
     <Compile Include="Papel\PapelRepository.cs" />
     <Compile Include="Papel\IPapelRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -1,0 +1,71 @@
+﻿@model List<MinhasFinancas.Web.ViewModels.AtivoViewModel>
+
+@{
+    ViewBag.Title = "CreateMult";
+}
+
+<h2>Inventário do mês</h2>
+
+
+@using (Html.BeginForm("CreateMult", "Inventario", FormMethod.Post))
+{
+    <div class="row">
+        <div class="col-5">
+            Mes:
+            <input type="date" id="dtFim" name="dtFim" class="form-control" />
+            <div class="btn btn-outline-info" title="Colocar mês" onclick="ColocarFinalMes()">></div>
+            <input type="hidden" id="hddData" value="@ViewBag.DataFim" />
+        </div>
+        <div class="col-5">
+            <input type="submit" value="Filtrar" class="btn btn-success" />
+        </div>
+        <br />
+    </div>
+}
+
+<br />
+<br />
+<br />
+
+@using (Html.BeginForm())
+{
+    foreach (var item in Model)
+    {
+        <div class="row">
+            <div class="col-2">
+                @item.Nome
+            </div>
+            <div class="col-6">
+                @Html.EditorFor(model => item.Inventario.Valor, new { htmlAttributes = new { @class = "form-control ValorINventarioMes" } })
+            </div>
+            @{
+                string nome = item.Nome.Replace(" ", "_");
+            }
+
+            <div class="col-2">
+                <span id="valorizacao_@nome"></span>
+            </div>
+            <div class="col-2">
+                <span id="porcentagem_@nome"></span>
+            </div>
+        </div>
+    }
+
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Salvar" class="btn btn-success" />
+        </div>
+    </div>
+}
+
+
+<div>
+    @Html.ActionLink("Voltar", "Index", new { area = "" }, new { @class = "btn btn-info" })
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+

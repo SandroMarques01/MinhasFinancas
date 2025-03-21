@@ -3,6 +3,10 @@ using MinhasFinancas.Repository.Login;
 using MinhasFinancas.Repository.Papel;
 using MinhasFinancas.Repository.Segmento;
 using MinhasFinancas.Repository.Transacao;
+using MinhasFinancas.Repository.Ativo;
+using MinhasFinancas.Repository.Conta;
+using MinhasFinancas.Repository.Inventario;
+using MinhasFinancas.Repository.Pagamento;
 using SimpleInjector;
 
 namespace MinhasFinancas.Repository.Core
@@ -26,6 +30,10 @@ namespace MinhasFinancas.Repository.Core
             container.Register<ISegmentoRepository, SegmentoRepository>(Lifestyle.Scoped);
             container.Register<ITransacaoRepository, TransacaoRepository>(Lifestyle.Scoped);
 
+            container.Register<IAtivoRepository, AtivoRepository>(Lifestyle.Scoped);
+            container.Register<IInventarioRepository, InventarioRepository>(Lifestyle.Scoped);
+            container.Register<IContaRepository, ContaRepository>(Lifestyle.Scoped);
+            container.Register<IPagamentoRepository, PagamentoRepository>(Lifestyle.Scoped);
         }
     }
 }

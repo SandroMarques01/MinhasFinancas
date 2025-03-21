@@ -192,8 +192,14 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Ativo\IAtivoService.cs" />
+    <Compile Include="Ativo\AtivoService.cs" />
+    <Compile Include="Ativo\AtivoValidation.cs" />
     <Compile Include="Configuracao\ConfiguracaoService.cs" />
     <Compile Include="Configuracao\IConfiguracaoService.cs" />
+    <Compile Include="Conta\ContaService.cs" />
+    <Compile Include="Conta\ContaValidation.cs" />
+    <Compile Include="Conta\IContaService.cs" />
     <Compile Include="Core\BaseService.cs" />
     <Compile Include="Core\DependencyInjectionConfigService.cs" />
     <Compile Include="Core\INotificador.cs" />
@@ -202,9 +208,15 @@
     <Compile Include="Dividendo\DividendoService.cs" />
     <Compile Include="Dividendo\DividendoValidation.cs" />
     <Compile Include="Dividendo\IDividendoService.cs" />
+    <Compile Include="Inventario\InventarioService.cs" />
+    <Compile Include="Inventario\InventarioValidation.cs" />
+    <Compile Include="Inventario\IInventarioService.cs" />
     <Compile Include="Login\ILoginService.cs" />
     <Compile Include="Login\LoginService.cs" />
     <Compile Include="Login\LoginValidation.cs" />
+    <Compile Include="Pagamento\PagamentoService.cs" />
+    <Compile Include="Pagamento\PagamentoValidation.cs" />
+    <Compile Include="Pagamento\IPagamentoService.cs" />
     <Compile Include="Papel\IPapelService.cs" />
     <Compile Include="Papel\PapelService.cs" />
     <Compile Include="Papel\PapelValidation.cs" />

@@ -93,6 +93,11 @@ namespace MinhasFinancas.Service.Transacao
             await _baseRepository.SaveChanges();
         }
 
+        public async Task DeleteAllByUser(string userId)
+        {
+            await _baseRepository.DeleteAllByUser(userId);
+        }
+
 
     }
 }

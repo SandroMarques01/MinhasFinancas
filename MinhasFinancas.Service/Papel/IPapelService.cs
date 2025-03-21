@@ -15,6 +15,7 @@ namespace MinhasFinancas.Service.Papel
         Task TrocaPapel (Guid origem,  Guid destino);
         Task Desdobramento(Guid origem, int quantidade, DateTime dataDesdobro, string userId);
         Task<IEnumerable<Infra.Models.Papel>> GetDividendosSemana(string includeProperties = null);
+        Task DeleteAllByUser(string userId);
 
     }
 }

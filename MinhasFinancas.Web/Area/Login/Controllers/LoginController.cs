@@ -37,10 +37,12 @@ namespace MinhasFinancas.Web.Area.Login.Controllers
 
             if (user != null)
             {
-                ConfigurationManager.AppSettings.Set("User", user.Nome);
-                ConfigurationManager.AppSettings.Set("UserId", user.Id.ToString());
+                Session["User"] = user.Nome;
+                Session["UserId"] = user.Id.ToString();
                 return Redirect(@"/Home/Index");
             }
+
+            ViewBag.Erro = "Usuário ou senha inválidos";
 
             return View();
         }

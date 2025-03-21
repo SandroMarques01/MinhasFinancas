@@ -1,7 +1,9 @@
-﻿using MinhasFinancas.Service.Core;
+﻿using MinhasFinancas.Infra;
+using MinhasFinancas.Service.Core;
 using MinhasFinancas.Web.ViewModels;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using System.Web.Mvc;
 
 namespace MinhasFinancas.Web.Controllers
@@ -17,12 +19,12 @@ namespace MinhasFinancas.Web.Controllers
 
         public string userName
         {
-            get { return ConfigurationManager.AppSettings.Get("User"); }
+            get { return Session["User"] as string; }
         }
 
         public string userId
         {
-            get { return ConfigurationManager.AppSettings.Get("UserId"); }
+            get { return Session["UserId"] as string; }
         }
 
         protected bool OperacaoValida()
@@ -32,6 +34,29 @@ namespace MinhasFinancas.Web.Controllers
             var notificacoes = _notificador.ObterNotificacoes();
             notificacoes.ForEach(c => ViewData.ModelState.AddModelError(string.Empty, c.Mensagem));
             return false;
+        }
+
+        protected double CalculoPrecoMedio(List<TransacaoViewModel> transacoes)
+        {
+            double precoMedio = 0;
+            double valorYotal = 0;
+            double qtdYotal = 0;
+            foreach (var transacao in transacoes.OrderBy(o => o.Data))
+            {
+                if (transacao.TipoTransacao == TipoTransacao.Compra)
+                {
+                    valorYotal += transacao.Quantidade * transacao.ValorUnt;
+                    qtdYotal += transacao.Quantidade;
+                    precoMedio = valorYotal / qtdYotal;
+                }
+                else
+                {
+                    qtdYotal -= transacao.Quantidade;
+                    valorYotal = precoMedio * qtdYotal;
+                }
+            }
+
+            return precoMedio;
         }
 
         //protected void IsActiveUser()

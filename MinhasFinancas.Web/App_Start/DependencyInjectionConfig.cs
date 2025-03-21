@@ -7,6 +7,10 @@ using SimpleInjector;
 using MinhasFinancas.Infra.Data;
 using MinhasFinancas.Service.Dividendo;
 using MinhasFinancas.Service.Papel;
+using MinhasFinancas.Service.Ativo;
+using MinhasFinancas.Service.Inventario;
+using MinhasFinancas.Service.Conta;
+using MinhasFinancas.Service.Pagamento;
 using MinhasFinancas.Service.Segmento;
 using MinhasFinancas.Service.Transacao;
 using MinhasFinancas.Repository.Core;
@@ -51,6 +55,12 @@ namespace MinhasFinancas.Web.App_Start
             container.Register<ITransacaoService, TransacaoService>(Lifestyle.Scoped);
             container.Register<IConfiguracaoService, ConfiguracaoService>(Lifestyle.Scoped);
             container.Register<INotificador, Notificador>(Lifestyle.Scoped);
+
+            container.Register<IAtivoService, AtivoService>(Lifestyle.Scoped);
+            container.Register<IInventarioService, InventarioService>(Lifestyle.Scoped);
+            container.Register<IContaService, ContaService>(Lifestyle.Scoped);
+            container.Register<IPagamentoService, PagamentoService>(Lifestyle.Scoped);
+
 
             DependencyInjectionConfigService.InitializeContainer(container);
 

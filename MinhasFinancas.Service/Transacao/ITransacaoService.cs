@@ -13,5 +13,6 @@ namespace MinhasFinancas.Service.Transacao
         Task DeleteById(Guid id);
         Task<IEnumerable<Infra.Models.Transacao>> Get(Expression<Func<Infra.Models.Transacao, bool>> filter = null, string includeProperties = null);
         Task<Infra.Models.Transacao> GetById(Guid id);
+        Task DeleteAllByUser(string userId);
     }
 }

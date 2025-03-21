@@ -1,0 +1,51 @@
+﻿@model MinhasFinancas.Web.ViewModels.AtivoViewModel
+
+@{
+    ViewBag.Title = "Delete Ativo";
+}
+
+<h2>Delete Ativo</h2>
+
+<div>
+    <h4>@Model.Nome</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Nome)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Nome)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TipoAtivo)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TipoAtivo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Descricao)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Descricao)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.StatusAtivo)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.StatusAtivo)
+        </dd>
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-danger" /> |
+            @Html.ActionLink("Voltar", "Index", new { area = "" }, new { @class = "btn btn-info" })
+        </div>
+    }
+</div>

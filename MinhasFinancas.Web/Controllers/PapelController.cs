@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using DocumentFormat.OpenXml.Office2010.Excel;
 using MinhasFinancas.Infra;
 using MinhasFinancas.Infra.Models;
 using MinhasFinancas.Service.Core;
@@ -10,7 +9,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using WebGrease.Css.Extensions;
 
 namespace MinhasFinancas.Web.Controllers
 {
@@ -97,28 +95,28 @@ namespace MinhasFinancas.Web.Controllers
             return View(lst.OrderBy(f => f.TipoPapel).OrderByDescending(f => f.TotalSaldo));
         }
 
-        private double CalculoPrecoMedio(List<TransacaoViewModel> transacoes)
-        {
-            double precoMedio = 0;
-            double valorYotal = 0;
-            double qtdYotal = 0;
-            foreach (var transacao in transacoes.OrderBy(o => o.Data))
-            {
-                if (transacao.TipoTransacao == TipoTransacao.Compra)
-                {
-                    valorYotal += transacao.Quantidade * transacao.ValorUnt;
-                    qtdYotal += transacao.Quantidade;
-                    precoMedio = valorYotal / qtdYotal;
-                }
-                else
-                {
-                    qtdYotal -= transacao.Quantidade;
-                    valorYotal = precoMedio * qtdYotal;
-                }
-            }
+        //private double CalculoPrecoMedio(List<TransacaoViewModel> transacoes)
+        //{
+        //    double precoMedio = 0;
+        //    double valorYotal = 0;
+        //    double qtdYotal = 0;
+        //    foreach (var transacao in transacoes.OrderBy(o => o.Data))
+        //    {
+        //        if (transacao.TipoTransacao == TipoTransacao.Compra)
+        //        {
+        //            valorYotal += transacao.Quantidade * transacao.ValorUnt;
+        //            qtdYotal += transacao.Quantidade;
+        //            precoMedio = valorYotal / qtdYotal;
+        //        }
+        //        else
+        //        {
+        //            qtdYotal -= transacao.Quantidade;
+        //            valorYotal = precoMedio * qtdYotal;
+        //        }
+        //    }
 
-            return precoMedio;
-        }
+        //    return precoMedio;
+        //}
 
         [HttpGet]
         public async Task<ActionResult> Detalhes(string codigo)
@@ -190,7 +188,7 @@ namespace MinhasFinancas.Web.Controllers
                 var listpapelViewModel = _mapper.Map<List<PapelViewModel>>(await _papelService.Get(x => x.Id == id && x.LoginId.ToString() == userId, "Transacao,Dividendo"));
                 papelViewModel = listpapelViewModel.FirstOrDefault();
 
-                return Redirect(@"/"+ papelViewModel.TipoPapel.ToString() + "/" + papelViewModel.Codigo);
+                return Redirect(@"/" + papelViewModel.TipoPapel.ToString() + "/" + papelViewModel.Codigo);
             }
             catch (Exception ex)
             {
@@ -211,12 +209,12 @@ namespace MinhasFinancas.Web.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-
         public async Task<ActionResult> Create(PapelViewModel papelViewModel)
         {
             if (!ModelState.IsValid) return View(papelViewModel);
 
             Papel obj = _mapper.Map<Papel>(papelViewModel);
+            obj.LoginId = new Guid(userId);
             await _papelService.Add(obj);
 
             if (!OperacaoValida()) return View(papelViewModel);

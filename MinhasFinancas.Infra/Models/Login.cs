@@ -8,5 +8,7 @@ namespace MinhasFinancas.Infra.Models
         public string Usuario { get; set; }
         public string Senha { get; set; }
         public virtual ICollection<Papel> Papel { get; set; }
+        public virtual ICollection<Ativo> Ativo { get; set; }
+        public virtual ICollection<Conta> Conta { get; set; }
     }
 }

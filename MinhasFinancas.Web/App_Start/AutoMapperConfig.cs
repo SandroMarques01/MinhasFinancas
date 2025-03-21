@@ -34,6 +34,10 @@ namespace MinhasFinancas.Web.App_Start
             CreateMap<Dividendo, DividendoViewModel>().ReverseMap();
             CreateMap<Segmento, SegmentoViewModel>().ReverseMap();
             CreateMap<Transacao, TransacaoViewModel>().ReverseMap();
+            CreateMap<Ativo, AtivoViewModel>().ReverseMap();
+            CreateMap<Inventario, InventarioViewModel>().ReverseMap();
+            CreateMap<Conta, ContaViewModel>().ReverseMap();
+            CreateMap<Pagamento, PagamentoViewModel>().ReverseMap();
         }
     }
 }

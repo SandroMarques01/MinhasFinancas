@@ -3,12 +3,27 @@ using MinhasFinancas.Repository.Core;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System;
+using Dapper;
+using System.Configuration;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MinhasFinancas.Repository.Transacao
 {
     public class TransacaoRepository : Repository<Infra.Models.Transacao>, ITransacaoRepository
     {
         public TransacaoRepository(AppDbContext db) : base(db) { }
+
+        public async Task DeleteAllByUser(string userId)
+        {
+            using (SqlConnection oSqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["MinhasFinancasDB"].ConnectionString))
+            {
+                string sComando = $@" delete from TbTransacao where PapelId in (select Id from TbPapel where LoginId = '{userId}') ";
+
+                oSqlConnection.Query(sComando);
+                oSqlConnection.Close();
+            }
+        }
 
         //public List<Infra.Models.Transacao> RetornaTotalTransacaoPorMes(int mesRetroativo, Guid acaoId = default)
         //{

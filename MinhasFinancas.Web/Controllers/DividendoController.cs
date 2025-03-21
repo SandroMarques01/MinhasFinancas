@@ -65,8 +65,8 @@ namespace MinhasFinancas.Web.Controllers
                         break;
                 }
 
-                f.PrecoMedio = lstT2.Sum(y => y.Quantidade * y.ValorUnt) / f.Quantidade;
-                
+                f.PrecoMedio = CalculoPrecoMedio(lstT2);
+
                 f.YieldOnCost = f.ValorRecebido / (f.PrecoMedio * f.Quantidade) * 100;
             });
 

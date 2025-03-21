@@ -163,5 +163,9 @@ namespace MinhasFinancas.Service.Papel
 
         }
 
+        public async Task DeleteAllByUser(string userId)
+        {
+            await _baseRepository.DeleteAllByUser(userId);
+        }
     }
 }

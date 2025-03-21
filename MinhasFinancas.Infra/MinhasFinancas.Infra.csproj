@@ -78,16 +78,25 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\AppDbContext.cs" />
+    <Compile Include="Mappings\AtivoConfig.cs" />
+    <Compile Include="Mappings\ContaConfig.cs" />
     <Compile Include="Mappings\DividendosConfig.cs" />
+    <Compile Include="Mappings\InventarioConfig.cs" />
     <Compile Include="Mappings\LoginConfig.cs" />
+    <Compile Include="Mappings\PagamentoConfig.cs" />
     <Compile Include="Mappings\PapelConfig.cs" />
     <Compile Include="Mappings\SegmentoConfig.cs" />
     <Compile Include="Mappings\TransacaoConfig.cs" />
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Ativo.cs" />
+    <Compile Include="Models\Conta.cs" />
     <Compile Include="Models\Dividendo.cs" />
     <Compile Include="Models\Entity.cs" />
     <Compile Include="Models\Enums\TipoDividendo.cs" />
+    <Compile Include="Models\Enums\TipoAtivo.cs" />
+    <Compile Include="Models\Inventario.cs" />
     <Compile Include="Models\Login.cs" />
+    <Compile Include="Models\Pagamento.cs" />
     <Compile Include="Models\Papel.cs" />
     <Compile Include="Models\Enums\TipoPapel.cs" />
     <Compile Include="Models\Enums\TipoTransacao.cs" />

@@ -33,6 +33,11 @@ namespace MinhasFinancas.Infra.Data
             modelBuilder.Configurations.Add(new DividendosConfig());
             modelBuilder.Configurations.Add(new SegmentoConfig());
 
+            modelBuilder.Configurations.Add(new AtivoConfig());
+            modelBuilder.Configurations.Add(new InventarioConfig());
+            modelBuilder.Configurations.Add(new ContaConfig());
+            modelBuilder.Configurations.Add(new PagamentoConfig());
+
             base.OnModelCreating(modelBuilder);
         }
 
@@ -41,5 +46,10 @@ namespace MinhasFinancas.Infra.Data
         public DbSet<Transacao> Transacaos { get; set; }
         public DbSet<Dividendo> Dividendos { get; set; }
         public DbSet<Segmento> Segmentos { get; set; }
+
+        public DbSet<Ativo> Ativos { get; set; }
+        public DbSet<Inventario> Inventarios { get; set; }
+        public DbSet<Conta> Contas { get; set; }
+        public DbSet<Pagamento> Pagamentos { get; set; }
     }
 }

@@ -1,0 +1,114 @@
+﻿@model IEnumerable<MinhasFinancas.Web.ViewModels.InventarioViewModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+<style>
+    .btnTbl {
+        padding: 0;
+    }
+
+    #tbodyInventario {
+        font-size: 10pt;
+    }
+
+    .descricaoCSS {
+        font-size: 9pt;
+    }
+
+    .form-control {
+        display: inline;
+    }
+</style>
+
+<h2>Inventário</h2>
+
+<p>
+    @Html.ActionLink("Novo Item", "Create", new { area = "" }, new { @class = "btn btn-success" })
+</p>
+<table class="table" id="tbInventario">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Ativo.Nome)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Valor)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Data)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Descricao)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StatusAtivo)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody id="tbodyInventario">
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="descricaoCSS">
+                    @Html.DisplayFor(modelItem => item.Ativo.Nome)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Valor)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Data)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Descricao)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StatusAtivo)
+                </td>
+                <td>
+                    @Html.ActionLink("E", "Edit", new { id = item.AtivoId }, new { @class = "btn btn-primary btnTbl" }) |
+                    @Html.ActionLink("Inf", "Details", new { id = item.AtivoId }, new { @class = "btn btn-info btnTbl" }) |
+                    @Html.ActionLink("D", "Delete", new { id = item.AtivoId }, new { @class = "btn btn-danger btnTbl" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+    $('#tbInventario th').click(function () {
+        var tabela = $(this).parents('table').eq(0);
+        var colunaIndex = $(this).index();
+        var ordem = $(this).hasClass('ordenado') && !$(this).hasClass('desc') ? 'desc' : 'asc';
+
+        tabela.find('th').removeClass('ordenado');
+        tabela.find('th').removeClass('desc');
+        $(this).addClass('ordenado');
+
+        if (ordem == "desc") {
+            $(this).addClass('desc');
+        }
+
+        var linhas = tabela.find('tbody > tr').toArray().sort(function (a, b) {
+            var valorA = $(a).find('td').eq(colunaIndex).text().toUpperCase();
+            var valorB = $(b).find('td').eq(colunaIndex).text().toUpperCase();
+
+            if (Number.isInteger(parseInt(valorA))) {
+                valorA = parseInt(valorA);
+                valorB = parseInt(valorB);
+            }
+
+            if (ordem === 'asc') {
+                return (valorA < valorB) ? -1 : (valorA > valorB) ? 1 : 0;
+            } else {
+                return (valorA > valorB) ? -1 : (valorA < valorB) ? 1 : 0;
+            }
+        });
+        $.each(linhas, function (index, linha) {
+            tabela.children('tbody').append(linha);
+        });
+    });
+</script>

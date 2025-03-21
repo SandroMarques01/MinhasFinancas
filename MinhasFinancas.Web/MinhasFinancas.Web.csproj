@@ -223,10 +223,14 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Area\Login\Controllers\LoginController.cs" />
+    <Compile Include="Controllers\AtivoController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ConfiguracaoController.cs" />
+    <Compile Include="Controllers\ContaController.cs" />
     <Compile Include="Controllers\DividendoController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\InventarioController.cs" />
+    <Compile Include="Controllers\PagamentoController.cs" />
     <Compile Include="Controllers\PapelController.cs" />
     <Compile Include="Controllers\SegmentoController.cs" />
     <Compile Include="Controllers\TransacaoController.cs" />
@@ -235,7 +239,11 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\ContaViewModel.cs" />
+    <Compile Include="ViewModels\PagamentoViewModel.cs" />
+    <Compile Include="ViewModels\InventarioViewModel.cs" />
     <Compile Include="ViewModels\DividendoViewModel.cs" />
+    <Compile Include="ViewModels\AtivoViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\PapelViewModel.cs" />
     <Compile Include="ViewModels\SegmentoViewModel.cs" />
@@ -318,8 +326,18 @@
     <Content Include="Views\Papel\Desdobramento.cshtml" />
     <Content Include="Views\Papel\Detalhes.cshtml" />
     <Content Include="Views\Login\Index.cshtml" />
-    <Content Include="Views\Shared\_Menu.cshtml" />
+    <Content Include="Views\Shared\_Login.cshtml" />
     <Content Include="Views\Configuracao\AlterarSenha.cshtml" />
+    <Content Include="Views\Ativo\Index.cshtml" />
+    <Content Include="Views\Ativo\Create.cshtml" />
+    <Content Include="Views\Ativo\Edit.cshtml" />
+    <Content Include="Views\Ativo\Details.cshtml" />
+    <Content Include="Views\Ativo\Delete.cshtml" />
+    <Content Include="Views\Inventario\Create.cshtml" />
+    <Content Include="Views\Inventario\Edit.cshtml" />
+    <Content Include="Views\Inventario\Delete.cshtml" />
+    <Content Include="Views\Inventario\Index.cshtml" />
+    <Content Include="Views\Inventario\CreateMult.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -328,6 +346,8 @@
     <Folder Include="Data\" />
     <Folder Include="Models\" />
     <Folder Include="Views\Base\" />
+    <Folder Include="Views\Conta\" />
+    <Folder Include="Views\Pagamento\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

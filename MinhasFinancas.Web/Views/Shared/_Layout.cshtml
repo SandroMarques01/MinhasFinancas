@@ -8,12 +8,6 @@
     @Scripts.Render("~/bundles/modernizr")
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <style>
-        .cantoDireito {
-            right: 20px;
-            position: absolute;
-        }
-    </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
@@ -25,16 +19,23 @@
             </button>
             <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between" id="navbarNav">
                 <ul class="navbar-nav flex-grow-1">
+                    <li><span class="nav-link" style="padding: 3px 10px;">-</span></li>
                     <li>@Html.ActionLink(" ", "Index", "Papel", new { area = "" }, new { @class = "nav-link fa-solid fa-file-lines", title = "Papéis" })</li>
                     <li>@Html.ActionLink(" ", "Index", "Segmento", new { area = "" }, new { @class = "nav-link fa-solid fa-table-columns", title = "Segmentos" })</li>
                     <li>@Html.ActionLink(" ", "Index", "Transacao", new { area = "" }, new { @class = "nav-link fa-solid fa-arrows-spin", title = "Transações" })</li>
                     <li>@Html.ActionLink(" ", "Index", "Dividendo", new { area = "" }, new { @class = "nav-link fa-solid fa-landmark", title = "Dividendos" })</li>
                     <li>@Html.ActionLink(" ", "Index", "Configuracao", new { area = "" }, new { @class = "nav-link fa-solid fa-certificate", title = "Configurações" })</li>
-                    <li><span class="nav-link" style = "padding: 3px 10px;">|</span></li>
-                    <li style = "right: 70px; position: absolute;">@Html.ActionLink(" ", "AlterarSenha", "Configuracao", new { area = "" }, new { @class = "nav-link fa-solid fa-user", title = "Alterar Nome/Senha" })</listyle>
-                    <li style = "right: 50px; position: absolute;"><span class="nav-link" style = "padding: 3px 10px;">|</span></li>
-                    <li style = "right: 20px; position: absolute;">@Html.ActionLink(" ", "Sair", "Configuracao", new { area = "" }, new { @class = "nav-link fa-solid fa-power-off", title = "Sair" })</li>
-                
+                    <li><span class="nav-link" style="padding: 3px 10px;">|</span></li>
+                    <li>@Html.ActionLink(" ", "Index", "Ativo", new { area = "" }, new { @class = "nav-link fa-solid fa-tower-observation", title = "Ativos" })</li>
+                    <li>@Html.ActionLink(" ", "Index", "Inventario", new { area = "" }, new { @class = "nav-link fa-solid fa-book", title = "Inventário" })</li>
+                    <li><span class="nav-link" style="padding: 3px 10px;">|</span></li>
+                    <li>@Html.ActionLink(" ", "Index", "Conta", new { area = "" }, new { @class = "nav-link fa-solid fa-book-open", title = "Contas" })</li>
+                    <li>@Html.ActionLink(" ", "Index", "Pagamento", new { area = "" }, new { @class = "nav-link fa-solid fa-receipt", title = "Pagamentos" })</li>
+
+                    <li style="right: 70px; position: absolute;">@Html.ActionLink(" ", "AlterarSenha", "Configuracao", new { area = "" }, new { @class = "nav-link fa-solid fa-user", title = "Alterar Nome/Senha" })</listyle>
+                    <li style="right: 50px; position: absolute;"><span class="nav-link" style="padding: 3px 10px;">|</span></li>
+                    <li style="right: 20px; position: absolute;">@Html.ActionLink(" ", "Sair", "Configuracao", new { area = "" }, new { @class = "nav-link fa-solid fa-power-off", title = "Sair" })</li>
+
                 </ul>
             </div>
         </div>

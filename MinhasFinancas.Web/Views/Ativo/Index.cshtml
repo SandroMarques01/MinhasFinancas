@@ -1,0 +1,118 @@
+﻿@model IEnumerable<MinhasFinancas.Web.ViewModels.AtivoViewModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+<style>
+    .btnTbl {
+        padding: 0;
+    }
+
+    #tbodyAtivo {
+        font-size: 10pt;
+    }
+
+    .nomeCSS {
+        font-size: 9pt;
+    }
+
+    .form-control {
+        display: inline;
+    }
+</style>
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Novo Ativo", "Create", new { area = "" }, new { @class = "btn btn-success" })
+</p>
+<table class="table" id="tbAtivos">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nome)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TipoAtivo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Descricao)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody id="tbodyAtivo">
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="nomeCSS">
+                    @Html.DisplayFor(modelItem => item.Nome)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TipoAtivo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Descricao)
+                </td>
+                <td>
+                    @Html.ActionLink("E", "Edit", new { id = item.Id }, new { @class = "btn btn-primary btnTbl" }) |
+                    @Html.ActionLink("Inf", "Details", new { id = item.Id }, new { @class = "btn btn-info btnTbl" }) |
+                    @Html.ActionLink("D", "Delete", new { id = item.Id }, new { @class = "btn btn-danger btnTbl" })
+                </td>
+            </tr>
+        }
+</table>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+    $('#tbAtivos th').click(function () {
+        var tabela = $(this).parents('table').eq(0);
+        var colunaIndex = $(this).index();
+        var ordem = $(this).hasClass('ordenado') && !$(this).hasClass('desc') ? 'desc' : 'asc';
+
+        tabela.find('th').removeClass('ordenado');
+        tabela.find('th').removeClass('desc');
+        $(this).addClass('ordenado');
+
+        if (ordem == "desc") {
+            $(this).addClass('desc');
+        }
+
+        var linhas = tabela.find('tbody > tr').toArray().sort(function (a, b) {
+            var valorA = $(a).find('td').eq(colunaIndex).text().toUpperCase();
+            var valorB = $(b).find('td').eq(colunaIndex).text().toUpperCase();
+
+            if (valorA.includes("R$")) {
+                valorA = parseFloat(valorA.replace('R$ ', '').replace('.', '').replace(',', '.'));
+                valorB = parseFloat(valorB.replace('R$ ', '').replace('.', '').replace(',', '.'));
+            }
+            else if (valorA.includes('%')) {
+                valorA = parseFloat(valorA.replace(',', '.'));
+                valorB = parseFloat(valorB.replace(',', '.'));
+            }
+            else if (valorA.includes('/')) {
+                valorA = new Date(valorA.trim().substring(6, 10), (parseInt(valorA.trim().substring(3, 5)) - 1), valorA.trim().substring(0, 2));
+                valorB = new Date(valorB.trim().substring(6, 10), (parseInt(valorB.trim().substring(3, 5)) - 1), valorB.trim().substring(0, 2));
+            }
+            else if (Number.isInteger(parseInt(valorA))) {
+                valorA = parseInt(valorA);
+                valorB = parseInt(valorB);
+            }
+
+            if (ordem === 'asc') {
+                return (valorA < valorB) ? -1 : (valorA > valorB) ? 1 : 0;
+            } else {
+                return (valorA > valorB) ? -1 : (valorA < valorB) ? 1 : 0;
+            }
+        });
+        $.each(linhas, function (index, linha) {
+            tabela.children('tbody').append(linha);
+        });
+    });
+
+
+
+</script>

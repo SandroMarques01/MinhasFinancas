@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Mvc.Routing.Constraints;
 
 namespace MinhasFinancas.Web.ViewModels
 {
@@ -33,8 +32,8 @@ namespace MinhasFinancas.Web.ViewModels
         [DisplayName("Tipo")]
         public TipoPapel TipoPapel { get; set; }
 
+
         [Range(0, Double.PositiveInfinity)]
-        [Moeda]
         [DisplayName("Cot. atual")]
         public double CotacaoAtual { get; set; }
 

@@ -61,5 +61,10 @@ namespace MinhasFinancas.Service.Dividendo
             var retorno = await _baseRepository.RetornaTotalDividendosPorMes(userId, mesRetroativo, tipoPapel, papelId);
             return retorno;
         }
+
+        public async Task DeleteAllByUser(string userId)
+        {
+            await _baseRepository.DeleteAllByUser(userId); 
+        }
     }
 }

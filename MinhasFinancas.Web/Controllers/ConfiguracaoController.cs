@@ -121,7 +121,7 @@ namespace MinhasFinancas.Web.Controllers
 
         public async Task<ActionResult> DeletarBanco()
         {
-            await _configuracaoService.DeletaTodoBanco(userId);
+            _configuracaoService.DeletaTodoBanco(userId);
 
             return RedirectToAction("Index", "Home");
         }

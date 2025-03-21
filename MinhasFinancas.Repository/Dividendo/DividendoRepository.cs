@@ -14,6 +14,17 @@ namespace MinhasFinancas.Repository.Dividendo
     {
         public DividendoRepository(AppDbContext db) : base(db) { }
 
+        public async Task DeleteAllByUser(string userId)
+        {
+            using (SqlConnection oSqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["MinhasFinancasDB"].ConnectionString))
+            {
+                string sComando = $@" delete from TbDividendo where PapelId in (select Id from TbPapel where LoginId = '{userId}') ";
+
+                oSqlConnection.Query(sComando);
+                oSqlConnection.Close();
+            }
+        }
+
         public async Task<IEnumerable<Infra.Models.Dividendo>> RetornaTotalDividendosPorMes(string userId, int mesRetroativo, int tipoPapel = 0, Guid papelId = default)
         {
             using (SqlConnection oSqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["MinhasFinancasDB"].ConnectionString))

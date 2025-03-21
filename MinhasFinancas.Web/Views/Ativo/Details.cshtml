@@ -1,0 +1,45 @@
+﻿@model MinhasFinancas.Web.ViewModels.AtivoViewModel
+
+@{
+    ViewBag.Title = "Detalhes do Ativo";
+}
+
+<h2>Detalhes do Ativo</h2>
+
+<div>
+    <h4>@Model.Nome</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Nome)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Nome)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TipoAtivo)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TipoAtivo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Descricao)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Descricao)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.StatusAtivo)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.StatusAtivo)
+        </dd>
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Editar", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary" }) |
+    @Html.ActionLink("Voltar", "Index", new { area = "" }, new { @class = "btn btn-info" })
+</p>
