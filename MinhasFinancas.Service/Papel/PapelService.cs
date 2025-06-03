@@ -1,6 +1,4 @@
-﻿using DocumentFormat.OpenXml.Spreadsheet;
-using MinhasFinancas.Infra.Models;
-using MinhasFinancas.Repository.Dividendo;
+﻿using MinhasFinancas.Repository.Dividendo;
 using MinhasFinancas.Repository.Papel;
 using MinhasFinancas.Repository.Transacao;
 using MinhasFinancas.Service.Core;

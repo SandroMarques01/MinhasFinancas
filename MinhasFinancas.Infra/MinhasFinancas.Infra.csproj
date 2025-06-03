@@ -100,6 +100,7 @@
     <Compile Include="Models\Papel.cs" />
     <Compile Include="Models\Enums\TipoPapel.cs" />
     <Compile Include="Models\Enums\TipoTransacao.cs" />
+    <Compile Include="Models\Partial\ExcelB3.cs" />
     <Compile Include="Models\Segmento.cs" />
     <Compile Include="Models\Transacao.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

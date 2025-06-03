@@ -36,9 +36,11 @@ namespace MinhasFinancas.Web.Controllers
             if (string.IsNullOrEmpty(userId))
                 return Redirect(@"/Login/Index");
 
+
+
             DateTime ultimoDiaMes = Convert.ToDateTime((DateTime.Now.Month == 12 ? DateTime.Now.Year + 1 : DateTime.Now.Year)
-                                                        + "-" + 
-                                                        (DateTime.Now.Month == 12 ? "01" : (DateTime.Now.Month + 1).ToString()) 
+                                                        + "-" +
+                                                        (DateTime.Now.Month == 12 ? "01" : (DateTime.Now.Month + 1).ToString())
                                                         + "-01").AddDays(-1);
 
             List<DividendoViewModel> lstD = _mapper.Map<List<DividendoViewModel>>(await _dividendoService.Get(x => x.Papel.LoginId.ToString() == userId, includeProperties: "Papel"));
@@ -57,7 +59,7 @@ namespace MinhasFinancas.Web.Controllers
             ViewBag.DividendosFiisMesPercent = ViewBag.DividendosFiisMes * 100 / lstT.Where(x => x.Papel.TipoPapel == Infra.TipoPapel.FII
                                                                             && x.TipoTransacao == Infra.TipoTransacao.Compra
                                                                             && x.Data < Convert.ToDateTime(DateTime.Now.Year + "-" + DateTime.Now.Month + "-01")).Sum(x => x.Quantidade * x.ValorUnt);
-            
+
             ViewBag.ValorAtualCarteira = totalInvestido;
 
             lstD = lstD.Where(f => f.Data >= DateTime.Now.AddDays(-1) && f.Data <= DateTime.Now.AddDays(6)).ToList();
@@ -98,6 +100,38 @@ namespace MinhasFinancas.Web.Controllers
             ViewData["DivGraficoETF"] = lstDGraficoETF;
 
             return View();
+        }
+
+        public async Task<ActionResult> DashBoard()
+        {
+            if (string.IsNullOrEmpty(userId))
+                return Redirect(@"/Login/Index");
+
+            List<PapelViewModel> lst = _mapper.Map<List<PapelViewModel>>(await _papelService.Get(x => x.LoginId.ToString() == userId && x.TipoPapel == Infra.TipoPapel.FII));
+
+            List<DividendoViewModel> lstD = _mapper.Map<List<DividendoViewModel>>(await _dividendoService.Get(x => x.Papel.LoginId.ToString() == userId));
+            List<TransacaoViewModel> lstT = _mapper.Map<List<TransacaoViewModel>>(await _transacaoService.Get(x => x.Papel.LoginId.ToString() == userId));
+
+            List<PapelViewModel> listaDividendos = new List<PapelViewModel>();
+
+            DateTime primeiroDiaMes = Convert.ToDateTime(DateTime.Now.Year + "-" + DateTime.Now.Month + "-01").AddMonths(-2);
+            DateTime ultimoDiaMes = Convert.ToDateTime((DateTime.Now.Month == 12 ? DateTime.Now.Year + 1 : DateTime.Now.Year)
+                                                        + "-" +
+                                                        (DateTime.Now.Month == 12 ? "01" : (DateTime.Now.Month + 1).ToString())
+                                                        + "-01").AddDays(-1);
+
+            foreach (var item in lst.Where(x => x.Ativo))
+            {
+                PapelViewModel obj = new PapelViewModel();
+                obj.Codigo = item.Codigo;
+                obj.CotacaoAtual = item.CotacaoAtual;
+                obj.PrecoMedio = CalculoPrecoMedio(lstT.Where(x => x.PapelId == item.Id).ToList());
+                obj.DividendosTotal = lstD.Where(x => x.PapelId == item.Id && x.Data > primeiroDiaMes && x.Data < ultimoDiaMes).Sum(x => x.ValorRecebido);
+                
+                listaDividendos.Add(obj);
+            }
+
+            return View(listaDividendos);
         }
 
         public ActionResult About()

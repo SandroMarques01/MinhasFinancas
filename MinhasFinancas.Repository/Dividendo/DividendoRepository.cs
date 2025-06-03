@@ -68,6 +68,33 @@ namespace MinhasFinancas.Repository.Dividendo
             }
         }
 
+        public async Task<IEnumerable<Infra.Models.Dividendo>> RetornaDividendosUltimos3Meses(string userId, int mesRetroativo, int tipoPapel = 0, Guid papelId = default)
+        {
+            using (SqlConnection oSqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["MinhasFinancasDB"].ConnectionString))
+            {
+                oSqlConnection.Open();
+
+                var parameters = new { UserId = userId, MesRetroativo = mesRetroativo, TipoPapel = tipoPapel, PapelId = papelId };
+
+                string sComando = $@"  SELECT 
+                                            d.PapelId, 
+                                            SUM(d.ValorRecebido) AS ValorRecebido
+                                        FROM TbDividendo d
+                                        JOIN TbPapel p ON d.PapelId = p.Id
+                                        WHERE p.LoginId = @UserId
+                                          AND p.TipoPapel = @TipoPapel
+                                          AND d.Data >= DATEADD(MONTH, -2, CAST(CONCAT(YEAR(GETDATE()), '-', MONTH(GETDATE()), '-01') AS DATE))
+                                        GROUP BY d.PapelId;
+                                    ";
+
+
+                List<Infra.Models.Dividendo> finishedProductReview = oSqlConnection.Query<Infra.Models.Dividendo>(sComando, parameters).ToList();
+                oSqlConnection.Close();
+
+                return finishedProductReview;
+            }
+        }
+
         //public List<Infra.Models.Dividendo> RetornaDividendosPorMeseTipo(int mesRetroativo)
         //{
         //    using (SqlConnection oSqlConnection = new SqlConnection(GetConnectionString()))

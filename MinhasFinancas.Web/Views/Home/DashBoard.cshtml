@@ -1,0 +1,177 @@
+﻿@model IEnumerable<MinhasFinancas.Web.ViewModels.PapelViewModel>
+
+@{
+    ViewBag.Title = "DashBoard";
+}
+
+<style>
+    .btnTbl {
+        padding: 0;
+    }
+
+    #tbodyPapel {
+        font-size: 10pt;
+        padding-bottom: 0;
+    }
+
+    .nomeCSS {
+        font-size: 9pt;
+    }
+
+    .form-control {
+        display: inline;
+    }
+
+    .success {
+        background-color: lightblue !important;
+    }
+
+    .danger {
+        background-color: pink !important;
+    }
+</style>
+
+
+<h2>DashBoard</h2>
+
+
+
+<table class="table table-bordered table-striped">
+    <thead class="thead-dark" id="tbPapeis">
+        <tr>
+            <th scope="col" style="width:5%;">
+                @Html.DisplayNameFor(model => model.Codigo)
+            </th>
+            <th scope="col" style="width:6%;">
+                @Html.DisplayNameFor(model => model.DividendosTotal)
+            </th>
+            <th scope="col" style="width:7%;">
+                @Html.DisplayNameFor(model => model.PrecoMedio)
+            </th>
+            <th scope="col" style="width:7%;">
+                Dividend on Cost
+            </th>
+            <th scope="col" style="width:7%;">
+                @Html.DisplayNameFor(model => model.CotacaoAtual)
+            </th>
+            <th scope="col" style="width:5%;">
+                Dividend Yeild
+            </th>
+        </tr>
+    </thead>
+    <tbody id="tbodyPapel">
+
+        @foreach (var item in Model.OrderByDescending(f => f.DividendosTotal).OrderBy(f => f.Codigo))
+        {
+            <tr>
+                <td scope="row">
+                    @Html.DisplayFor(modelItem => item.Codigo)
+                </td>
+                <td scope="row">
+                    @item.DividendosTotal.ToString("C")
+                </td>
+                <td scope="row">
+                    @item.PrecoMedio.ToString("C")
+                </td>
+                <td scope="row">
+                    @{ double DoC = Math.Round(item.DividendosTotal * 100 / item.PrecoMedio, 2); }
+                    @DoC.ToString()%
+                </td>
+                <td scope="row" style="background-color: moccasin;">
+                    @item.CotacaoAtual.ToString("C")
+                    @*@Html.DisplayFor(modelItem => item.CotacaoAtual)*@
+                </td>
+                <td scope="row">
+                    @{ double DY = Math.Round(item.DividendosTotal * 100 / item.CotacaoAtual, 2); }
+                    @DY.ToString()%
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $("#filtroInput").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#tbodyPapel tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+
+        if ($("#hddData").val() == '') {
+            var dt = new Date();
+            dt = new Date(dt.getFullYear(), dt.getMonth() + 1, 1);
+            dt = new Date(dt - 1)
+            $("#dtFim").val(dt.getFullYear() + "-" + String(dt.getMonth() + 1).padStart(2, '0') + "-" + String(dt.getDate()).padStart(2, '0'));
+        }
+        else {
+            $("#dtFim").val($("#hddData").val());
+        }
+
+        $('#tbPapeis th').click(function () {
+            var tabela = $(this).parents('table').eq(0);
+            var colunaIndex = $(this).index();
+            var ordem = $(this).hasClass('ordenado') && !$(this).hasClass('desc') ? 'desc' : 'asc';
+
+            tabela.find('th').removeClass('ordenado');
+            tabela.find('th').removeClass('desc');
+            $(this).addClass('ordenado');
+
+            if (ordem == "desc") {
+                $(this).addClass('desc');
+            }
+
+            var linhas = tabela.find('tbody > tr').toArray().sort(function (a, b) {
+                var valorA = $(a).find('td').eq(colunaIndex).text().toUpperCase();
+                var valorB = $(b).find('td').eq(colunaIndex).text().toUpperCase();
+
+                if (valorA.includes("R$")) {
+                    valorA = parseFloat(valorA.replace('R$ ', '').replace('.', '').replace(',', '.'));
+                    valorB = parseFloat(valorB.replace('R$ ', '').replace('.', '').replace(',', '.'));
+                }
+                else if (valorA.includes('%')) {
+                    valorA = parseFloat(valorA.replace(',', '.'));
+                    valorB = parseFloat(valorB.replace(',', '.'));
+                }
+                else if (valorA.includes('/')) {
+                    valorA = new Date(valorA.trim().substring(6, 10), (parseInt(valorA.trim().substring(3, 5)) - 1), valorA.trim().substring(0, 2));
+                    valorB = new Date(valorB.trim().substring(6, 10), (parseInt(valorB.trim().substring(3, 5)) - 1), valorB.trim().substring(0, 2));
+                }
+                else if (Number.isInteger(parseInt(valorA))) {
+                    valorA = parseInt(valorA);
+                    valorB = parseInt(valorB);
+                }
+
+                if (ordem === 'asc') {
+                    return (valorA < valorB) ? -1 : (valorA > valorB) ? 1 : 0;
+                } else {
+                    return (valorA > valorB) ? -1 : (valorA < valorB) ? 1 : 0;
+                }
+            });
+            $.each(linhas, function (index, linha) {
+                tabela.children('tbody').append(linha);
+            });
+        });
+    });
+
+    var hdDtF = 0
+    function ColocarFinalMes() {
+        var dt = new Date();
+        if (hdDtF == 1) {
+            hdDtF = 0;
+            dt = new Date(dt.getFullYear(), dt.getMonth() + 1, 1);
+            dt = new Date(dt - 1)
+            $("#dtFim").val(dt.getFullYear() + "-" + String(dt.getMonth() + 1).padStart(2, '0') + "-" + String(dt.getDate()).padStart(2, '0'));
+        }
+        else {
+            hdDtF = 1;
+            $("#dtFim").val(dt.getFullYear() + "-" + 12 + "-" + 31);
+        }
+    }
+
+</script>

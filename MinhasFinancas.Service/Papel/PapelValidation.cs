@@ -17,12 +17,6 @@ namespace MinhasFinancas.Service.Papel
             RuleFor(p => p.TipoPapel)
                 .NotEmpty().WithMessage("O campo {PropertyName} não pode estar vazio");
 
-            RuleFor(p => p.CotacaoAtual)
-                .GreaterThanOrEqualTo(0).WithMessage("O campo {PropertyName} precisa ser maior que {ComparisonValue}");
-
-            RuleFor(d => d.Ativo)
-                .NotEmpty().WithMessage("O campo {PropertyName} não pode estar vazio");
-
             //When(p => p.TipoPapel == TipoPapel.BDR, () => {});
         }
     }

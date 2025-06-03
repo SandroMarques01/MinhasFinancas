@@ -63,7 +63,7 @@ namespace MinhasFinancas.Web.ViewModels
         public double PrecoMedio { get; set; }
         [DisplayName("Div.")]
         public double DividendosTotal { get; set; }
-        [DisplayName("% Div.")]
+        [DisplayName("% DY.")]
         public double PercentDividendos { get; set; }
         [DisplayName("Val.")]
         public double Valorizacao { get; set; }
@@ -71,5 +71,9 @@ namespace MinhasFinancas.Web.ViewModels
         public double GanhoUnt { get; set; }
         [DisplayName("Ganho T.")]
         public double GanhoTotal { get; set; }
+
+
+        [DisplayName("% DoC.")]
+        public double PercentDivOnCost { get; set; }
     }
 }
